@@ -266,8 +266,9 @@ jQuery(document).ready(function() {
 });
 function kshipping_new_box() {
 	let $ = jQuery;
+	let text_remove = $('.kshippingargentina-boxes').attr('data-remove-text');
 	let model = $('.kshippingargentina-box').first().clone().appendTo('.kshippingargentina-boxes');
-	$(model).append('<a href="javascript:;" onclick="kshipping_remove_box(this)">Remove</a>');
+	$(model).append('<a href="javascript:;" onclick="kshipping_remove_box(this)">'+text_remove+'</a>');
 	$('input', model).val('');
 }
 function kshipping_remove_box(el) {
@@ -297,13 +298,82 @@ function kshipping_generate_label(btn) {
 				alert(data.error);
 			}
 		} catch(e) {
-			alert('Internal server error');
+			alert('Internal server error 2');
 		}
 
 	}).fail(function() {
 		$(btn).removeAttr('disabled');
 		kshipping_generate_label_loading = false;
 		$(btn).html($(btn).attr('data-text'));
-		alert('Internal server error');
+		alert('Internal server error 1');
+	});
+}
+function kshipping_delete_label(btn, order_id, service_type) {
+	let $ = jQuery;
+	if (kshipping_generate_label_loading) return;
+	kshipping_generate_label_loading = true;
+	$(btn).html($(btn).attr('data-text-loading')).attr('disabled', 'disabled');
+	let data_to_send = {
+		delete_label: order_id,
+		service_type: service_type,
+		kshippingargentina_delete_label_nonce: $('#kshippingargentina_delete_label_nonce').val()
+	};
+	$.post(wc_kshippingargentina_context.ajax_url, data_to_send, function(data_json) {
+		kshipping_generate_label_loading = false;
+		$(btn).removeAttr('disabled');
+		$(btn).html($(btn).attr('data-text'));
+		console.log(data_json);
+		try {
+			let data = jQuery.parseJSON(data_json);
+			console.log(data);
+			if (data.ok) {
+				document.location.reload();
+			} else {
+				alert(data.error);
+			}
+		} catch(e) {
+			alert('Internal server error 2');
+		}
+
+	}).fail(function() {
+		$(btn).removeAttr('disabled');
+		kshipping_generate_label_loading = false;
+		$(btn).html($(btn).attr('data-text'));
+		alert('Internal server error 1');
+	});
+}
+function kshipping_save_tracking_code(btn, order_id) {
+	let $ = jQuery;
+	if (kshipping_generate_label_loading) return;
+	kshipping_generate_label_loading = true;
+	$(btn).html($(btn).attr('data-text-loading')).attr('disabled', 'disabled');
+	let data_to_send = {
+		save_tracking_code: order_id,
+		tracking_code: $('#kshipping_tracking_code').val(),
+		instance_id: $('#kshippingargentina_instance_id').val(),
+		kshippingargentina_tracking_code_nonce: $('#kshippingargentina_tracking_code_nonce').val()
+	};
+	$.post(wc_kshippingargentina_context.ajax_url, data_to_send, function(data_json) {
+		kshipping_generate_label_loading = false;
+		$(btn).removeAttr('disabled');
+		$(btn).html($(btn).attr('data-text'));
+		console.log(data_json);
+		try {
+			let data = jQuery.parseJSON(data_json);
+			console.log(data);
+			if (data.ok) {
+				document.location.reload();
+			} else {
+				alert(data.error);
+			}
+		} catch(e) {
+			alert('Internal server error 2');
+		}
+
+	}).fail(function() {
+		$(btn).removeAttr('disabled');
+		kshipping_generate_label_loading = false;
+		$(btn).html($(btn).attr('data-text'));
+		alert('Internal server error 1');
 	});
 }

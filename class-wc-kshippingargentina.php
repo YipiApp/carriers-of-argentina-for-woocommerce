@@ -34,7 +34,7 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 * @var string
 		 */
 
-		const VERSION = '1.0.21';
+		const VERSION = '1.0.25';
 
 		/**
 		 * Instance of this class.
@@ -43,6 +43,11 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 */
 		protected static $instance = null;
 
+		/**
+		 * Vat types.
+		 *
+		 * @var object
+		 */
 		public static $vat_types = array(
 			'DNI'  => 'DNI',
 			'CUIT' => 'CUIT',

@@ -10,14 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
-	require_once dirname( __FILE__ ) . '/class-wc-shipping-gateway-kshippingargentina.php';
 	/**
 	 * Shipping class.
 	 *
 	 * @since 1.0.0
 	 * @extends WC_Shipping_Gateway_KShippingArgentina
 	 */
-	class WC_KShippingArgentina_Shipping extends WC_Shipping_Gateway_KShippingArgentina {
+	class WC_KShippingArgentina_Shipping extends WC_Shipping_Method {
 		/**
 		 * Instance.
 		 *
@@ -37,6 +36,12 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		 * @var mixed
 		 */
 		public $type;
+		/**
+		 * Shipping attribute.
+		 *
+		 * @var mixed
+		 */
+		public $find_in_store;
 		/**
 		 * Shipping attribute.
 		 *
@@ -306,6 +311,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			$this->office           = 'office' === $this->type;
 			$this->office_src       = $this->get_option( 'office_src' );
 			$this->insurance_active = 'yes' === $this->get_option( 'insurance_active' );
+			$this->find_in_store    = 'yes' === $this->get_option( 'find_in_store' );
 			$this->insurance        = (float) $this->get_option( 'insurance' );
 			$this->velocity         = $this->get_option( 'velocity', 'classic' );
 			$this->fiscal_type      = $this->get_option( 'fiscal_type', 'CF' );

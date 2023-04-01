@@ -15,6 +15,9 @@ $currency_dst = 'ARS';
 $from_unit_w = strtolower( get_option( 'woocommerce_weight_unit' ) );
 $from_unit_d = strtolower( get_option( 'woocommerce_dimension_unit' ) );
 
+$countries_obj = new WC_Countries();
+$states        = $countries_obj->get_states( 'AR' );
+
 $r = array(
 	'enabled'            => array(
 		'title'   => __( 'Enable / Disable', 'wc-kshippingargentina' ),
@@ -58,11 +61,85 @@ $r = array(
 		'description' => __( 'Optional, only for generation of label', 'wc-kshippingargentina' ),
 		'default'     => '',
 	),
+	'time_slot'          => array(
+		'title'    => __( 'OCA collections time slot', 'wc-kshippingargentina' ),
+		'type'     => 'select',
+		'default'  => '1',
+		'options'  => array(
+			'1' => __( '8:00 - 17:00', 'wc-kshippingargentina' ),
+			'2' => __( '8:00 - 12:00', 'wc-kshippingargentina' ),
+			'3' => __( '14:00 - 17:00', 'wc-kshippingargentina' ),
+		),
+		'desc_tip' => false,
+	),
 	'postcode'           => array(
 		'title'       => __( 'Sender Post Code', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default'     => '',
+	),
+	'state'              => array(
+		'title'       => __( 'State of sender', 'wc-kshippingargentina' ),
+		'type'        => 'select',
+		'description' => '',
+		'default'     => '',
+		'options'     => $states,
+	),
+	'city'               => array(
+		'title'       => __( 'City of sender', 'wc-kshippingargentina' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
+	'street'             => array(
+		'title'       => __( 'Street of sender', 'wc-kshippingargentina' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
+	'number'             => array(
+		'title'       => __( 'Number of sender', 'wc-kshippingargentina' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
+	'floor'              => array(
+		'title'       => __( 'Floor of sender', 'wc-kshippingargentina' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
+	'apartment'          => array(
+		'title'       => __( 'Apartment of sender', 'wc-kshippingargentina' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
+	'other'              => array(
+		'title'       => __( 'Detalle (Entre-calles, etc)', 'wc-kshippingargentina' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
+	'fullname'           => array(
+		'title'       => __( 'Full name of sender (Or company name)', 'wc-kshippingargentina' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
+	'email'              => array(
+		'title'       => __( 'E-Mail of sender', 'wc-kshippingargentina' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
 	),
 	'weight'             => array(
 		// translators: %s Unit weight.

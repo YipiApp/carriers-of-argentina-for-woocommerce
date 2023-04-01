@@ -91,6 +91,10 @@ return array(
 		'title' => __( 'Enable Insurance', 'wc-kshippingargentina' ),
 		'type'  => 'checkbox',
 	),
+	'find_in_store'                => array(
+		'title' => __( 'Does this carrier pick up the package at your store? (Only for OCA e-Pack)', 'wc-kshippingargentina' ),
+		'type'  => 'checkbox',
+	),
 	'insurance'                    => array(
 		'title'       => __( 'Insurance Percentage (Only for Correo Argentino)', 'wc-kshippingargentina' ),
 		'type'        => 'text',
