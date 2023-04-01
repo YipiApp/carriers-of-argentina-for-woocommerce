@@ -171,7 +171,7 @@ class WC_KShippingArgentina_Manager extends WC_Integration {
 	 * @return void
 	 */
 	public function init_form_fields() {
-		$this->form_fields = include 'data-settings-kshippingargentina-manager.php';
+		$this->form_fields = include 'data-settings-manager.php';
 	}
 
 

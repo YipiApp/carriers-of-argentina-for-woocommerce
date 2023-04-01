@@ -367,7 +367,7 @@ class KShippingArgentina_API {
 		}
 		return $token;
 	}
-	public static function get_pdf_label_andreani( $tc, &$error, $sandbox = false ) {
+	public static function get_andreani_pdf_label( $tc, &$error, $sandbox = false ) {
 		$sandbox     = apply_filters( 'kshippingargentina_sandbox', $sandbox );
 		$api_version = apply_filters( 'kshippingargentina_andreani_api_version', 'v2' );
 		if ( $sandbox ) {

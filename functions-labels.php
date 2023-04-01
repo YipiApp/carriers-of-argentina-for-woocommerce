@@ -19,7 +19,7 @@ add_action(
 					$('.check-column input[type=checkbox]:checked').each(function() {
 						list_posts.push($(this).attr('value'));
 					});
-					if (list_posts.length < 1) { alert('<?php echo esc_html_e( 'Debe seleccionar al menos una orden', 'wc-kshippingargentina' ); ?>'); return; }
+					if (list_posts.length < 1) { alert('<?php echo esc_html_e( 'You must select at least one order', 'wc-kshippingargentina' ); ?>'); return; }
 					if (kshippingargentina_metabox_loading) return;
 					kshippingargentina_metabox_loading = true;
 					var url = 'edit.php?post_type=shop_order&generate_massive_tracking_code=1&';
@@ -139,6 +139,36 @@ add_action(
 				foreach ( $tracking_codes as $tc ) {
 					$new_labels[ $tc ] = $label;
 				}
+				update_post_meta( $order_id, 'kshippingargentina_label_file', $new_labels );
+				die(
+					wp_json_encode(
+						array(
+							'ok' => true,
+						)
+					)
+				);
+			}
+			foreach ( $tracking_codes as $tc ) {
+				$api_error = false;
+				if ( 'correo_argentino' === $shipping->service_type ) {
+					$new_labels[ $tc ] = false;
+				} elseif ( 'andreani' === $shipping->service_type) {
+					$pdf               = KShippingArgentina_API::get_andreani_pdf_label( $tc, $api_error );
+					$new_labels[ $tc ] = $pdf ? kshipping_save_pdf(
+						$order_id,
+						"andreani_{$order_id}_{$tc}.pdf",
+						$pdf
+					) : false;
+				} elseif ( 'oca' === $shipping->service_type ) {
+					$pdf               = KShippingArgentina_API::get_oca_pdf_label( $tc, $api_error );
+					$new_labels[ $tc ] = $pdf ? kshipping_save_pdf(
+						$order_id,
+						"oca_{$order_id}_{$tc}.pdf",
+						$pdf
+					) : false;
+				}
+			}
+			if ( count( $new_labels ) ) {
 				update_post_meta( $order_id, 'kshippingargentina_label_file', $new_labels );
 				die(
 					wp_json_encode(
@@ -388,7 +418,7 @@ add_action(
 			?>
 		<div class="" style="width:100%">
 				<div class="dokan-panel dokan-panel-default">
-						<div class="dokan-panel-heading"><strong><?php esc_html_e( 'Datos Correo Argentino', 'woocommerce-kcorreoargentino' ); ?></div>
+						<div class="dokan-panel-heading"><strong><?php esc_html_e( 'Datos Correo Argentino', 'wc-kshippingargentina' ); ?></div>
 					<div class="dokan-panel-body" id="kshippingargentina-metabox">
 							<?php
 							kshippingargentina_metabox_cb( $order, true );
@@ -823,7 +853,7 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
 	$tracking_code = array();
 	foreach ( $result['bultos'] as $bulto ) {
 		$api_error                                = false;
-		$pdf                                      = KShippingArgentina_API::get_pdf_label_andreani( $bulto['numeroDeEnvio'], $api_error );
+		$pdf                                      = KShippingArgentina_API::get_andreani_pdf_label( $bulto['numeroDeEnvio'], $api_error );
 		$tracking_code[ $bulto['numeroDeEnvio'] ] = $pdf ? kshipping_save_pdf(
 			$order_id,
 			"andreani_{$order_id}_{$bulto['numeroDeEnvio']}.pdf",
@@ -955,6 +985,11 @@ function kshipping_save_pdf( $order_id, $file_name, $binary, $override = true ) 
 	if ( ! is_dir( $base_dir . $final_path ) ) {
 		mkdir( $base_dir . $final_path );
 	}
+
+	if ( ! file_exists( $base_dir . $final_path . '/index.php' ) ) {
+		$wp_filesystem->put_contents( $base_dir . $final_path . '/index.php' );
+	}
+
 	$sub_dirs = array();
 	$to_sub   = (int) $order_id;
 	while ( $to_sub > 0 ) {
@@ -970,6 +1005,11 @@ function kshipping_save_pdf( $order_id, $file_name, $binary, $override = true ) 
 	if ( $override && file_exists( $base_dir . $final_path . '/' . $file_name ) ) {
 		unlink( $base_dir . $final_path . '/' . $file_name );
 	}
+
+	if ( ! file_exists( $base_dir . $final_path . '/index.php' ) ) {
+		$wp_filesystem->put_contents( $base_dir . $final_path . '/index.php' );
+	}
+
 	if ( ! file_exists( $base_dir . $final_path . '/' . $file_name ) ) {
 		if ( ! $wp_filesystem->put_contents( $base_dir . $final_path . '/' . $file_name, $binary, 0644 ) ) {
 			return false;

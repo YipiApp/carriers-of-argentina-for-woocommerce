@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
-"POT-Creation-Date: 2023-03-27 12:54-0400\n"
-"PO-Revision-Date: 2023-03-27 12:55-0400\n"
+"POT-Creation-Date: 2023-04-01 17:54-0400\n"
+"PO-Revision-Date: 2023-04-01 17:54-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
 #. translators: %s Version of WooCommerce.
-#: class-wc-kshippingargentina.php:137
+#: class-wc-kshippingargentina.php:148
 #, php-format
 msgid ""
 "WooCommerce Shipping Argentina depends on the last version of %s to work!"
@@ -30,388 +30,538 @@ msgstr ""
 "Transportistas de Argentina para WooCommerce depende de la última versión de "
 "%s para funcionar!"
 
-#: class-wc-kshippingargentina.php:137
+#: class-wc-kshippingargentina.php:148
 msgid "WooCommerce"
 msgstr "WooCommerce"
 
-#: functions.php:196 functions.php:631
+#: functions-labels.php:22
+msgid "You must select at least one order"
+msgstr "Debe seleccionar al menos un pedido"
+
+#: functions-labels.php:28
+msgid "Cargando..."
+msgstr "Cargando..."
+
+#: functions-labels.php:30 functions-labels.php:45 functions-labels.php:61
+#: templates/order.tpl.php:259 templates/order.tpl.php:261
+msgid "Generate Label"
+msgstr "Generar etiqueta"
+
+#: functions-labels.php:47
+msgid "Internal server error"
+msgstr "Error interno del servidor"
+
+#: functions-labels.php:118
+msgid "Invalid tracking codes"
+msgstr "Códigos de seguimiento no válidos"
+
+#: functions-labels.php:132
+msgid "This order already has tracking codes assigned"
+msgstr "Este pedido ya tiene códigos de seguimiento asignados"
+
+#: functions-labels.php:185
+msgid "Invalid service type."
+msgstr "Tipo de servicio"
+
+#: functions-labels.php:226
+msgid ""
+"The label for this order could not be generated, you can verify what happens "
+"from the plugin log if you have it active in the configuration."
+msgstr ""
+"No se pudo generar la etiqueta para este pedido, puede verificar lo que "
+"sucede desde el registro del complemento si lo tiene activo en la "
+"configuración."
+
+#: functions-labels.php:276
+msgid "Invalid Status:"
+msgstr "Estado no válido:"
+
+#: functions-labels.php:288
+msgid "Shipping instance not exists."
+msgstr "La instancia de envío no existe."
+
+#: functions-labels.php:310
+msgid "Shipping type not found:"
+msgstr "Envíos para Argentina"
+
+#: functions-labels.php:366
+msgid "The client asked that it not be sent by an Argentine carrier."
+msgstr "El cliente pidió que no fuera enviado por un transportista argentino."
+
+#: functions-labels.php:376
+msgid "This carrier not is supported."
+msgstr "Este operador no es compatible."
+
+#: functions-labels.php:382
+msgid "Invalid status, payment is not completed."
+msgstr "Estado no válido, el pago no se ha completado."
+
+#: functions-labels.php:388
+msgid "Current tracking code:"
+msgstr "Código de seguimiento actual:"
+
+#: functions-labels.php:410
+msgid "Data of the Argentine carrier"
+msgstr "Datos del transportista argentino"
+
+#: functions-labels.php:421
+msgid "Datos Correo Argentino"
+msgstr "Correo Argentino"
+
+#: functions-labels.php:664 functions-labels.php:670 functions-labels.php:672
+msgid "Error generating OCA order"
+msgstr "Error al generar el pedido OCA"
+
+#: functions-labels.php:704
+msgid ""
+"An error occurred connecting to OCA, try again later, if the error persists "
+"you should check the plugin logs with technical support."
+msgstr ""
+"Se produjo un error al conectarse a OCA, inténtelo de nuevo más tarde, si el "
+"error persiste, debe verificar los registros del complemento con soporte "
+"técnico."
+
+#: functions-labels.php:845
+msgid "Andreani return with Timeout"
+msgstr "Andreani retorno con Timeout"
+
+#: functions.php:47 functions.php:480
 msgid "Shipment Arrival"
 msgstr "Paquete entregado"
 
 #. translators: count.
-#: functions.php:202
+#: functions.php:53
 #, php-format
 msgid "Shipment Arrival <span class=\"count\">(%s)</span>"
 msgid_plural "Shipment Arrival <span class=\"count\">(%s)</span>"
 msgstr[0] "Paquete entregado <span class=\"count\">(%s)</span>"
 msgstr[1] "Llegada del envío <span class=\"count\">(%s)</span>"
 
-#: functions.php:208 functions.php:632
+#: functions.php:59 functions.php:481
 msgid "Shipment in Transit"
 msgstr "Envío en tránsito"
 
 #. translators: count.
-#: functions.php:214
+#: functions.php:65
 #, php-format
 msgid "Shipment in Transit <span class=\"count\">(%s)</span>"
 msgid_plural "Shipment in Transit <span class=\"count\">(%s)</span>"
 msgstr[0] "Envío en tránsito <span class=\"count\">(%s)</span>"
 msgstr[1] "Envío en tránsito <span class=\"count\">(%s)</span>"
 
-#: functions.php:282
+#: functions.php:112
 msgid "Nearest office"
 msgstr "Oficina más cercana"
 
-#: functions.php:287
+#: functions.php:117
 msgid "Choose one..."
 msgstr "Elige uno..."
 
-#: functions.php:366
-msgid "Tipo de Identificación"
-msgstr "Tipo de Identificación"
+#: functions.php:196 templates/order.tpl.php:90
+msgid "Identification number type"
+msgstr "Tipo de número de identificación"
 
-#: functions.php:380
-msgid "Número de Identificación"
-msgstr "Número de Identificación"
+#: functions.php:206 templates/order.tpl.php:104
+msgid "Identification number"
+msgstr "Número de identificación"
 
-#: functions.php:391
-msgid "Código de Área del Teléfono Móvil"
-msgstr "Código de Área del Teléfono Móvil"
+#: functions.php:217 templates/order.tpl.php:150
+msgid "Mobile Phone Area Code"
+msgstr "Código de área del teléfono móvil"
 
-#: functions.php:400
-msgid "Teléfono Móvil (Sin Código de Área)"
-msgstr "Teléfono Móvil (Sin Código de Área)"
+#: functions.php:226 templates/order.tpl.php:154
+msgid "Mobile Phone (No Area Code)"
+msgstr "Teléfono móvil (sin código de área)"
 
-#: functions.php:411 functions.php:422
-msgid "Altura (Ingresar solo números)"
-msgstr "Altura (Ingresar solo números)"
+#: functions.php:237 functions.php:248 templates/order.tpl.php:138
+msgid "Height (Enter numbers only)"
+msgstr "Altura (introduzca solo números)"
 
-#: functions.php:434 functions.php:445
-msgid "Piso"
+#: functions.php:260 functions.php:271 templates/order.tpl.php:142
+msgid "Floor"
 msgstr "Piso"
 
-#: functions.php:456 functions.php:467
-msgid "Apartamento"
+#: functions.php:282 functions.php:293 templates/order.tpl.php:146
+msgid "Apartment"
 msgstr "Apartamento"
 
-#: functions.php:484
-msgid "Calle"
+#: functions.php:311
+msgid "Street"
 msgstr "Calle"
 
-#: functions.php:485
-msgid "Nombre de la Calle"
-msgstr "Nombre de la Calle"
+#: functions.php:312 templates/order.tpl.php:130
+msgid "Street name"
+msgstr "Nombre de calle"
 
-#: functions.php:486 functions.php:487
-msgid "Detalle (Entre-calles, etc)"
+#: functions.php:313 functions.php:314 templates/order.tpl.php:134
+msgid "Detail (Between-streets, etc)"
 msgstr "Detalle (Entre-calles, etc)"
 
-#: functions.php:552
-msgid "días"
-msgstr "días"
+#: functions.php:401
+msgid "days"
+msgstr "dias"
 
-#: functions.php:553
-msgid "Su carro de compras esta vacio"
-msgstr "Su carro de compras esta vacio"
+#: functions.php:402
+msgid "Your shopping cart is empty"
+msgstr "Tu carrito está vacío"
 
-#: functions.php:554
-msgid "No se encontraron transportistas"
-msgstr "No se encontraron transportistas"
+#: functions.php:403
+msgid "No carriers found"
+msgstr "No se han encontrado transportistas"
 
-#: functions.php:555
-msgid "Producto no encontrado"
+#: functions.php:404
+msgid "Product not found"
 msgstr "Producto no encontrado"
 
-#: functions.php:556
-msgid "Error en el servidor"
-msgstr "Error en el servidor"
+#: functions.php:405
+msgid "Server error"
+msgstr "Error del servidor"
 
-#: functions.php:557
-msgid "Cargando..."
+#: functions.php:406
+msgid "Loading..."
 msgstr "Cargando..."
 
-#: functions.php:558
-msgid "El plugin no esta configurado correctamente..."
+#: functions.php:407
+msgid "The plugin is not configured correctly..."
 msgstr "El plugin no esta configurado correctamente..."
 
 #. translators: Office.
-#: functions.php:685
+#: functions.php:537 functions.php:597
 #, php-format
 msgid "Office: %1$s"
 msgstr "Oficina: %1$s"
 
 #. translators: name - (iso / code).
-#: functions.php:698
+#: functions.php:550 functions.php:610
 #, php-format
 msgid "Office %1$s: %2$s - %3$s (%4$s / %5$s)"
 msgstr "Oficina %1$s: %2$s - %3$s (%4$s / %5$s)"
 
-#. translators: Office.
-#: functions.php:741
-#, php-format
-msgid "Oficina: %1$s"
-msgstr "Oficina: %1$s"
+#: functions.php:648
+msgid "Shipping"
+msgstr "Envío"
 
-#. translators: name - (iso / code).
-#: functions.php:754
-#, php-format
-msgid "Oficina %1$s: %2$s - %3$s (%4$s / %5$s)"
-msgstr "Oficina %1$s: %2$s - %3$s (%4$s / %5$s)"
-
-#: includes/class-kshippingargentina-api.php:121
+#: includes/class-kshippingargentina-api.php:165
 msgid "Cities not found..."
 msgstr "Ciudades no encontradas..."
+
+#: includes/class-kshippingargentina-api.php:359
+#: includes/class-kshippingargentina-api.php:364
+msgid "User or Password of Andreani is invalid"
+msgstr "El usuario o la contraseña de Andreani no son válidos"
+
+#: includes/class-kshippingargentina-api.php:393
+#: includes/class-kshippingargentina-api.php:428
+#: includes/data-settings-shipping.php:46
+msgid "Andreani"
+msgstr "Andreani"
 
 #: includes/class-wc-kshippingargentina-manager.php:42
 msgid "Shipping for Argentina"
 msgstr "Envíos para Argentina"
 
-#: includes/class-wc-kshippingargentina-shipping.php:266
+#: includes/class-wc-kshippingargentina-shipping.php:271
 msgid "Correo Argentino/Andreani/OCA e-Pack"
 msgstr "Correo Argentino/Andreani/OCA e-Pack"
 
-#: includes/class-wc-kshippingargentina-shipping.php:267
+#: includes/class-wc-kshippingargentina-shipping.php:272
 msgid "Use a shipping company from Argentina in this area"
 msgstr "Utilice una compañía de envío de Argentina en esta área"
 
-#: includes/class-wc-kshippingargentina-shipping.php:409
+#: includes/class-wc-kshippingargentina-shipping.php:427
 msgid "Argentina have to be the country of origin."
 msgstr "Argentina tiene que ser el país de origen."
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:543
-#: includes/class-wc-kshippingargentina-shipping.php:613
+#: includes/class-wc-kshippingargentina-shipping.php:561
+#: includes/class-wc-kshippingargentina-shipping.php:631
 #, php-format
 msgid "Product #%s is missing dimensions."
 msgstr "Al producto #%s le faltan dimensiones."
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:555
-#: includes/class-wc-kshippingargentina-shipping.php:625
+#: includes/class-wc-kshippingargentina-shipping.php:573
+#: includes/class-wc-kshippingargentina-shipping.php:643
 #, php-format
 msgid "Product #%s is missing dimensions. Aborting."
 msgstr "El producto # %s carece de dimensiones. Abortar."
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:712
+#: includes/class-wc-kshippingargentina-shipping.php:721
 #, php-format
 msgid "Product #%s is virtual. Skipping."
 msgstr "El producto #%s es virtual. Saltar."
 
 #. translators: Min and max days of delay.
-#: includes/class-wc-kshippingargentina-shipping.php:882
+#: includes/class-wc-kshippingargentina-shipping.php:891
 #, php-format
 msgid "%1$d to %2$d days"
 msgstr "%1$d a %2$d días"
 
-#: includes/class-wc-kshippingargentina-shipping.php:919
+#: includes/class-wc-kshippingargentina-shipping.php:928
 msgid "- Free Shipping"
 msgstr "- Envío gratuito"
 
 #. translators: ISO Currency.
-#: includes/class-wc-kshippingargentina-shipping.php:936
+#: includes/class-wc-kshippingargentina-shipping.php:945
 msgid "Argentina Shipping"
 msgstr "Envíos en Argentina"
 
-#: includes/class-wc-kshippingargentina-shipping.php:936
+#: includes/class-wc-kshippingargentina-shipping.php:945
 #, php-format
 msgid ""
 "You currency <code>%s</code> can not be supported. Please use ARS or USD."
 msgstr "Su moneda <code>%s</code> no puede ser compatible. Utilice ARS o USD."
 
-#: includes/class-wc-shipping-gateway-kshippingargentina.php:61
-msgid "Select all"
-msgstr "Seleccionar todos"
-
-#: includes/class-wc-shipping-gateway-kshippingargentina.php:61
-msgid "Select none"
-msgstr "Selecciona ninguno"
-
-#: includes/data-settings-kshippingargentina-manager.php:20
+#: includes/data-settings-manager.php:23
 msgid "Enable / Disable"
 msgstr "Activar / Desactivar"
 
-#: includes/data-settings-kshippingargentina-manager.php:22
+#: includes/data-settings-manager.php:25
 msgid "Enable Shipping Argentina"
 msgstr "Activar Envíos para Argentina"
 
-#: includes/data-settings-kshippingargentina-manager.php:26
+#: includes/data-settings-manager.php:29
 msgid "X-RapidAPI-Host"
 msgstr "X-RapidAPI-Host"
 
-#: includes/data-settings-kshippingargentina-manager.php:28
-#: includes/data-settings-kshippingargentina-manager.php:34
+#: includes/data-settings-manager.php:31 includes/data-settings-manager.php:37
 msgid "Get this in https://rapidapi.com/kijamve/api/argentina-shipping-cost"
 msgstr "Obtén esto en https://rapidapi.com/kijamve/api/argentina-shipping-cost"
 
-#: includes/data-settings-kshippingargentina-manager.php:32
+#: includes/data-settings-manager.php:35
 msgid "X-RapidAPI-Key"
 msgstr "X-RapidAPI-Key"
 
-#: includes/data-settings-kshippingargentina-manager.php:38
+#: includes/data-settings-manager.php:41
 msgid "Andreani API Username (Optional)"
 msgstr "Nombre de usuario de la API de Andreani (opcional)"
 
-#: includes/data-settings-kshippingargentina-manager.php:40
-#: includes/data-settings-kshippingargentina-manager.php:52
-#: includes/data-settings-kshippingargentina-manager.php:58
+#: includes/data-settings-manager.php:43 includes/data-settings-manager.php:55
+#: includes/data-settings-manager.php:61
 msgid "Optional, only for generation of label"
 msgstr "Opcional, solo para la generación de etiquetas"
 
-#: includes/data-settings-kshippingargentina-manager.php:44
+#: includes/data-settings-manager.php:47
 msgid "Andreani API Password (Optional)"
 msgstr "Contraseña de la API de Andreani (opcional)"
 
-#: includes/data-settings-kshippingargentina-manager.php:46
+#: includes/data-settings-manager.php:49
 msgid "Only for generation of label"
 msgstr "Solo para generación de etiqueta"
 
-#: includes/data-settings-kshippingargentina-manager.php:50
+#: includes/data-settings-manager.php:53
 msgid "OCA e-Pack API Username (Optional)"
 msgstr "Nombre de usuario de la API de OCA e-Pack (opcional)"
 
-#: includes/data-settings-kshippingargentina-manager.php:56
+#: includes/data-settings-manager.php:59
 msgid "OCA e-Pack API Password (Optional)"
 msgstr "Contraseña de la API de OCA e-Pack (opcional)"
 
-#: includes/data-settings-kshippingargentina-manager.php:62
+#: includes/data-settings-manager.php:65
+msgid "OCA collections time slot"
+msgstr "Intervalo de tiempo de retiros de paquetería en tienda para OCA"
+
+#: includes/data-settings-manager.php:69
+msgid "8:00 - 17:00"
+msgstr "8:00 - 17:00"
+
+#: includes/data-settings-manager.php:70
+msgid "8:00 - 12:00"
+msgstr "8:00 - 12:00"
+
+#: includes/data-settings-manager.php:71
+msgid "14:00 - 17:00"
+msgstr "14:00 - 17:00"
+
+#: includes/data-settings-manager.php:76
 msgid "Sender Post Code"
 msgstr "Código postal del remitente"
 
+#: includes/data-settings-manager.php:82
+msgid "State of sender"
+msgstr "Provincia del remitente"
+
+#: includes/data-settings-manager.php:89
+msgid "City of sender"
+msgstr "Ciudad del remitente"
+
+#: includes/data-settings-manager.php:96
+msgid "Street of sender"
+msgstr "Calle del remitente"
+
+#: includes/data-settings-manager.php:103
+msgid "Number of sender"
+msgstr "Altura de remitentes"
+
+#: includes/data-settings-manager.php:110
+msgid "Floor of sender"
+msgstr "Piso del remitente"
+
+#: includes/data-settings-manager.php:117
+msgid "Apartment of sender"
+msgstr "Apartamento"
+
+#: includes/data-settings-manager.php:124
+msgid "Detalle (Entre-calles, etc)"
+msgstr "Detalle (Entre-calles, etc)"
+
+#: includes/data-settings-manager.php:131
+msgid "Full name of sender (Or company name)"
+msgstr "Nombre completo del remitente (o nombre de la empresa)"
+
+#: includes/data-settings-manager.php:138
+msgid "DNI type of sender (Only for Andreani)"
+msgstr "Tipo de remitente DNI (solo para Andreani)"
+
+#: includes/data-settings-manager.php:142
+msgid "DNI"
+msgstr "DNI"
+
+#: includes/data-settings-manager.php:143
+msgid "CUIT"
+msgstr "CUIT"
+
+#: includes/data-settings-manager.php:144
+msgid "CUIL"
+msgstr "CUIL"
+
+#: includes/data-settings-manager.php:148
+msgid "DNI of sender"
+msgstr "DNI del remitente"
+
+#: includes/data-settings-manager.php:155
+msgid "Phone of sender"
+msgstr "Teléfono del remitente"
+
+#: includes/data-settings-manager.php:162
+msgid "E-Mail of sender"
+msgstr "Correo electrónico del remitente"
+
 #. translators: %s Unit weight.
-#: includes/data-settings-kshippingargentina-manager.php:69
+#: includes/data-settings-manager.php:170
 #, php-format
 msgid "Weight default product (In %s)"
 msgstr "Peso predeterminado del producto (en %s)"
 
-#: includes/data-settings-kshippingargentina-manager.php:71
+#: includes/data-settings-manager.php:172
 msgid "Only numbers value, for example: 0.1"
 msgstr "Solo valor numérico, por ejemplo: 0.1"
 
-#: includes/data-settings-kshippingargentina-manager.php:72
-msgid "0.1"
-msgstr "0.1"
-
 #. translators: %s Unit dimension.
-#: includes/data-settings-kshippingargentina-manager.php:77
+#: includes/data-settings-manager.php:178
 #, php-format
 msgid "Width default product (In %s)"
 msgstr "Anchura predeterminada del producto (en %s)"
 
-#: includes/data-settings-kshippingargentina-manager.php:79
-#: includes/data-settings-kshippingargentina-manager.php:87
-#: includes/data-settings-kshippingargentina-manager.php:95
+#: includes/data-settings-manager.php:180
+#: includes/data-settings-manager.php:188
+#: includes/data-settings-manager.php:196
 msgid "Only numbers value, for example: 10"
 msgstr "Solo valor numérico, por ejemplo: 10"
 
-#: includes/data-settings-kshippingargentina-manager.php:80
-#: includes/data-settings-kshippingargentina-manager.php:88
-#: includes/data-settings-kshippingargentina-manager.php:96
-msgid "15"
-msgstr "15"
-
 #. translators: %s Unit dimension.
-#: includes/data-settings-kshippingargentina-manager.php:85
+#: includes/data-settings-manager.php:186
 #, php-format
 msgid "Height default product (In %s)"
 msgstr "Altura predeterminada del producto (en %s)"
 
 #. translators: %s Unit dimension.
-#: includes/data-settings-kshippingargentina-manager.php:93
+#: includes/data-settings-manager.php:194
 #, php-format
 msgid "Depth default product (In %s)"
 msgstr "Profundidad predeterminada del producto (en %s)"
 
-#: includes/data-settings-kshippingargentina-manager.php:100
+#: includes/data-settings-manager.php:201
 msgid "Calculation mode"
 msgstr "Modo de cálculo"
 
-#: includes/data-settings-kshippingargentina-manager.php:105
+#: includes/data-settings-manager.php:206
 msgid "Use width and height longest of all. Adding depth of each product."
 msgstr ""
 "Use el ancho y el alto más largos de todos. Sumando la profundidad de cada "
 "producto."
 
-#: includes/data-settings-kshippingargentina-manager.php:106
+#: includes/data-settings-manager.php:207
 msgid "Use the longer sides of each product."
 msgstr "Utilice los lados más largos de cada producto."
 
-#: includes/data-settings-kshippingargentina-manager.php:110
+#: includes/data-settings-manager.php:211
 msgid "Package type"
 msgstr "Tipo de paquete"
 
-#: includes/data-settings-kshippingargentina-manager.php:115
+#: includes/data-settings-manager.php:216
 msgid "One package"
 msgstr "Un paquete"
 
-#: includes/data-settings-kshippingargentina-manager.php:116
+#: includes/data-settings-manager.php:217
 msgid "One package by product (One package for all same products)"
 msgstr ""
 "Un paquete por producto (Un paquete para todas las variaciones de un "
 "producto)"
 
-#: includes/data-settings-kshippingargentina-manager.php:117
+#: includes/data-settings-manager.php:218
 msgid "One package by unit"
 msgstr "Un paquete por unidad"
 
 #. translators: %1$s currency origin -  %2$s currency destination.
-#: includes/data-settings-kshippingargentina-manager.php:122
+#: includes/data-settings-manager.php:223
 #, php-format
 msgid "Enable %1$s to %2$s conversion"
 msgstr "Habilitar conversión de %1$s a %2$s"
 
-#: includes/data-settings-kshippingargentina-manager.php:124
+#: includes/data-settings-manager.php:225
 msgid "Activate the plugin by converting the amounts to the gateway currency"
 msgstr ""
 "Active el plugin convirtiendo el precio de la moneda de la tienda a la del "
 "plugin"
 
-#: includes/data-settings-kshippingargentina-manager.php:127
+#: includes/data-settings-manager.php:228
 msgid "Disable module"
 msgstr "Desactivar Modulo"
 
-#: includes/data-settings-kshippingargentina-manager.php:128
+#: includes/data-settings-manager.php:229
 msgid "Use the official conversion rate"
 msgstr "Usar tasa oficial"
 
-#: includes/data-settings-kshippingargentina-manager.php:129
-#: includes/data-settings-kshippingargentina-manager.php:136
+#: includes/data-settings-manager.php:230
+#: includes/data-settings-manager.php:237
 msgid "Use a manual conversion rate"
 msgstr "Usar una tasa manual"
 
 #. translators: %1$s currency origin -  %2$s currency destination.
-#: includes/data-settings-kshippingargentina-manager.php:134
+#: includes/data-settings-manager.php:235
 #, php-format
 msgid "Convert using manual rate from %1$s to %2$s"
 msgstr "Convierta usando la tasa manual de  %1$s a %2$s"
 
-#: includes/data-settings-kshippingargentina-manager.php:140
+#: includes/data-settings-manager.php:241
 msgid "Meta-key for DNI"
 msgstr "Meta-clave para DNI"
 
-#: includes/data-settings-kshippingargentina-manager.php:142
-#: includes/data-settings-kshippingargentina-manager.php:149
-#: includes/data-settings-kshippingargentina-manager.php:156
+#: includes/data-settings-manager.php:243
+#: includes/data-settings-manager.php:250
+#: includes/data-settings-manager.php:257
 msgid "If you don't specify it, the plugin adds it to the checkout form."
 msgstr "Si no lo especifica, el complemento lo agrega al formulario de pago."
 
-#: includes/data-settings-kshippingargentina-manager.php:147
+#: includes/data-settings-manager.php:248
 msgid "Meta-key for Phone"
 msgstr "Meta-clave para teléfono"
 
-#: includes/data-settings-kshippingargentina-manager.php:154
+#: includes/data-settings-manager.php:255
 msgid "Meta-key for Altura (Address)"
 msgstr "Meta-clave para Altura (Dirección)"
 
-#: includes/data-settings-kshippingargentina-manager.php:161
+#: includes/data-settings-manager.php:262
 msgid "Debug"
 msgstr "Debug"
 
-#: includes/data-settings-kshippingargentina-manager.php:163
+#: includes/data-settings-manager.php:264
 msgid "Enable log"
 msgstr "Activar Log"
 
-#: includes/data-settings-kshippingargentina-manager.php:165
+#: includes/data-settings-manager.php:266
 msgid "See in WooCommerce logs"
 msgstr "Ver en los registros de WooCommerce"
 
@@ -443,10 +593,6 @@ msgstr "Seleccione su compañía de envío."
 #: includes/data-settings-shipping.php:45
 msgid "OCA e-Pack"
 msgstr "OCA e-Pack"
-
-#: includes/data-settings-shipping.php:46
-msgid "Andreani"
-msgstr "Andreani"
 
 #: includes/data-settings-shipping.php:51
 msgid "Type"
@@ -499,10 +645,18 @@ msgid "Enable Insurance"
 msgstr "Habilitar seguro"
 
 #: includes/data-settings-shipping.php:95
+msgid ""
+"Does this carrier pick up the package at your store? (Only for Andreani/OCA "
+"e-Pack)"
+msgstr ""
+"¿Este transportista recoge el paquete en su tienda? (Solo para Andreani/OCA "
+"e-Pack)"
+
+#: includes/data-settings-shipping.php:99
 msgid "Insurance Percentage (Only for Correo Argentino)"
 msgstr "Porcentaje de seguro (sólo para Correo Argentino)"
 
-#: includes/data-settings-shipping.php:97
+#: includes/data-settings-shipping.php:101
 msgid ""
 "If the shipments are Insured, enter the Insurance Percentage here (Only for "
 "Correo Argentino)"
@@ -510,39 +664,39 @@ msgstr ""
 "Si los envíos están asegurados, ingrese aquí el Porcentaje de Seguro (Solo "
 "para Correo Argentino)"
 
-#: includes/data-settings-shipping.php:102
+#: includes/data-settings-shipping.php:106
 msgid "Delivery time (If the service does not provide it)"
 msgstr "Plazo de entrega (Si el servicio no lo proporciona)"
 
-#: includes/data-settings-shipping.php:104
+#: includes/data-settings-shipping.php:108
 msgid "Enter the approximate delivery time of this transport"
 msgstr "Introduce el plazo de entrega aproximado de este transporte"
 
-#: includes/data-settings-shipping.php:105
+#: includes/data-settings-shipping.php:109
 msgid "4 - 7 days"
 msgstr "4 a 7 días"
 
-#: includes/data-settings-shipping.php:109
+#: includes/data-settings-shipping.php:113
 msgid "Velocity"
 msgstr "Velocidad"
 
-#: includes/data-settings-shipping.php:111
+#: includes/data-settings-shipping.php:115
 msgid "Select the velocity (Only for Correo Argentino)"
 msgstr "Seleccione la velocidad (Sólo para Correo Argentino)"
 
-#: includes/data-settings-shipping.php:114
+#: includes/data-settings-shipping.php:118
 msgid "Classic"
 msgstr "Clásico"
 
-#: includes/data-settings-shipping.php:115
+#: includes/data-settings-shipping.php:119
 msgid "Express"
 msgstr "Express"
 
-#: includes/data-settings-shipping.php:120
+#: includes/data-settings-shipping.php:124
 msgid "Fiscal Type"
 msgstr "Tipo de precio fiscal"
 
-#: includes/data-settings-shipping.php:122
+#: includes/data-settings-shipping.php:126
 msgid ""
 "Select the type of fiscal price that will be charged (Only for Correo "
 "Argentino)"
@@ -550,55 +704,38 @@ msgstr ""
 "Seleccione el tipo de precio fiscal que se cobrará (Sólo para Correo "
 "Argentino)"
 
-#: includes/data-settings-shipping.php:125
+#: includes/data-settings-shipping.php:129
 msgid "Responsable Inscrito (Only available with Correo Argentino)"
 msgstr "Responsable Inscrito (Sólo disponible con Correo Argentino)"
 
-#: includes/data-settings-shipping.php:126
+#: includes/data-settings-shipping.php:130
 msgid "Monotributista y Consumidor Final"
 msgstr "Monotributista y Consumidor Final"
 
-#: includes/data-settings-shipping.php:131
+#: includes/data-settings-shipping.php:135
 msgid "Add a fee value of shipping cost for all orders"
 msgstr "Agregue un valor de tarifa de costo de envío para todos los pedidos"
 
-#: includes/data-settings-shipping.php:133
+#: includes/data-settings-shipping.php:137
 msgid "Add this fee cost to courier amount."
 msgstr "Agregue este costo de tarifa al monto del servicio de mensajería."
 
-#: includes/data-settings-shipping.php:134
-#: includes/data-settings-shipping.php:141
-#: includes/data-settings-shipping.php:148
-#: includes/data-settings-shipping.php:155
-#: includes/data-settings-shipping.php:174
-#: includes/data-settings-shipping.php:181
-#: includes/data-settings-shipping.php:189
-#: includes/data-settings-shipping.php:197
-#: includes/data-settings-shipping.php:204
-#: includes/data-settings-shipping.php:211
-#: includes/data-settings-shipping.php:218
-#: includes/data-settings-shipping.php:225
-#: includes/data-settings-shipping.php:259
-#: includes/data-settings-shipping.php:268
-msgid "0"
-msgstr "0"
-
-#: includes/data-settings-shipping.php:138
+#: includes/data-settings-shipping.php:142
 msgid "Add a fee percent of shipping cost for all orders"
 msgstr ""
 "Agregar un porcentaje de tarifa del costo de envío para todos los pedidos"
 
-#: includes/data-settings-shipping.php:140
+#: includes/data-settings-shipping.php:144
 msgid "Add this fee percent cost to courier amount."
 msgstr ""
 "Agregue este costo porcentual a la tarifa del monto del servicio de "
 "mensajería."
 
-#: includes/data-settings-shipping.php:145
+#: includes/data-settings-shipping.php:149
 msgid "Minimum value of shipping cost for all orders"
 msgstr "Valor mínimo de los costos de envío para todos los pedidos"
 
-#: includes/data-settings-shipping.php:147
+#: includes/data-settings-shipping.php:151
 msgid ""
 "If the cost of courier is less than the amount established here, the "
 "customer will only be charged this amount."
@@ -606,11 +743,11 @@ msgstr ""
 "Si el coste del servicio de mensajería es inferior al importe aquí "
 "establecido, sólo se cobrará al cliente este importe."
 
-#: includes/data-settings-shipping.php:152
+#: includes/data-settings-shipping.php:156
 msgid "Maximum value of shipping cost for all orders"
 msgstr "Valor máximo de los gastos de envío para todos los pedidos"
 
-#: includes/data-settings-shipping.php:154
+#: includes/data-settings-shipping.php:158
 msgid ""
 "If the cost of courier is greater than the amount established here, the "
 "customer will only be charged this amount."
@@ -618,11 +755,11 @@ msgstr ""
 "Si el coste de mensajería es superior a la cantidad aquí establecida, solo "
 "se le cobrará al cliente esta cantidad."
 
-#: includes/data-settings-shipping.php:159
+#: includes/data-settings-shipping.php:163
 msgid "Exclude if exists any product from the following categories"
 msgstr "Excluir si existe algún producto de las siguientes categorías"
 
-#: includes/data-settings-shipping.php:161
+#: includes/data-settings-shipping.php:165
 msgid ""
 "This option allows you to disable if the order contains any products from "
 "these selected categories."
@@ -630,30 +767,30 @@ msgstr ""
 "Esta opción le permite desactivar si el pedido contiene algún producto de "
 "estas categorías seleccionadas."
 
-#: includes/data-settings-shipping.php:165
+#: includes/data-settings-shipping.php:169
 msgid "Exclude for following States"
 msgstr "Excluir para los siguientes estados"
 
-#: includes/data-settings-shipping.php:167
+#: includes/data-settings-shipping.php:171
 msgid "This option allows you to deactivate for this states."
 msgstr "Esta opción le permite desactivar para estos estados."
 
-#: includes/data-settings-shipping.php:171
+#: includes/data-settings-shipping.php:175
 msgid "Minimum amount of Cart to activate courier"
 msgstr "Costo mínima de carrito para activar el servicio de mensajería"
 
-#: includes/data-settings-shipping.php:173
+#: includes/data-settings-shipping.php:177
 msgid ""
 "Deactivate if order amount is less to this value. (leave in 0 for ignore)"
 msgstr ""
 "Desactive si el importe del pedido es inferior a este valor. (dejar en 0 "
 "para ignorar)"
 
-#: includes/data-settings-shipping.php:178
+#: includes/data-settings-shipping.php:182
 msgid "Maximum amount of Cart to activate courier"
 msgstr "Costo máxima de carrito para activar el servicio de mensajería"
 
-#: includes/data-settings-shipping.php:180
+#: includes/data-settings-shipping.php:184
 msgid ""
 "Deactivate if order amount is greater to this value. (leave in 0 for ignore)"
 msgstr ""
@@ -661,12 +798,12 @@ msgstr ""
 "ignorar)"
 
 #. translators: %s Unit dimension.
-#: includes/data-settings-shipping.php:186
+#: includes/data-settings-shipping.php:190
 #, php-format
 msgid "Minimum weight of Cart to activate courier (In %s)"
 msgstr "Peso mínimo del carrito para activar el servicio de mensajería (en %s)"
 
-#: includes/data-settings-shipping.php:188
+#: includes/data-settings-shipping.php:192
 msgid ""
 "Deactivate if weight of order is less to this value. (leave in 0 for ignore)"
 msgstr ""
@@ -674,12 +811,12 @@ msgstr ""
 "ignorar)"
 
 #. translators: %s Unit dimension.
-#: includes/data-settings-shipping.php:194
+#: includes/data-settings-shipping.php:198
 #, php-format
 msgid "Maximum weight of Cart to activate courier (In %s)"
 msgstr "Peso máximo del carrito para activar el servicio de mensajería (en %s)"
 
-#: includes/data-settings-shipping.php:196
+#: includes/data-settings-shipping.php:200
 msgid ""
 "Deactivate if weight of order is greater to this value. (leave in 0 for "
 "ignore)"
@@ -687,25 +824,25 @@ msgstr ""
 "Desactive si el peso del pedido es mayor a este valor. (dejar en 0 para "
 "ignorar)"
 
-#: includes/data-settings-shipping.php:201
+#: includes/data-settings-shipping.php:205
 msgid "Minimum amount of Cart to activate the Discount Shipping"
 msgstr "Costo mínimo de carrito para activar el envío con descuento"
 
-#: includes/data-settings-shipping.php:203
-#: includes/data-settings-shipping.php:210
+#: includes/data-settings-shipping.php:207
+#: includes/data-settings-shipping.php:214
 msgid "This option allows to apply a discount in the cost of shipping."
 msgstr "Esta opción permite aplicar un descuento en el coste del envío."
 
-#: includes/data-settings-shipping.php:208
+#: includes/data-settings-shipping.php:212
 msgid "Minimum weight of order to activate the Discount Shipping"
 msgstr "Peso mínimo del pedido para activar el Descuento de Envío"
 
-#: includes/data-settings-shipping.php:215
+#: includes/data-settings-shipping.php:219
 msgid "Percent of discount in the shipping cost"
 msgstr "Porcentaje de descuento en el costo de envío"
 
-#: includes/data-settings-shipping.php:217
-#: includes/data-settings-shipping.php:224
+#: includes/data-settings-shipping.php:221
+#: includes/data-settings-shipping.php:228
 msgid ""
 "This option works only if the shipping cost (and weight) of courier is "
 "greater of \"Minimum amount (and weight) of Cart to activate the Discount "
@@ -715,37 +852,37 @@ msgstr ""
 "mensajería es mayor de \"Costo mínimo (y peso) de carrito para activar el "
 "envío con descuento\". Deje en 0 para desactivar esta opción."
 
-#: includes/data-settings-shipping.php:222
+#: includes/data-settings-shipping.php:226
 msgid "Amount of discount in the shipping cost"
 msgstr "Importe del descuento en el coste del envío"
 
-#: includes/data-settings-shipping.php:229
+#: includes/data-settings-shipping.php:233
 msgid "Hide estimated delivery time label"
 msgstr "Ocultar etiqueta de tiempo estimado de entrega"
 
-#: includes/data-settings-shipping.php:231
+#: includes/data-settings-shipping.php:235
 msgid "Hide delay label"
 msgstr "Ocultar etiqueta de tiempo estimado de entrega"
 
-#: includes/data-settings-shipping.php:235
+#: includes/data-settings-shipping.php:239
 msgid "Enable Shipping Argentina for Free Shipping"
 msgstr "Habilite este transportista Argentino para envío gratuito"
 
-#: includes/data-settings-shipping.php:237
+#: includes/data-settings-shipping.php:241
 msgid "Activate this method for Free Shipping"
 msgstr "Active este método para el envío gratuito"
 
-#: includes/data-settings-shipping.php:241
+#: includes/data-settings-shipping.php:245
 msgid "Free Shipping Mode"
 msgstr "Modo de envío gratuito"
 
-#: includes/data-settings-shipping.php:243
-#: includes/data-settings-shipping.php:257
-#: includes/data-settings-shipping.php:266
+#: includes/data-settings-shipping.php:247
+#: includes/data-settings-shipping.php:261
+#: includes/data-settings-shipping.php:270
 msgid "This option works only if \"Free Shipping\" is activated."
 msgstr "Esta opción solo funciona si está activado \"Envío gratuito\"."
 
-#: includes/data-settings-shipping.php:247
+#: includes/data-settings-shipping.php:251
 msgid ""
 "Use \"Free Shipping\" if a free shipping coupon is applied (The following "
 "criteria are ignored)"
@@ -753,7 +890,7 @@ msgstr ""
 "Utilice \"Envío gratuito\" si se aplica un cupón de envío gratuito (se "
 "ignoran los siguientes criterios)"
 
-#: includes/data-settings-shipping.php:248
+#: includes/data-settings-shipping.php:252
 msgid ""
 "Use \"Free Shipping\" if there is a free shipping coupon applied and if the "
 "following criteria are met"
@@ -761,7 +898,7 @@ msgstr ""
 "Use \"Envío gratis\" si se aplica un cupón de envío gratuito y si se cumplen "
 "los siguientes criterios"
 
-#: includes/data-settings-shipping.php:249
+#: includes/data-settings-shipping.php:253
 msgid ""
 "Use \"Free Shipping\" if there is a free shipping coupon applied or if the "
 "following criteria are met"
@@ -769,7 +906,7 @@ msgstr ""
 "Use \"Envío gratis\" si se aplica un cupón de envío gratuito o si se cumplen "
 "los siguientes criterios"
 
-#: includes/data-settings-shipping.php:250
+#: includes/data-settings-shipping.php:254
 msgid ""
 "Use \"Free Shipping\" automatically only if you meet any of the following "
 "criteria (applied coupons are ignored)"
@@ -777,12 +914,12 @@ msgstr ""
 "Use \"Envío gratuito\" automáticamente solo si cumple con alguno de los "
 "siguientes criterios (se ignoran los cupones aplicados)"
 
-#: includes/data-settings-shipping.php:255
+#: includes/data-settings-shipping.php:259
 msgid "Cart minimum amount to activate the Free Shipping"
 msgstr "Costo mínimo del carrito para activar el envío gratuito"
 
-#: includes/data-settings-shipping.php:258
-#: includes/data-settings-shipping.php:267
+#: includes/data-settings-shipping.php:262
+#: includes/data-settings-shipping.php:271
 msgid ""
 "This option works only if you have enabled courier for Free Shipping. Leave "
 "to 0 to apply free shipping all orders."
@@ -791,19 +928,149 @@ msgstr ""
 "envío gratuito. Deje a 0 para aplicar el envío gratuito de todos los pedidos."
 
 #. translators: %s Unit dimension.
-#: includes/data-settings-shipping.php:264
+#: includes/data-settings-shipping.php:268
 #, php-format
 msgid "Cart minimum weight to activate the Free Shipping (In %s)"
 msgstr "Peso mínimo del carrito para activar el envío gratuito (en %s)"
 
-#: includes/data-settings-shipping.php:272
+#: includes/data-settings-shipping.php:276
 msgid "Free shipping for the following States (Leave empty for all)"
 msgstr "Envío gratuito para los siguientes estados (dejar vacío para todos)"
 
-#: includes/data-settings-shipping.php:274
+#: includes/data-settings-shipping.php:278
 msgid "This option allows free shipping by courier in some states."
 msgstr ""
 "Esta opción permite el envío gratuito por mensajería en algunos estados."
+
+#: templates/order.tpl.php:26
+msgid ""
+"Assign tracking codes manually, if there is more than one, separate them "
+"with the comma character (,)"
+msgstr ""
+"Asigne códigos de seguimiento manualmente, si hay más de uno, sepárelos con "
+"el carácter de coma (,)"
+
+#: templates/order.tpl.php:29 templates/order.tpl.php:65
+#: templates/order.tpl.php:258
+msgid "Loading"
+msgstr "Cargando"
+
+#: templates/order.tpl.php:30 templates/order.tpl.php:32
+msgid "Save tracking codes"
+msgstr "Guardar códigos de seguimiento"
+
+#: templates/order.tpl.php:41
+msgid "Tracking Code"
+msgstr "Código de seguimiento"
+
+#: templates/order.tpl.php:42
+msgid "Label"
+msgstr "Etiqueta"
+
+#: templates/order.tpl.php:53
+msgid ""
+"Failed to download the PDF of the generated tracking code, activate the "
+"module log for more details or contact your service provider."
+msgstr ""
+"Error al descargar el PDF del código de seguimiento generado, activar el "
+"registro del módulo para obtener más detalles o ponerse en contacto con su "
+"proveedor de servicios."
+
+#: templates/order.tpl.php:66 templates/order.tpl.php:69
+msgid "Discard labels and generate new ones"
+msgstr "Descartar etiquetas y generar otras nuevas"
+
+#: templates/order.tpl.php:68
+msgid ""
+"This action is IRREVERSIBLE, are you sure you want to DELETE the current "
+"labels?"
+msgstr ""
+"Esta acción es IRREVERSIBLE, ¿está seguro de que desea ELIMINAR las "
+"etiquetas actuales?"
+
+#: templates/order.tpl.php:76
+msgid "Customer Address"
+msgstr "Dirección del cliente"
+
+#: templates/order.tpl.php:78
+msgid "Full name"
+msgstr "Nombre completo"
+
+#: templates/order.tpl.php:82
+msgid "First name"
+msgstr "Nombre"
+
+#: templates/order.tpl.php:86
+msgid "Last name"
+msgstr "Apellido"
+
+#: templates/order.tpl.php:108
+msgid "State"
+msgstr "Estado"
+
+#: templates/order.tpl.php:122
+msgid "City"
+msgstr "Ciudad"
+
+#: templates/order.tpl.php:126
+msgid "Postcode"
+msgstr "Código postal"
+
+#: templates/order.tpl.php:158
+msgid "Other Phone"
+msgstr "Otro Teléfono"
+
+#: templates/order.tpl.php:162
+msgid "E-mail"
+msgstr "E-mail"
+
+#: templates/order.tpl.php:167
+msgid "Carrier Information"
+msgstr "Información del transportista"
+
+#: templates/order.tpl.php:170
+msgid "Origin Postcode"
+msgstr "Código postal de origen"
+
+#: templates/order.tpl.php:174
+msgid "Origin Office"
+msgstr "Entrega en sucursal"
+
+#: templates/order.tpl.php:191
+msgid "Destination Office"
+msgstr "Entrega en sucursal"
+
+#: templates/order.tpl.php:208
+msgid "Boxes"
+msgstr "Bultos"
+
+#: templates/order.tpl.php:211 templates/order.tpl.php:239
+msgid "Remove"
+msgstr "Eliminar"
+
+#: templates/order.tpl.php:216
+msgid "Box"
+msgstr "Caja"
+
+#: templates/order.tpl.php:218
+msgid "Dimensions (In CM)"
+msgstr "Dimensiones (en CM)"
+
+#: templates/order.tpl.php:225
+msgid "Weight (In KG)"
+msgstr "Peso (en KG)"
+
+#: templates/order.tpl.php:229
+msgid "Contents"
+msgstr "Contenidos"
+
+#: templates/order.tpl.php:233
+msgid "Total Cost (In ARS)"
+msgstr "Costo total (en ARS)"
+
+#: templates/order.tpl.php:250
+msgid "Add new box"
+msgstr "Agregar nuevo bulto"
 
 #. Plugin Name of the plugin/theme
 #. Description of the plugin/theme
@@ -815,17 +1082,78 @@ msgid "http://www.kijam.com/"
 msgstr "http://www.kijam.com/"
 
 #. Author of the plugin/theme
-msgid "Kijam Lopez"
+msgid "Kijam López"
 msgstr "Kijam López"
 
 #. Author URI of the plugin/theme
-msgid "http://kijam.com/"
-msgstr "https://kijam.com/"
+msgid "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
+msgstr "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
 
 #, fuzzy
-#~| msgid "Shipping for Argentina"
-#~ msgid "Shipping Argentina"
-#~ msgstr "Envíos para Argentina"
+#~ msgid "Debe seleccionar al menos una orden"
+#~ msgstr "Debe seleccionar al menos una orden"
+
+#~ msgid "Tipo de Identificación"
+#~ msgstr "Tipo de Identificación"
+
+#~ msgid "Número de Identificación"
+#~ msgstr "Número de Identificación"
+
+#~ msgid "Código de Área del Teléfono Móvil"
+#~ msgstr "Código de Área del Teléfono Móvil"
+
+#~ msgid "Teléfono Móvil (Sin Código de Área)"
+#~ msgstr "Teléfono Móvil (Sin Código de Área)"
+
+#~ msgid "Altura (Ingresar solo números)"
+#~ msgstr "Altura (Ingresar solo números)"
+
+#~ msgid "Piso"
+#~ msgstr "Piso"
+
+#~ msgid "Calle"
+#~ msgstr "Calle"
+
+#~ msgid "Nombre de la Calle"
+#~ msgstr "Nombre de la Calle"
+
+#~ msgid "días"
+#~ msgstr "días"
+
+#~ msgid "Su carro de compras esta vacio"
+#~ msgstr "Su carro de compras esta vacio"
+
+#~ msgid "No se encontraron transportistas"
+#~ msgstr "No se encontraron transportistas"
+
+#~ msgid "Error en el servidor"
+#~ msgstr "Error en el servidor"
+
+#, php-format
+#~ msgid "Oficina: %1$s"
+#~ msgstr "Oficina: %1$s"
+
+#, php-format
+#~ msgid "Oficina %1$s: %2$s - %3$s (%4$s / %5$s)"
+#~ msgstr "Oficina %1$s: %2$s - %3$s (%4$s / %5$s)"
+
+#~ msgid "Select all"
+#~ msgstr "Seleccionar todos"
+
+#~ msgid "Select none"
+#~ msgstr "Selecciona ninguno"
+
+#~ msgid "0.1"
+#~ msgstr "0.1"
+
+#~ msgid "15"
+#~ msgstr "15"
+
+#~ msgid "0"
+#~ msgstr "0"
+
+#~ msgid "http://kijam.com/"
+#~ msgstr "https://kijam.com/"
 
 #~ msgid "Enable Correo Argentino"
 #~ msgstr "Habilitar Correo Argentino"

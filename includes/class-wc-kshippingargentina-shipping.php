@@ -268,8 +268,8 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		public function __construct( $instance_id = 0 ) {
 			$this->id                 = 'kshippingargentina-shipping';
 			$this->instance_id        = absint( $instance_id );
-			$this->method_title       = __( 'Correo Argentino/Andreani/OCA e-Pack', 'woocommerce-mercadoenvios' );
-			$this->method_description = __( 'Use a shipping company from Argentina in this area', 'woocommerce-mercadoenvios' );
+			$this->method_title       = __( 'Correo Argentino/Andreani/OCA e-Pack', 'wc-kshippingargentina' );
+			$this->method_description = __( 'Use a shipping company from Argentina in this area', 'wc-kshippingargentina' );
 			$this->supports           = array(
 				'shipping-zones',
 				'instance-settings',
@@ -718,7 +718,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			foreach ( $package['contents'] as $item_id => &$p ) {
 				if ( ! $p['data']->needs_shipping() ) {
 					// translators: %s Product ID.
-					KShippingArgentina_API::debug( sprintf( __( 'Product #%s is virtual. Skipping.', 'woocommerce-mercadoenvios' ), $item_id ), 'error' );
+					KShippingArgentina_API::debug( sprintf( __( 'Product #%s is virtual. Skipping.', 'wc-kshippingargentina' ), $item_id ), 'error' );
 					continue;
 				}
 				$r               = array();
