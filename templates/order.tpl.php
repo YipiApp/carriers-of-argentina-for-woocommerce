@@ -49,7 +49,11 @@ $labels      = get_post_meta( $order->get_id(), 'kshippingargentina_label_file',
 			} else {
 				echo '<td>' . esc_html( $tracking_code ) . '</td>';
 			}
-			echo '<td><a target="_blank" href="' . esc_url( $label['url_path'] ) . '">' . esc_html( $label['file_name'] ) . '</a></td>';
+			if ( ! $label ) {
+				echo '<td>' . esc_html( __( 'Failed to download the PDF of the generated tracking code, activate the module log for more details or contact your service provider.', 'wc-kshippingargentina' ) ) . '</td>';
+			} else {
+				echo '<td><a target="_blank" href="' . esc_url( $label['url_path'] ) . '">' . esc_html( $label['file_name'] ) . '</a></td>';
+			}
 			echo '</tr>';
 		}
 		?>
@@ -71,8 +75,8 @@ $labels      = get_post_meta( $order->get_id(), 'kshippingargentina_label_file',
 		<div class="order_data_column">
 			<strong><?php esc_html_e( 'Customer Address', 'wc-kshippingargentina' ); ?></strong>
 			<p class="form-field form-field-wide">
-				<label for="kshipping_fullname"><?php esc_html_e( 'Full name', 'wc-kshippingargentina' ); ?>:</label>
-				<input type="text" class="kshipping_fullname" name="kshipping[full_name]" id="kshipping_fullname" value="<?php echo esc_html( trim( $first_name . ' ' . $last_name ) ); ?>" />
+				<label for="kshipping_full_name"><?php esc_html_e( 'Full name', 'wc-kshippingargentina' ); ?>:</label>
+				<input type="text" class="kshipping_full_name" name="kshipping[full_name]" id="kshipping_fullname" value="<?php echo esc_html( isset( $full_name ) && ! empty( $full_name ) ? $full_name : trim( $first_name . ' ' . $last_name ) ); ?>" />
 			</p>
 			<p class="form-field form-field-wide">
 				<label for="kshipping_first_name"><?php esc_html_e( 'First name', 'wc-kshippingargentina' ); ?>:</label>
@@ -100,54 +104,48 @@ $labels      = get_post_meta( $order->get_id(), 'kshippingargentina_label_file',
 				<label for="kshipping_vat"><?php esc_html_e( 'Identification number', 'wc-kshippingargentina' ); ?>:</label>
 				<input type="text" class="kshipping_vat" name="kshipping[vat]" id="kshipping_" value="<?php echo esc_html( $vat ); ?>" />
 			</p>
-			<?php
-			if ( ! $shipping->office ) :
-				?>
-				<p class="form-field form-field-wide">
-					<label for="kshipping_state"><?php esc_html_e( 'State', 'wc-kshippingargentina' ); ?>:</label>
-					<select class="kshipping_state" name="kshipping[state]" id="kshipping_state">
-						<?php
-						foreach ( $states as $s_key => $s_name ) {
-							if ( $s_key === $state ) {
-								echo '<option selected value="' . esc_html( $s_key ) . '">' . esc_html( $s_name ) . '</option>';
-							} else {
-								echo '<option value="' . esc_html( $s_key ) . '">' . esc_html( $s_name ) . '</option>';
-							}
+			<p class="form-field form-field-wide">
+				<label for="kshipping_state"><?php esc_html_e( 'State', 'wc-kshippingargentina' ); ?>:</label>
+				<select class="kshipping_state" name="kshipping[state]" id="kshipping_state">
+					<?php
+					foreach ( $states as $s_key => $s_name ) {
+						if ( $s_key === $state ) {
+							echo '<option selected value="' . esc_html( $s_key ) . '">' . esc_html( $s_name ) . '</option>';
+						} else {
+							echo '<option value="' . esc_html( $s_key ) . '">' . esc_html( $s_name ) . '</option>';
 						}
-						?>
-					</select>
-				</p>
-				<p class="form-field form-field-wide">
-					<label for="kshipping_city"><?php esc_html_e( 'City', 'wc-kshippingargentina' ); ?>:</label>
-					<input type="text" class="kshipping_city" name="kshipping[city]" id="kshipping_city" value="<?php echo esc_html( $city ); ?>" />
-				</p>
-				<p class="form-field form-field-wide">
-					<label for="kshipping_city"><?php esc_html_e( 'Postcode', 'wc-kshippingargentina' ); ?>:</label>
-					<input type="text" class="kshipping_postcode" name="kshipping[postcode]" id="kshipping_postcode" value="<?php echo esc_html( $postcode ); ?>" />
-				</p>
-				<p class="form-field form-field-wide">
-					<label for="kshipping_address_1"><?php esc_html_e( 'Street name', 'wc-kshippingargentina' ); ?>:</label>
-					<input type="text" class="kshipping_address_1" name="kshipping[address_1]" id="kshipping_address_1" value="<?php echo esc_html( $address_1 ); ?>" />
-				</p>
-				<p class="form-field form-field-wide">
-					<label for="kshipping_address_2"><?php esc_html_e( 'Detail (Between-streets, etc)', 'wc-kshippingargentina' ); ?>:</label>
-					<input type="text" class="kshipping_address_2" name="kshipping[address_2]" id="kshipping_address_2" value="<?php echo esc_html( $address_2 ); ?>" />
-				</p>
-				<p class="form-field form-field-wide">
-					<label for="kshipping_number"><?php esc_html_e( 'Height (Enter numbers only)', 'wc-kshippingargentina' ); ?>:</label>
-					<input type="text" class="kshipping_number" name="kshipping[number]" id="kshipping_number" value="<?php echo esc_html( $number ); ?>" />
-				</p>
-				<p class="form-field form-field-wide">
-					<label for="kshipping_floor"><?php esc_html_e( 'Floor', 'wc-kshippingargentina' ); ?>:</label>
-					<input type="text" maxlength="3" class="kshipping_floor" name="kshipping[floor]" id="kshipping_floor" value="<?php echo esc_html( $floor ); ?>" />
-				</p>
-				<p class="form-field form-field-wide">
-					<label for="kshipping_apartment"><?php esc_html_e( 'Apartment', 'wc-kshippingargentina' ); ?>:</label>
-					<input type="text" maxlength="3" class="kshipping_apartment" name="kshipping[apartment]" id="kshipping_apartment" value="<?php echo esc_html( $apartment ); ?>" />
-				</p>
-				<?php
-			endif;
-			?>
+					}
+					?>
+				</select>
+			</p>
+			<p class="form-field form-field-wide">
+				<label for="kshipping_city"><?php esc_html_e( 'City', 'wc-kshippingargentina' ); ?>:</label>
+				<input type="text" class="kshipping_city" name="kshipping[city]" id="kshipping_city" value="<?php echo esc_html( $city ); ?>" />
+			</p>
+			<p class="form-field form-field-wide">
+				<label for="kshipping_city"><?php esc_html_e( 'Postcode', 'wc-kshippingargentina' ); ?>:</label>
+				<input type="text" class="kshipping_postcode" name="kshipping[postcode]" id="kshipping_postcode" value="<?php echo esc_html( $postcode ); ?>" />
+			</p>
+			<p class="form-field form-field-wide">
+				<label for="kshipping_address_1"><?php esc_html_e( 'Street name', 'wc-kshippingargentina' ); ?>:</label>
+				<input type="text" class="kshipping_address_1" name="kshipping[address_1]" id="kshipping_address_1" value="<?php echo esc_html( $address_1 ); ?>" />
+			</p>
+			<p class="form-field form-field-wide">
+				<label for="kshipping_address_2"><?php esc_html_e( 'Detail (Between-streets, etc)', 'wc-kshippingargentina' ); ?>:</label>
+				<input type="text" class="kshipping_address_2" name="kshipping[address_2]" id="kshipping_address_2" value="<?php echo esc_html( $address_2 ); ?>" />
+			</p>
+			<p class="form-field form-field-wide">
+				<label for="kshipping_number"><?php esc_html_e( 'Height (Enter numbers only)', 'wc-kshippingargentina' ); ?>:</label>
+				<input type="text" class="kshipping_number" name="kshipping[number]" id="kshipping_number" value="<?php echo esc_html( $number ); ?>" />
+			</p>
+			<p class="form-field form-field-wide">
+				<label for="kshipping_floor"><?php esc_html_e( 'Floor', 'wc-kshippingargentina' ); ?>:</label>
+				<input type="text" maxlength="3" class="kshipping_floor" name="kshipping[floor]" id="kshipping_floor" value="<?php echo esc_html( $floor ); ?>" />
+			</p>
+			<p class="form-field form-field-wide">
+				<label for="kshipping_apartment"><?php esc_html_e( 'Apartment', 'wc-kshippingargentina' ); ?>:</label>
+				<input type="text" maxlength="3" class="kshipping_apartment" name="kshipping[apartment]" id="kshipping_apartment" value="<?php echo esc_html( $apartment ); ?>" />
+			</p>
 			<p class="form-field form-field-wide">
 				<label for="kshipping_prefix_phone"><?php esc_html_e( 'Mobile Phone Area Code', 'wc-kshippingargentina' ); ?>:</label>
 				<input type="text" class="kshipping_prefix_phone" name="kshipping[prefix_phone]" id="kshipping_prefix_phone" value="<?php echo esc_html( $prefix_phone ); ?>" />

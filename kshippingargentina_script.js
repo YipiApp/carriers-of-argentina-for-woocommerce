@@ -9,11 +9,11 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 		for (let i in list) {
 			let o = list[i];
 			let selected = '';
-			if (wc_kshippingargentina_context.office_kshippingargentina == o.iso) {
+			if (wc_kshippingargentina_context.office_kshippingargentina == o.iso + '#' + o.id) {
 				found = true;
 				selected = 'selected';
 			}
-			$('.method_instance_id-'+instance_id+' select').append('<option ' + selected + ' data-map="https://maps.google.com/?q=' + o.lat + ',' + o.lng + '" value="' + o.iso + '">' + o.description + ' - ' + o.address + '</option>');
+			$('.method_instance_id-'+instance_id+' select').append('<option ' + selected + ' data-map="https://maps.google.com/?q=' + o.lat + ',' + o.lng + '" value="' + o.iso + '#' + o.id + '">' + o.description + ' - ' + o.address + '</option>');
 		}
 	});
 }

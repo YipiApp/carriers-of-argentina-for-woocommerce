@@ -76,6 +76,13 @@ add_action(
 			isset( $_POST['kshippingargentina_delete_label_nonce'] ) &&
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kshippingargentina_delete_label_nonce'] ) ), ( (int) $_POST['delete_label'] ) . '_kshippingargentina_delete_label_nonce' )
 		) {
+			$oca_tracking_reference = get_post_meta( (int) $_POST['delete_label'], 'kshippingargentina_oca_tracking_reference' );
+			if ( $oca_tracking_reference ) {
+				$pdf_error = false;
+				KShippingArgentina_API::cancel_oca_label( $oca_tracking_reference, $pdf_error );
+				delete_post_meta( (int) $_POST['delete_label'], 'kshippingargentina_oca_tracking_reference' );
+				delete_post_meta( (int) $_POST['delete_label'], 'kshippingargentina_oca_operation_code' );
+			}
 			delete_post_meta( (int) $_POST['delete_label'], 'kshippingargentina_label_file' );
 			die(
 				wp_json_encode(
@@ -170,8 +177,8 @@ add_action(
 			} elseif ( 'oca' === $shipping->service_type ) {
 				$file = kshipping_generate_label_oca( $order, $label, $shipping );
 			}
-			if ( $file ) {
-				update_post_meta( $order->get_id(), 'kshippingargentina_label_file', $file );
+			if ( $file && isset( $file['error'] ) && ! $file['error'] ) {
+				update_post_meta( $order->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
 				die(
 					wp_json_encode(
 						array(
@@ -186,7 +193,7 @@ add_action(
 				wp_json_encode(
 					array(
 						'ok'    => false,
-						'error' => __( 'The label for this order could not be generated, you can verify what happens from the plugin log if you have it active in the configuration.', 'wc-kshippingargentina' ),
+						'error' => $file && isset( $file['error'] ) && $file['error'] ? $file['error'] : __( 'The label for this order could not be generated, you can verify what happens from the plugin log if you have it active in the configuration.', 'wc-kshippingargentina' ),
 						'data'  => $label,
 					)
 				)
@@ -600,10 +607,79 @@ add_action(
  * @param int|WC_Order                   $order Order Object or Order ID.
  * @param array                          $label Labels.
  * @param WC_KShippingArgentina_Shipping $shipping Shipping Object.
- * @param string                         $format echo, base64, binary or file_path.
  */
-function kshipping_generate_label_oca( $order, $label, $shipping, $format = 'echo' ) {
+function kshipping_generate_label_oca( $order, $label, $shipping ) {
+	$order_id = $order->get_id();
+	$xml      = apply_filters(
+		'kshipping_xml_oca',
+		KShippingArgentina_API::oca_to_xml( $order_id . '-' . $label['vat_type'] . $label['vat'], $label, $shipping ),
+		$order,
+		$label,
+		$shipping
+	);
+	KShippingArgentina_API::debug( 'OCA XML: ' . $xml );
+	$setting = get_option( 'woocommerce_kshippingargentina-manager_settings' );
+	$data    = KShippingArgentina_API::call_oca(
+		'IngresoORMultiplesRetiros',
+		array(
+			'usr'             => $setting['oca_username'],
+			'psw'             => $setting['oca_password'],
+			'ConfirmarRetiro' => true,
+			'xml_Datos'       => $xml,
+		)
+	);
+	$error   = array();
 
+	if ( isset( $data['Errores'] ) ) {
+		$error[] = __( 'Error generating OCA order', 'wc-kshippingargentina' ) . ': ' . ( (string) $data['Errores']['Error']['Descripcion'] );
+	}
+
+	$tracking_code = array();
+
+	if ( isset( $data['Error'] ) ) {
+		$error[] = __( 'Error generating OCA order', 'wc-kshippingargentina' ) . ': ' . ( (string) $data['Error']['Descripcion'] );
+	} elseif ( ! isset( $data['Resumen'] ) ) {
+		$error[] = __( 'Error generating OCA order', 'wc-kshippingargentina' ) . ': ' . wp_json_encode( $data );
+	} elseif ( isset( $data['DetalleIngresos'] ) && isset( $data['DetalleIngresos']['NumeroEnvio'] ) ) {
+		update_post_meta( $order_id, 'kshippingargentina_oca_tracking_reference', (int) $data['DetalleIngresos']['OrdenRetiro'] );
+		update_post_meta( $order_id, 'kshippingargentina_oca_operation_code', (int) $data['Resumen']['CodigoOperacion'] );
+		$tc        = (string) $data['DetalleIngresos']['NumeroEnvio'];
+		$pdf_error = false;
+		$pdf       = KShippingArgentina_API::get_oca_pdf_label( $tc, $pdf_error );
+		if ( $pdf ) {
+			$tracking_code = array(
+				$tc => kshipping_save_pdf( $order_id, "oca_{$order_id}_$tc.pdf", $pdf ),
+			);
+		} else {
+			$tracking_code = array(
+				$tc => false,
+			);
+			/*
+				if ( $pdf_error ) {
+					$error[] = $pdf_error;
+				}
+				$pdf_error = false;
+				KShippingArgentina_API::cancel_oca_label( $data['DetalleIngresos']['OrdenRetiro'], $pdf_error );
+				if ( $pdf_error ) {
+					$error[] = $pdf_error;
+				}
+			*/
+		}
+	}
+	$result = array(
+		'error'         => false,
+		'tracking_code' => $tracking_code,
+	);
+	if ( ! count( $tracking_code ) ) {
+		$result['error'] = count( $error ) ? implode( ', ', $error ) : __( 'An error occurred connecting to OCA, try again later, if the error persists you should check the plugin logs with technical support.', 'wc-kshippingargentina' );
+	}
+	return apply_filters(
+		'kshipping_generate_label_andreani',
+		$result,
+		$order,
+		$label,
+		$shipping
+	);
 
 }
 
@@ -613,10 +689,157 @@ function kshipping_generate_label_oca( $order, $label, $shipping, $format = 'ech
  * @param int|WC_Order                   $order Order Object or Order ID.
  * @param array                          $label Labels.
  * @param WC_KShippingArgentina_Shipping $shipping Shipping Object.
- * @param string                         $format echo, base64, binary or file_path.
  */
-function kshipping_generate_label_andreani( $order, $label, $shipping, $format = 'echo' ) {
+function kshipping_generate_label_andreani( $order, $label, $shipping ) {
+	$ofi_src          = explode( '#', $label['office_src'] );
+	$ofi_dst          = explode( '#', $label['office'] );
+	$setting          = get_option( 'woocommerce_kshippingargentina-manager_settings' );
+	$order_id         = $order->get_id();
+	$andreani_request = array(
+		'contrato'     => $shipping->product_type,
+		'origen'       => $shipping->find_in_store ? array(
+			'postal' => array(
+				'pais'         => 'Argentina',
+				'region'       => 'AR-' . $setting['state'],
+				'codigoPostal' => $setting['postcode'],
+				'calle'        => $setting['street'],
+				'numero'       => $setting['number'],
+				'localidad'    => $setting['city'],
+			),
+		) : array(
+			'sucursal' => array( 'id' => $ofi_src[1] ),
+		),
+		'remitente'    => array(
+			'nombreCompleto'  => $setting['fullname'],
+			'eMail'           => $setting['email'],
+			'documentoTipo'   => $setting['dni_type'],
+			'documentoNumero' => $setting['dni'],
+			'telefonos'       => array(
+				array(
+					'tipo'   => 1,
+					'numero' => $setting['phone'],
+				),
+			),
+		),
+		'destinatario' => array(
+			array(
+				'nombreCompleto'  => $label['full_name'],
+				'eMail'           => $label['email'],
+				'documentoTipo'   => $label['vat_type'],
+				'documentoNumero' => $label['vat'],
+				'telefonos'       => array(
+					array(
+						'tipo'   => (int) 2,
+						'numero' => $label['prefix_phone'] . $label['phone'],
+					),
+				),
+			),
+		),
+		'destino'      => ! $shipping->office ? array(
+			'postal' => array(
+				'pais'         => 'Argentina',
+				'region'       => 'AR-' . $label['state'],
+				'codigoPostal' => $label['postcode'],
+				'calle'        => $label['address_1'],
+				'numero'       => $label['number'],
+				'localidad'    => $label['city'],
+			),
+		) : array(
+			'sucursal' => array( 'id' => $ofi_dst[1] ),
+		),
+	);
+	if ( $shipping->find_in_store && ! empty( $setting['other'] ) ) {
+		$andreani_request['origen']['postal']['componentesDeDireccion'] = array(
+			array(
+				'meta'      => 'Detalle',
+				'contenido' => $setting['other'],
+			),
+		);
+	}
+	if ( ! $shipping->office && ! empty( $label['address_2'] ) ) {
+		$andreani_request['destino']['postal']['componentesDeDireccion'] = array(
+			array(
+				'meta'      => 'Detalle',
+				'contenido' => $label['address_2'],
+			),
+		);
+	}
+	$bultos = array();
+	foreach ( array_keys( $label['box']['width'] ) as $i ) {
+		$bultos[] = array(
+			'anchoCm'                    => (int) $label['box']['width'][ $i ],
+			'altoCm'                     => (int) $label['box']['height'][ $i ],
+			'largoCm'                    => (int) $label['box']['depth'][ $i ],
+			'volumenCm'                  => (int) ( $label['box']['width'][ $i ] * $label['box']['height'][ $i ] * $label['box']['depth'][ $i ] ),
+			'kilos'                      => (float) round( $label['box']['weight'][ $i ], 2 ),
+			'descripcion'                => $label['box']['content'][ $i ],
+			'valorDeclaradoSinImpuestos' => (int) $label['box']['total'][ $i ],
+			'valorDeclaradoConImpuestos' => (int) $label['box']['total'][ $i ],
+			'referencias'                => array(
+				array(
+					'meta'      => 'detalle',
+					'contenido' => $label['box']['content'][ $i ],
+				),
+				array(
+					'meta'      => 'idCliente',
+					'contenido' => $order_id . '-' . $i,
+				),
+				array(
+					'meta'      => 'observaciones',
+					'contenido' => isset( $label['address_2'] ) && ! empty( $label['address_2'] ) ? $post['address_2'] : '',
+				),
+			),
+		);
+	}
+	$andreani_request['bultos'] = $bultos;
 
+	$api_error = false;
+	$result    = KShippingArgentina_API::create_label_andreani(
+		apply_filters(
+			'kshippingargentina_andreani_label_request',
+			$andreani_request,
+			$order,
+			$label,
+			$shipping
+		),
+		$api_error
+	);
+	KShippingArgentina_API::debug( 'kshippingargentina_andreani_label_request result: ', array( $result, $api_error ) );
+	if ( ! $result || ! isset( $result['bultos'] ) || ! count( $result['bultos'] ) ) {
+		if ( ! $api_error && isset( $result['title'] ) && isset( $result['detail'] ) ) {
+			$api_error = "{$result['title']}: {$result['detail']}";
+		}
+		return apply_filters(
+			'kshipping_generate_label_andreani',
+			array(
+				'error'         => $api_error ? $api_error : __( 'Andreani return with Timeout', 'wc-kshippingargentina' ),
+				'tracking_code' => false,
+			),
+			$order,
+			$label,
+			$shipping
+		);
+	}
+	$tracking_code = array();
+	foreach ( $result['bultos'] as $bulto ) {
+		$api_error                                = false;
+		$pdf                                      = KShippingArgentina_API::get_pdf_label_andreani( $bulto['numeroDeEnvio'], $api_error );
+		$tracking_code[ $bulto['numeroDeEnvio'] ] = $pdf ? kshipping_save_pdf(
+			$order_id,
+			"andreani_{$order_id}_{$bulto['numeroDeEnvio']}.pdf",
+			$pdf
+		) : false;
+	}
+	return apply_filters(
+		'kshipping_generate_label_andreani',
+		array(
+			'error'         => false,
+			'tracking_code' => $tracking_code,
+		),
+		$order,
+		$label,
+		$shipping
+	);
 }
 
 /**
@@ -698,7 +921,10 @@ function kshipping_generate_label_correo_argentino( $order, $label, $shipping ) 
 		return apply_filters(
 			'kshipping_generate_label_correo_argentino',
 			array(
-				'no_tracking_code' => $file,
+				'error'         => false,
+				'tracking_code' => array(
+					'no_tracking_code' => $file,
+				),
 			),
 			$order,
 			$label,

@@ -92,7 +92,7 @@ return array(
 		'type'  => 'checkbox',
 	),
 	'find_in_store'                => array(
-		'title' => __( 'Does this carrier pick up the package at your store? (Only for OCA e-Pack)', 'wc-kshippingargentina' ),
+		'title' => __( 'Does this carrier pick up the package at your store? (Only for Andreani/OCA e-Pack)', 'wc-kshippingargentina' ),
 		'type'  => 'checkbox',
 	),
 	'insurance'                    => array(

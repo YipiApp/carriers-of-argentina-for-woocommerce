@@ -134,6 +134,30 @@ $r = array(
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
+	'dni_type'              => array(
+		'title'   => __( 'DNI type of sender (Only for Andreani)', 'woocommerce-kandreani' ),
+		'type'    => 'select',
+		'default' => 'DNI',
+		'options' => array(
+			'DNI'  => __( 'DNI', 'woocommerce-kandreani' ),
+			'CUIT' => __( 'CUIT', 'woocommerce-kandreani' ),
+			'CUIL' => __( 'CUIL', 'woocommerce-kandreani' ),
+		),
+	),
+	'dni'                   => array(
+		'title'       => __( 'DNI of sender', 'woocommerce-kandreani' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
+	'phone'                 => array(
+		'title'       => __( 'Phone of sender', 'woocommerce-kandreani' ),
+		'type'        => 'text',
+		'description' => '',
+		'default    ' => '',
+		'desc_tip'    => false,
+	),
 	'email'              => array(
 		'title'       => __( 'E-Mail of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
