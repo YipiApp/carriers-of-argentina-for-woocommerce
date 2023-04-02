@@ -38,9 +38,11 @@ add_action(
 							for(let i in list.errors) {
 								msg += '#'+list.errors[i].order_id + ': ' + list.errors[i].msg + '\n';
 							}
-							alert(msg); // show response from the php script.
-						} else if (list.link)
-							document.location.href = list.link;
+							if (msg)
+								alert(msg); // show response from the php script.
+						}
+						if (typeof list.url_zip != 'undefined' && list.url_zip)
+							document.location.href = list.url_zip;
 					}).fail(function() {
 						$('#kshippingargentinao_generate_label').html('<?php echo esc_html_e( 'Generate Label', 'wc-kshippingargentina' ); ?>');
 						kshippingargentina_metabox_loading = false;
@@ -69,7 +71,8 @@ add_action(
 
 add_action(
 	'init',
-	function() {
+	function () {
+		global $wp_filesystem;
 		if ( ! isset( $_POST['kshippingargentina_is_order_save'] ) &&
 			isset( $_POST['delete_label'] ) &&
 			isset( $_POST['service_type'] ) &&
@@ -140,6 +143,7 @@ add_action(
 					$new_labels[ $tc ] = $label;
 				}
 				update_post_meta( $order_id, 'kshippingargentina_label_file', $new_labels );
+				kshipping_notify_new_tracking( wc_get_order( $order_id ), $shipping );
 				die(
 					wp_json_encode(
 						array(
@@ -152,7 +156,7 @@ add_action(
 				$api_error = false;
 				if ( 'correo_argentino' === $shipping->service_type ) {
 					$new_labels[ $tc ] = false;
-				} elseif ( 'andreani' === $shipping->service_type) {
+				} elseif ( 'andreani' === $shipping->service_type ) {
 					$pdf               = KShippingArgentina_API::get_andreani_pdf_label( $tc, $api_error );
 					$new_labels[ $tc ] = $pdf ? kshipping_save_pdf(
 						$order_id,
@@ -170,6 +174,7 @@ add_action(
 			}
 			if ( count( $new_labels ) ) {
 				update_post_meta( $order_id, 'kshippingargentina_label_file', $new_labels );
+				kshipping_notify_new_tracking( wc_get_order( $order_id ), $shipping );
 				die(
 					wp_json_encode(
 						array(
@@ -209,6 +214,7 @@ add_action(
 			}
 			if ( $file && isset( $file['error'] ) && ! $file['error'] ) {
 				update_post_meta( $order->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
+				kshipping_notify_new_tracking( $order, $shipping );
 				die(
 					wp_json_encode(
 						array(
@@ -236,39 +242,19 @@ add_action(
 			isset( $_GET['kshippingargentina_massive_label_nonce'] ) &&
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['kshippingargentina_massive_label_nonce'] ) ), 'kshippingargentina_massive_label_nonce' )
 		) {
-			$args  = array(
-				'post_type' => 'shop_order',
-				'post__in'  => explode( ',', sanitize_text_field( wp_unslash( $_GET['kca_posts'] ) ) ),
+			$posts = array_map(
+				function( $v ) {
+					return (int) $v;
+				},
+				array_filter( explode( ',', sanitize_text_field( wp_unslash( $_GET['kca_posts'] ) ) ) )
 			);
-			$posts = get_posts( $args );
-			if ( ! empty( $posts ) ) {
-				$lines          = array();
-				$setting        = get_option( 'woocommerce_kshippingargentina-manager_settings' );
-				$zones          = WC_Shipping_Zones::get_zones();
-				$methods        = array_map(
-					function( $zone ) {
-						return $zone['shipping_methods'];
-					},
-					$zones
-				);
+			if ( count( $posts ) ) {
 				$posts_correo   = array();
 				$posts_andreani = array();
 				$posts_oca      = array();
 				$errors         = array();
-				foreach ( $posts as $p ) {
-					$order_id = $p->ID;
-					$order    = new WC_Order( $order_id );
-
-					/*
-					$tracking_code = get_post_meta( $order_id, 'kshippingargentina_tracking_code', true );
-					if ( $tracking_code && ! empty( $tracking_code ) ) {
-						$errors[] = array(
-							'msg'      => __( 'Tracking code exists:', 'wc-kshippingargentina' ) . ' ' . $tracking_code,
-							'order_id' => $order_id,
-						);
-						continue;
-					}
-					*/
+				foreach ( $posts as $order_id ) {
+					$order = new WC_Order( $order_id );
 
 					$status = $order->get_status();
 					if ( in_array( $status, array( 'pending', 'on-hold', 'cancelled', 'refunded', 'failed' ), true ) ) {
@@ -278,6 +264,7 @@ add_action(
 						);
 						continue;
 					}
+
 					$shipping    = null;
 					$instance_id = $order->get_meta( 'kshippingargentina_instance_id' );
 					if ( $instance_id ) {
@@ -323,6 +310,179 @@ add_action(
 							)
 						)
 					);
+				} else {
+					$files  = array();
+					$errors = array();
+					foreach ( $posts_correo as &$to_label ) {
+						$tracking_codes = get_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', true );
+						if ( $tracking_codes && is_array( $tracking_codes ) && count( $tracking_codes ) ) {
+							foreach ( $tracking_codes as $tc => $data ) {
+								if ( ! $data ) {
+									$errors[] = array(
+										// translators: %s => Tracking code.
+										'msg'      => sprintf( __( 'Label %s generated, but the pdf was impossible to get because of an error in the service provider.' ), $tc ),
+										'order_id' => $to_label['order']->get_id(),
+									);
+									continue 2;
+								}
+							}
+							$files[] = $tracking_codes;
+							continue;
+						}
+						$label = kshippingargentina_order_to_label_data( $to_label['order'], $to_label['shipping'] );
+						$file  = kshipping_generate_label_correo_argentino( $to_label['order'], $label, $to_label['shipping'] );
+						if ( ! $file['error'] ) {
+							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
+							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
+							foreach ( $file['tracking_code'] as $tc => $data ) {
+								if ( ! $data ) {
+									$errors[] = array(
+										// translators: %s => Tracking code.
+										'msg'      => sprintf( __( 'Label %s generated, but the pdf was impossible to get because of an error in the service provider.' ), $tc ),
+										'order_id' => $to_label['order']->get_id(),
+									);
+									continue 2;
+								}
+							}
+							$files[] = $file['tracking_code'];
+						} else {
+							$errors[] = array(
+								'msg'      => $file['error'],
+								'order_id' => $to_label['order']->get_id(),
+							);
+						}
+					}
+					foreach ( $posts_oca as &$to_label ) {
+						$tracking_codes = get_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', true );
+						if ( $tracking_codes && is_array( $tracking_codes ) && count( $tracking_codes ) ) {
+							foreach ( $tracking_codes as $tc => $data ) {
+								if ( ! $data ) {
+									$errors[] = array(
+										// translators: %s => Tracking code.
+										'msg'      => sprintf( __( 'Label %s generated, but the pdf was impossible to get because of an error in the service provider.' ), $tc ),
+										'order_id' => $to_label['order']->get_id(),
+									);
+									continue 2;
+								}
+							}
+							$files[] = $tracking_codes;
+						}
+						$label = kshippingargentina_order_to_label_data( $to_label['order'], $to_label['shipping'] );
+						$file  = kshipping_generate_label_oca( $to_label['order'], $label, $to_label['shipping'] );
+						if ( ! $file['error'] ) {
+							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
+							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
+							foreach ( $file['tracking_code'] as $tc => $data ) {
+								if ( ! $data ) {
+									$errors[] = array(
+										// translators: %s => Tracking code.
+										'msg'      => sprintf( __( 'Label %s generated, but the pdf was impossible to get because of an error in the service provider.' ), $tc ),
+										'order_id' => $to_label['order']->get_id(),
+									);
+									continue 2;
+								}
+							}
+							$files[] = $file['tracking_code'];
+						} else {
+							$errors[] = array(
+								'msg'      => $file['error'],
+								'order_id' => $to_label['order']->get_id(),
+							);
+						}
+					}
+					foreach ( $posts_andreani as &$to_label ) {
+						$tracking_codes = get_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', true );
+						if ( $tracking_codes && is_array( $tracking_codes ) && count( $tracking_codes ) ) {
+							foreach ( $tracking_codes as $tc => $data ) {
+								if ( ! $data ) {
+									$errors[] = array(
+										// translators: %s => Tracking code.
+										'msg'      => sprintf( __( 'Label %s generated, but the pdf was impossible to get because of an error in the service provider.' ), $tc ),
+										'order_id' => $to_label['order']->get_id(),
+									);
+									continue 2;
+								}
+							}
+							$files[] = $tracking_codes;
+							continue;
+						}
+						$label = kshippingargentina_order_to_label_data( $to_label['order'], $to_label['shipping'] );
+						$file  = kshipping_generate_label_andreani( $to_label['order'], $label, $to_label['shipping'] );
+						if ( ! $file['error'] ) {
+							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
+							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
+							foreach ( $file['tracking_code'] as $tc => $data ) {
+								if ( ! $data ) {
+									$errors[] = array(
+										// translators: %s => Tracking code.
+										'msg'      => sprintf( __( 'Label %s generated, but the pdf was impossible to get because of an error in the service provider.' ), $tc ),
+										'order_id' => $to_label['order']->get_id(),
+									);
+									continue 2;
+								}
+							}
+							$files[] = $file['tracking_code'];
+						} else {
+							$errors[] = array(
+								'msg'      => $file['error'],
+								'order_id' => $to_label['order']->get_id(),
+							);
+						}
+					}
+					$url_zip = false;
+					if ( count( $files ) ) {
+						// Initialize the WP filesystem.
+						if ( ! $wp_filesystem ) {
+							require_once ABSPATH . '/wp-admin/includes/file.php';
+							WP_Filesystem();
+						}
+						$upload_dir = wp_upload_dir();
+						$base_dir   = $upload_dir['basedir'];
+						$final_path = '/kshipping_argentina';
+						if ( ! is_dir( $base_dir . $final_path ) ) {
+							mkdir( $base_dir . $final_path );
+						}
+						$final_path .= '/massive';
+						if ( ! is_dir( $base_dir . $final_path ) ) {
+							mkdir( $base_dir . $final_path );
+						}
+						if ( ! file_exists( $base_dir . $final_path . '/index.php' ) ) {
+							$wp_filesystem->put_contents( $base_dir . $final_path . '/index.php', '' );
+						}
+						if ( class_exists( 'ZipArchive' ) ) {
+							$zip       = new ZipArchive();
+							$file_name = 'labels-' . time() . '.zip';
+							if ( $zip->open( $base_dir . $final_path . '/' . $file_name, ZipArchive::CREATE ) === true ) {
+								foreach ( $files as $file ) {
+									foreach ( $file as $data ) {
+										$zip->addFile( $data['file_path'], $data['file_name'] );
+									}
+								}
+								$zip->close();
+								$url_zip = $upload_dir['baseurl'] . $final_path . '/' . $file_name;
+							}
+						}
+						if ( ! $url_zip && class_exists( 'PharData' ) ) {
+							$file_name = 'labels-' . time() . '.tar';
+							$tar       = new PharData( $base_dir . $final_path . '/' . $file_name );
+							foreach ( $files as $file ) {
+								foreach ( $file as $data ) {
+									$tar->addFile( $data['file_path'], $data['file_name'] );
+								}
+							}
+							$url_zip = $upload_dir['baseurl'] . $final_path . '/' . $file_name;
+						}
+					}
+					die(
+						wp_json_encode(
+							array(
+								'errors'    => $errors,
+								'files'     => $files,
+								'url_zip'   => $url_zip,
+								'new_nonce' => wp_create_nonce( 'kshippingargentina_massive_label_nonce' ),
+							)
+						)
+					);
 				}
 			}
 			die(
@@ -330,6 +490,8 @@ add_action(
 					array(
 						'error'     => 'No order found with Correo Argentina/Andreani/OCA in the given range.',
 						'new_nonce' => wp_create_nonce( 'kshippingargentina_massive_label_nonce' ),
+						'args'      => $args,
+						'count'     => count( $posts ),
 					)
 				)
 			);
@@ -519,7 +681,7 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 		$cats = get_the_terms( $product_id, 'product_cat' );
 		if ( $cats && is_array( $cats ) && count( $cats ) > 0 ) {
 			foreach ( $cats as $c_term ) {
-				if ( in_array( (int) $c_term->term_id, $exclude_categories ) ) {
+				if ( in_array( (int) $c_term->term_id, $exclude_categories, true ) ) {
 					return;// Esta categoria esta excluida para ser usado.
 				}
 			}
@@ -684,16 +846,6 @@ function kshipping_generate_label_oca( $order, $label, $shipping ) {
 			$tracking_code = array(
 				$tc => false,
 			);
-			/*
-				if ( $pdf_error ) {
-					$error[] = $pdf_error;
-				}
-				$pdf_error = false;
-				KShippingArgentina_API::cancel_oca_label( $data['DetalleIngresos']['OrdenRetiro'], $pdf_error );
-				if ( $pdf_error ) {
-					$error[] = $pdf_error;
-				}
-			*/
 		}
 	}
 	$result = array(
@@ -816,7 +968,7 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
 				),
 				array(
 					'meta'      => 'observaciones',
-					'contenido' => isset( $label['address_2'] ) && ! empty( $label['address_2'] ) ? $post['address_2'] : '',
+					'contenido' => isset( $label['address_2'] ) && ! empty( $label['address_2'] ) ? $label['address_2'] : '',
 				),
 			),
 		);
@@ -987,7 +1139,7 @@ function kshipping_save_pdf( $order_id, $file_name, $binary, $override = true ) 
 	}
 
 	if ( ! file_exists( $base_dir . $final_path . '/index.php' ) ) {
-		$wp_filesystem->put_contents( $base_dir . $final_path . '/index.php' );
+		$wp_filesystem->put_contents( $base_dir . $final_path . '/index.php', '' );
 	}
 
 	$sub_dirs = array();
@@ -1007,7 +1159,7 @@ function kshipping_save_pdf( $order_id, $file_name, $binary, $override = true ) 
 	}
 
 	if ( ! file_exists( $base_dir . $final_path . '/index.php' ) ) {
-		$wp_filesystem->put_contents( $base_dir . $final_path . '/index.php' );
+		$wp_filesystem->put_contents( $base_dir . $final_path . '/index.php', '' );
 	}
 
 	if ( ! file_exists( $base_dir . $final_path . '/' . $file_name ) ) {
@@ -1015,6 +1167,7 @@ function kshipping_save_pdf( $order_id, $file_name, $binary, $override = true ) 
 			return false;
 		}
 	}
+
 	return apply_filters(
 		'kshipping_save_pdf',
 		array(
@@ -1028,4 +1181,31 @@ function kshipping_save_pdf( $order_id, $file_name, $binary, $override = true ) 
 		$file_name,
 		$binary
 	);
+}
+
+/**
+ * Create CSV for Correo Argentino.
+ *
+ * @param int|WC_Order                   $order Order ID.
+ * @param WC_KShippingArgentina_Shipping $shipping Shipping Object.
+ */
+function kshipping_notify_new_tracking( $order, $shipping ) {
+	$mailer = WC()->mailer();
+	$mailer->get_emails();
+	$setting = get_option( 'woocommerce_kshippingargentina-manager_settings' );
+	KShippingArgentina_API::debug(
+		'kshipping_notify_new_tracking',
+		array(
+			$order->get_id(),
+			$setting['no_change_in_transit'],
+			$shipping->service_type,
+			$shipping->instance_id,
+		)
+	);
+	if ( 'yes' !== $setting['no_change_in_transit'] ) {
+		$order->update_status( 'intransit-shipment' );
+	}
+	WC_KNewTracking_Customer_Email::get_instance();
+	WC_KNewTracking_Admin_Email::get_instance();
+	do_action( 'woocommerce_order_new_ktracking_code', $order->get_id(), $shipping );
 }

@@ -15,7 +15,32 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 0.1
  * @extends \WC_Email
  */
-class WC_KNewTracking_Customer_Email extends WC_Email {
+class WC_KNewTracking_Admin_Email extends WC_Email {
+	/**
+	 * Instance.
+	 *
+	 * @var WC_KNewTracking_Admin_Email
+	 */
+	private static $instance = null;
+
+	/**
+	 * Returns instance.
+	 *
+	 * @return WC_KNewTracking_Admin_Email
+	 */
+	public static function get_instance() {
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+	/**
+	 * Mail message.
+	 *
+	 * @var string
+	 */
+	private $mail_message;
+
 	/**
 	 * Set email defaults
 	 *
@@ -23,22 +48,26 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 	 */
 	public function __construct() {
 
+		self::$instance = $this;
+
 		// set ID, this simply needs to be a unique name.
 		$this->id = 'wc-knewtracking-customer';
 
 		// this is the title in WooCommerce Email settings.
-		$this->title = __( 'New tracking code assigned', 'wc-kshippingargentina' );
+		$this->title = __( 'Admin: New tracking code assigned', 'wc-kshippingargentina' );
 
 		// this is the description in WooCommerce email settings.
 		$this->description = __( 'Send an email to the customer with the tracking number assigned to an order', 'wc-kshippingargentina' );
 
 		// these are the default heading and subject lines that can be overridden using the settings.
-		$this->heading = $this->get_option( 'heading', __( 'Tracking code generated', 'wc-kshippingargentina' ) );
-		$this->subject = $this->get_option( 'subject', __( 'Tracking code generated', 'wc-kshippingargentina' ) );
+		$this->heading      = $this->get_option( 'heading', __( '#{order_id} Tracking code generated', 'wc-kshippingargentina' ) );
+		$this->subject      = $this->get_option( 'subject', __( '#{order_id} Tracking code generated', 'wc-kshippingargentina' ) );
+		$this->mail_message = $this->get_option( 'message', __( 'A tracking code has been created for the order #{order_id}, if you want to track it follow this link: {link}. If you want to download the PDF you can do it through this link: {label_link}', 'wc-kshippingargentina' ) );
 
 		// these define the locations of the templates that this email should use, we'll just use the new order template since this email is similar.
-		$this->template_html  = 'emails/new-tracking-html.php';
-		$this->template_plain = 'emails/new-tracking-plain.php';
+		$plugin_dirname = basename( dirname( __DIR__ ) );
+		$this->template_html  = '../../' . $plugin_dirname . '/emails/new-tracking-html.php';
+		$this->template_plain = '../../' . $plugin_dirname . '/emails/new-tracking-plain.php';
 
 		add_action( 'woocommerce_order_new_ktracking_code', array( $this, 'trigger' ), 10, 2 );
 
@@ -52,6 +81,7 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 		if ( ! $this->recipient ) {
 			$this->recipient = get_option( 'admin_email' );
 		}
+		$this->email_type = 'html';
 	}
 
 	/**
@@ -62,7 +92,14 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 	 * @param WC_KShippingArgentina_Shipping $shipping shipping.
 	 */
 	public function trigger( $order_id, $shipping ) {
-
+		KShippingArgentina_API::debug(
+			'WC_KNewTracking_Admin_Email trigger',
+			array(
+				$order_id,
+				$shipping->service_type,
+				$shipping->instance_id,
+			)
+		);
 		// bail if no order ID is present.
 		if ( ! $order_id || ! $shipping ) {
 			return;
@@ -78,12 +115,64 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 		$this->find[]    = '{order_number}';
 		$this->replace[] = $this->object->get_order_number();
 
+		$message = str_replace( '{order_id}', $this->object->get_order_number(), $this->mail_message );
+		$links   = array();
+		$labels  = get_post_meta( $this->object->get_id(), 'kshippingargentina_label_file', true );
+		if ( ! $labels || ! is_array( $labels ) || ! count( $labels ) ) {
+			KShippingArgentina_API::debug(
+				'WC_KNewTracking_Admin_Email trigger no labels',
+				array(
+					$order_id,
+					$labels
+				)
+			);
+			return;
+		}
+		$url = '';
+		if ( 'correo_argentino' === $shipping->service_type ) {
+			$url = KShippingArgentina_API::TRACKING_URL_CORREO;
+		} elseif ( 'oca' === $shipping->service_type ) {
+			$url = KShippingArgentina_API::TRACKING_URL_OCA;
+		} elseif ( 'andreani' === $shipping->service_type ) {
+			$url = KShippingArgentina_API::TRACKING_URL_ANDREANI;
+		}
+		$link_labels = array();
+		foreach ( $labels as $tc => $label ) {
+			$links[] = str_replace( '@', $tc, '<a href="' . $url . '">' . $tc . '</a>' );
+			if ( $label && isset( $label['url_path'] ) && ! empty( $label['url_path'] ) ) {
+				$link_labels[] = '<a href="' . $label['url_path'] . '">' . $label['file_name'] . '</a>';
+			}
+		}
+		if ( ! count( $link_labels ) ) {
+			$link_labels[] = '<b style="color:red">' . __( 'There were problems downloading the labels.', 'wc-kshippingargentina' ) . '</b>';
+		}
+
+		$this->find[]    = '{kshipping_message}';
+		$this->replace[] = str_replace( '{label_link}', implode( ', ', $link_labels ), str_replace( '{link}', implode( ', ', $links ), $message ) );
+
+		$billing_address = $this->object->get_address( 'billing' );
+		$this->recipient = $billing_address['email'];
+
 		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+			KShippingArgentina_API::debug(
+				'WC_KNewTracking_Admin_Email trigger disabled',
+				array(
+					$order_id,
+					$this->is_enabled(),
+					$this->get_recipient(),
+				)
+			);
 			return;
 		}
 
+		KShippingArgentina_API::debug(
+			'WC_KNewTracking_Admin_Email trigger sending...',
+			array(
+				$order_id,
+			)
+		);
 		// woohoo, send the email!
-		$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+		$this->send( $this->get_recipient(), str_replace( '{order_id}', $this->object->get_order_number(), $this->get_subject() ), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 	}
 
 	/**
@@ -103,7 +192,6 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 		);
 		return ob_get_clean();
 	}
-
 
 	/**
 	 * Get content plain function.
@@ -138,23 +226,23 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 				'default' => 'yes',
 			),
 			'recipient'  => array(
-				'title'       => 'Recipient(s)',
+				'title'       => __( 'Recipient(s)', 'wc-kshippingargentina' ),
 				'type'        => 'text',
 				// translators: %s email example.
 				'description' => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to <code>%s</code>.', 'wc-kshippingargentina' ), esc_attr( get_option( 'admin_email' ) ) ),
 				'placeholder' => '',
-				'default'     => '',
+				'default'     => get_option( 'admin_email' ),
 			),
 			'subject'    => array(
-				'title'       => 'Subject',
+				'title'       => __( 'Subject', 'wc-kshippingargentina' ),
 				'type'        => 'text',
 				// translators: %s email example.
 				'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'wc-kshippingargentina' ), $this->subject ),
 				'placeholder' => '',
-				'default'     => '',
+				'default'     => $this->subject,
 			),
 			'heading'    => array(
-				'title'       => 'Email Heading',
+				'title'       => __( 'Email Heading', 'wc-kshippingargentina' ),
 				'type'        => 'text',
 				'description' => sprintf(
 					// translators: %s email example.
@@ -162,19 +250,13 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 					$this->heading
 				),
 				'placeholder' => '',
-				'default'     => '',
+				'default'     => $this->heading,
 			),
-			'email_type' => array(
-				'title'       => __( 'Email type', 'wc-kshippingargentina' ),
-				'type'        => 'select',
-				'description' => __( 'Choose which format of email to send.', 'wc-kshippingargentina' ),
-				'default'     => 'html',
-				'class'       => 'email_type',
-				'options'     => array(
-					'plain'     => 'Plain text',
-					'html'      => 'HTML',
-					'multipart' => 'Multipart',
-				),
+			'message'    => array(
+				'title'       => __( 'Message', 'wc-kshippingargentina' ),
+				'type'        => 'textarea',
+				'placeholder' => '',
+				'default'     => $this->mail_message,
 			),
 		);
 	}

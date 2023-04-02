@@ -15,6 +15,14 @@ if ( $shipping->office ) {
 $offices_src = KShippingArgentina_API::get_office( $shipping->service_type, $setting['postcode'], true, null );
 $labels      = get_post_meta( $order->get_id(), 'kshippingargentina_label_file', true );
 
+$url = '';
+if ( 'correo_argentino' === $shipping->service_type ) {
+	$url = KShippingArgentina_API::TRACKING_URL_CORREO;
+} elseif ( 'oca' === $shipping->service_type ) {
+	$url = KShippingArgentina_API::TRACKING_URL_OCA;
+} elseif ( 'andreani' === $shipping->service_type ) {
+	$url = KShippingArgentina_API::TRACKING_URL_ANDREANI;
+}
 ?>
 <div id="kshippingargentina-container">
 	<input type="hidden" id="kshippingargentina_instance_id"  name="kshippingargentina_instance_id" value="<?php echo esc_html( $shipping->instance_id ); ?>" />
@@ -47,7 +55,7 @@ $labels      = get_post_meta( $order->get_id(), 'kshippingargentina_label_file',
 			if ( 'no_tracking_code' === $tracking_code ) {
 				echo '<td>-</td>';
 			} else {
-				echo '<td>' . esc_html( $tracking_code ) . '</td>';
+				echo '<td>' . wp_kses_post( str_replace( '@', $tracking_code, '<a href="' . $url . '">' . $tracking_code . '</a>' ) ) . '</td>';
 			}
 			if ( ! $label ) {
 				echo '<td>' . esc_html( __( 'Failed to download the PDF of the generated tracking code, activate the module log for more details or contact your service provider.', 'wc-kshippingargentina' ) ) . '</td>';
@@ -76,7 +84,7 @@ $labels      = get_post_meta( $order->get_id(), 'kshippingargentina_label_file',
 			<strong><?php esc_html_e( 'Customer Address', 'wc-kshippingargentina' ); ?></strong>
 			<p class="form-field form-field-wide">
 				<label for="kshipping_full_name"><?php esc_html_e( 'Full name', 'wc-kshippingargentina' ); ?>:</label>
-				<input type="text" class="kshipping_full_name" name="kshipping[full_name]" id="kshipping_fullname" value="<?php echo esc_html( isset( $full_name ) && ! empty( $full_name ) ? $full_name : trim( $first_name . ' ' . $last_name ) ); ?>" />
+				<input type="text" class="kshipping_full_name" name="kshipping[full_name]" id="kshipping_full_name" value="<?php echo esc_html( isset( $full_name ) && ! empty( $full_name ) ? $full_name : trim( $first_name . ' ' . $last_name ) ); ?>" />
 			</p>
 			<p class="form-field form-field-wide">
 				<label for="kshipping_first_name"><?php esc_html_e( 'First name', 'wc-kshippingargentina' ); ?>:</label>

@@ -12,7 +12,7 @@
  * Description: Carriers of Argentina for WooCommerce
  * Author: Kijam López
  * Author URI: https://github.com/kijamve/carriers-of-argentina-for-woocommerce
- * Version: 1.0.17
+ * Version: 1.1.0
  * License: GPLv2
  * Text Domain: wc-kshippingargentina
  * Domain Path: /languages/
@@ -34,7 +34,7 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 * @var string
 		 */
 
-		const VERSION = '1.0.25';
+		const VERSION = '1.1.0';
 
 		/**
 		 * Instance of this class.
@@ -84,7 +84,7 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 */
 		public static function get_instance() {
 			// If the single instance hasn't been set, set it now.
-			if ( null == self::$instance ) {
+			if ( null === self::$instance ) {
 				self::$instance = new self();
 			}
 
@@ -135,6 +135,10 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 * @return  array
 		 */
 		public function email_classes( $email_classes ) {
+			require 'includes/class-wc-knewtracking-admin-email.php';
+			require 'includes/class-wc-knewtracking-customer-email.php';
+			$email_classes['WC_KNewTracking_Admin_Email']    = new WC_KNewTracking_Admin_Email();
+			$email_classes['WC_KNewTracking_Customer_Email'] = new WC_KNewTracking_Customer_Email();
 			return $email_classes;
 		}
 

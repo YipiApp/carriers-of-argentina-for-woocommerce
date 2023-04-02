@@ -11,11 +11,9 @@
  * @since             1.0.0
  */
 class KShippingArgentina_API {
-
 	const TRACKING_URL_OCA      = 'https://www1.oca.com.ar/OEPTrackingWeb/trackingenvio.asp?numero1=@';
-	const TRACKING_URL_ANDREANI = '@';
-	const TRACKING_URL_CORREO   = '@';
-
+	const TRACKING_URL_ANDREANI = 'https://www.andreani.com/#!/informacionEnvio/@';
+	const TRACKING_URL_CORREO   = 'https://www.correoargentino.com.ar/formularios/e-commerce?id=@';
 
 	const OCA_ACCOUNT_LENGTH      = 10;
 	const OCA_NAME_LENGTH         = 30;
@@ -36,8 +34,9 @@ class KShippingArgentina_API {
 	const OCA_REMIT_LENGTH        = 30;
 	const OCA_ATTR_LENGTH         = 11;
 
-	const OCA_API_SANDBOX      = 'http://webservice.oca.com.ar/ePak_Tracking_TEST/Oep_TrackEPak.asmx?wsdl';
-	const OCA_API_PROD         = 'http://webservice.oca.com.ar/ePak_tracking/Oep_TrackEPak.asmx?wsdl';
+	const OCA_API_SANDBOX = 'http://webservice.oca.com.ar/ePak_Tracking_TEST/Oep_TrackEPak.asmx?wsdl';
+	const OCA_API_PROD    = 'http://webservice.oca.com.ar/ePak_tracking/Oep_TrackEPak.asmx?wsdl';
+
 	const ANDREANI_API_PROD    = array(
 		'v2' => 'https://apis.andreani.com',
 		'v1' => 'https://api.andreani.com',
@@ -282,7 +281,6 @@ class KShippingArgentina_API {
 				if ( isset( $api_arr['statusCode'] ) && ( $api_arr['statusCode'] < 200 || $api_arr['statusCode'] > 299 ) ) {
 					return false;
 				}
-				// self::debug( 'From CACHE: ', array( $url ) ); //From cache.
 				return $api_arr;
 			}
 			return false;
@@ -333,6 +331,14 @@ class KShippingArgentina_API {
 	// ##################################################################
 	// ##################################################################
 
+	/**
+	 * Get Andreani Token.
+	 *
+	 * @param mixed $error error.
+	 * @param bool  $sandbox sandbox.
+	 *
+	 * @return mixed
+	 */
 	public static function get_token_andreani( &$error, $sandbox = false ) {
 		$sandbox  = apply_filters( 'kshippingargentina_sandbox', $sandbox );
 		$key      = base64_encode( self::$config['andreani_username'] . ':' . self::$config['andreani_password'] );
@@ -367,6 +373,16 @@ class KShippingArgentina_API {
 		}
 		return $token;
 	}
+
+	/**
+	 * Get Andreani PDF Label.
+	 *
+	 * @param string $tc Tracking code.
+	 * @param mixed  $error error.
+	 * @param bool   $sandbox sandbox.
+	 *
+	 * @return mixed
+	 */
 	public static function get_andreani_pdf_label( $tc, &$error, $sandbox = false ) {
 		$sandbox     = apply_filters( 'kshippingargentina_sandbox', $sandbox );
 		$api_version = apply_filters( 'kshippingargentina_andreani_api_version', 'v2' );
@@ -394,6 +410,16 @@ class KShippingArgentina_API {
 		}
 		return false;
 	}
+
+	/**
+	 * Create Andreani Label.
+	 *
+	 * @param array $request Request.
+	 * @param mixed $error error.
+	 * @param bool  $sandbox sandbox.
+	 *
+	 * @return mixed
+	 */
 	public static function create_label_andreani( $request, &$error, $sandbox = false ) {
 		$sandbox     = apply_filters( 'kshippingargentina_sandbox', $sandbox );
 		$api_version = apply_filters( 'kshippingargentina_andreani_api_version', 'v2' );
@@ -645,6 +671,7 @@ class KShippingArgentina_API {
 	 * SOAP Client.
 	 *
 	 * @param string $tc Tracking code.
+	 * @param mixed  $error error.
 	 * @param bool   $sandbox sandbox.
 	 *
 	 * @return mixed
@@ -664,7 +691,11 @@ class KShippingArgentina_API {
 		);
 		$data         = wp_remote_post( $url, $config );
 		if ( ! is_wp_error( $data ) ) {
-			$b64 = (string) simplexml_load_string( $data['body'] );
+			try {
+				$b64 = (string) @simplexml_load_string( $data['body'] );
+			} catch ( Exception $e ) {
+				$b64 = false;
+			}
 			if ( ! $b64 ) {
 				self::debug( 'From API invalid XML: ', array( $url, $query_string, $data['body'] ) );
 				if ( null !== $error ) {
@@ -712,45 +743,54 @@ class KShippingArgentina_API {
 			self::debug( 'Request OCA services invalid:' . $method, $params );
 			return false;
 		}
-		if ( $force_url ) {
-			$url = $force_url;
-		} else {
-			$url = $sandbox ? self::OCA_API_SANDBOX : self::OCA_API_PROD;
-		}
-		$xml = false;
+
 		try {
-			self::debug( 'Request OCA ' . $url . ' - ' . $method, $params );
-			$response = self::get_oca_soap_client( $url )->{$method}( $params );
-			self::debug( 'Response ' . $url . ' - ' . $method, $response );
-			if ( $return_raw ) {
-				return $response->{$method . 'Result'};
+			if ( $force_url ) {
+				$url = $force_url;
+			} else {
+				$url = $sandbox ? self::OCA_API_SANDBOX : self::OCA_API_PROD;
 			}
-			if ( ! isset( $response->{$method . 'Result'}->any ) ) {
-				self::debug( 'Error on ' . $method, $response->{$method . 'Result'} );
-				if ( null !== $error ) {
-					$error = (string) $response->{$method . 'Result'};
+			$xml = false;
+			try {
+				self::debug( 'Request OCA ' . $url . ' - ' . $method, $params );
+				$response = self::get_oca_soap_client( $url )->{$method}( $params );
+				self::debug( 'Response ' . $url . ' - ' . $method, $response );
+				if ( $return_raw ) {
+					return $response->{$method . 'Result'};
 				}
+				if ( ! isset( $response->{$method . 'Result'}->any ) ) {
+					self::debug( 'Error on ' . $method, $response->{$method . 'Result'} );
+					if ( null !== $error ) {
+						$error = (string) $response->{$method . 'Result'};
+					}
+					return false;
+				}
+				$xml = new SimpleXMLElement( $response->{$method . 'Result'}->any );
+			} catch ( Exception $e ) {
+				if ( null !== $error ) {
+					$error = $e->getMessage();
+				}
+				self::debug( 'Error on ' . $method . ': ' . $e->getMessage() );
 				return false;
 			}
-			$xml = new SimpleXMLElement( $response->{$method . 'Result'}->any );
+
+			if ( ! count( $xml->children() ) ) {
+				self::debug( 'Error on ' . $method . ': No results from OCA webservice' );
+				return false;
+			}
+			$data = json_decode( wp_json_encode( $xml ), true );
+			self::debug( 'Response in array ' . $url . ' - ' . $method, $data );
+			if ( isset( $data['NewDataSet'] ) && ! empty( $data['NewDataSet'] ) ) {
+				return reset( $data['NewDataSet'] );
+			} else {
+				return reset( $data );
+			}
 		} catch ( Exception $e ) {
 			if ( null !== $error ) {
 				$error = $e->getMessage();
 			}
-			self::debug( 'Error on ' . $method . ': ' . $e->getMessage() );
+			self::debug( 'Error2 on ' . $method . ': ' . $e->getMessage() );
 			return false;
-		}
-
-		if ( ! count( $xml->children() ) ) {
-			self::debug( 'Error on ' . $method . ': No results from OCA webservice' );
-			return false;
-		}
-		$data = json_decode( wp_json_encode( $xml ), true );
-		self::debug( 'Response in array ' . $url . ' - ' . $method, $data );
-		if ( isset( $data['NewDataSet'] ) && ! empty( $data['NewDataSet'] ) ) {
-			return reset( $data['NewDataSet'] );
-		} else {
-			return reset( $data );
 		}
 	}
 
@@ -803,7 +843,6 @@ class KShippingArgentina_API {
 	 */
 	public static function get_cache( $cache_id ) {
 		$data = false;
-		// $cache_id .= '_' . WC_KShippingArgentina::VERSION;
 		if ( isset( self::$module_cache[ $cache_id ] ) && self::$module_cache[ $cache_id ] ) {
 			$data = self::$module_cache[ $cache_id ];
 			return $data;
@@ -864,7 +903,6 @@ class KShippingArgentina_API {
 	 * @return mixed
 	 */
 	public static function set_cache( $cache_id, $value, $ttl = 21600 ) {
-		// $cache_id                       .= '_' . WC_KShippingArgentina::VERSION;
 		$wpdb                            = WC_KShippingArgentina::woocommerce_wpdb();
 		$table_name                      = $wpdb->prefix . 'kshippingargentina_cache';
 		self::$module_cache[ $cache_id ] = $value;

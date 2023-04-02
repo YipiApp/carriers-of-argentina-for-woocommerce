@@ -6,35 +6,17 @@
  */
 
 add_filter(
-	'woocommerce_states',
-	function ( $states ) {
-		$states['AR'] = array(
-			'C' => 'Capital Federal',
-			'B' => 'Buenos Aires',
-			'K' => 'Catamarca',
-			'H' => 'Chaco',
-			'U' => 'Chubut',
-			'X' => 'Córdoba',
-			'W' => 'Corrientes',
-			'E' => 'Entre Ríos',
-			'P' => 'Formosa',
-			'Y' => 'Jujuy',
-			'L' => 'La Pampa',
-			'F' => 'La Rioja',
-			'M' => 'Mendoza',
-			'N' => 'Misiones',
-			'Q' => 'Neuquén',
-			'R' => 'Río Negro',
-			'A' => 'Salta',
-			'J' => 'San Juan',
-			'D' => 'San Luis',
-			'Z' => 'Santa Cruz',
-			'S' => 'Santa Fe',
-			'G' => 'Santiago del Estero',
-			'V' => 'Tierra del Fuego',
-			'T' => 'Tucumán',
-		);
-		return $states;
+	'wc_order_statuses',
+	function ( $order_statuses ) {
+		$new_order_statuses = array();
+		foreach ( $order_statuses as $key => $status ) {
+			$new_order_statuses[ $key ] = $status;
+			if ( 'wc-processing' === $key ) {
+				$new_order_statuses['wc-arrival-shipment']   = __( 'Shipment Arrival', 'wc-kshippingargentina' );
+				$new_order_statuses['wc-intransit-shipment'] = __( 'Shipment in Transit', 'wc-kshippingargentina' );
+			}
+		}
+		return $new_order_statuses;
 	}
 );
 
@@ -65,8 +47,40 @@ add_action(
 				'label_count'               => _n_noop( 'Shipment in Transit <span class="count">(%s)</span>', 'Shipment in Transit <span class="count">(%s)</span>' ),
 			)
 		);
-	},
-	1
+	}
+);
+
+add_filter(
+	'woocommerce_states',
+	function ( $states ) {
+		$states['AR'] = array(
+			'C' => 'Capital Federal',
+			'B' => 'Buenos Aires',
+			'K' => 'Catamarca',
+			'H' => 'Chaco',
+			'U' => 'Chubut',
+			'X' => 'Córdoba',
+			'W' => 'Corrientes',
+			'E' => 'Entre Ríos',
+			'P' => 'Formosa',
+			'Y' => 'Jujuy',
+			'L' => 'La Pampa',
+			'F' => 'La Rioja',
+			'M' => 'Mendoza',
+			'N' => 'Misiones',
+			'Q' => 'Neuquén',
+			'R' => 'Río Negro',
+			'A' => 'Salta',
+			'J' => 'San Juan',
+			'D' => 'San Luis',
+			'Z' => 'Santa Cruz',
+			'S' => 'Santa Fe',
+			'G' => 'Santiago del Estero',
+			'V' => 'Tierra del Fuego',
+			'T' => 'Tucumán',
+		);
+		return $states;
+	}
 );
 
 add_action(
@@ -469,21 +483,6 @@ function wc_kshippingargentina_ajax() {
 	}
 	die( '"invalid_cmd"' );
 }
-
-add_filter(
-	'wc_order_statuses',
-	function ( $order_statuses ) {
-		$new_order_statuses = array();
-		foreach ( $order_statuses as $key => $status ) {
-			$new_order_statuses[ $key ] = $status;
-			if ( 'wc-processing' === $key ) {
-				$new_order_statuses['wc-arrival-shipment']   = __( 'Shipment Arrival', 'wc-kshippingargentina' );
-				$new_order_statuses['wc-intransit-shipment'] = __( 'Shipment in Transit', 'wc-kshippingargentina' );
-			}
-		}
-		return $new_order_statuses;
-	}
-);
 
 add_filter(
 	'woocommerce_default_address_fields',

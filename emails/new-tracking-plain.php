@@ -9,4 +9,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
+
 {kshipping_message}

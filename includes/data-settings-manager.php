@@ -19,49 +19,49 @@ $countries_obj = new WC_Countries();
 $states        = $countries_obj->get_states( 'AR' );
 
 $r = array(
-	'enabled'            => array(
+	'enabled'              => array(
 		'title'   => __( 'Enable / Disable', 'wc-kshippingargentina' ),
 		'type'    => 'checkbox',
 		'label'   => __( 'Enable Shipping Argentina', 'wc-kshippingargentina' ),
 		'default' => 'yes',
 	),
-	'api_host'           => array(
+	'api_host'             => array(
 		'title'       => __( 'X-RapidAPI-Host', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'Get this in https://rapidapi.com/kijamve/api/argentina-shipping-cost', 'wc-kshippingargentina' ),
 		'default'     => '',
 	),
-	'api_key'            => array(
+	'api_key'              => array(
 		'title'       => __( 'X-RapidAPI-Key', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'Get this in https://rapidapi.com/kijamve/api/argentina-shipping-cost', 'wc-kshippingargentina' ),
 		'default'     => '',
 	),
-	'andreani_username'  => array(
+	'andreani_username'    => array(
 		'title'       => __( 'Andreani API Username (Optional)', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'Optional, only for generation of label', 'wc-kshippingargentina' ),
 		'default'     => '',
 	),
-	'andreani_password'  => array(
+	'andreani_password'    => array(
 		'title'       => __( 'Andreani API Password (Optional)', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'Only for generation of label', 'wc-kshippingargentina' ),
 		'default'     => '',
 	),
-	'oca_username'       => array(
+	'oca_username'         => array(
 		'title'       => __( 'OCA e-Pack API Username (Optional)', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'Optional, only for generation of label', 'wc-kshippingargentina' ),
 		'default'     => '',
 	),
-	'oca_password'       => array(
+	'oca_password'         => array(
 		'title'       => __( 'OCA e-Pack API Password (Optional)', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'Optional, only for generation of label', 'wc-kshippingargentina' ),
 		'default'     => '',
 	),
-	'time_slot'          => array(
+	'time_slot'            => array(
 		'title'    => __( 'OCA collections time slot', 'wc-kshippingargentina' ),
 		'type'     => 'select',
 		'default'  => '1',
@@ -72,69 +72,69 @@ $r = array(
 		),
 		'desc_tip' => false,
 	),
-	'postcode'           => array(
+	'postcode'             => array(
 		'title'       => __( 'Sender Post Code', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default'     => '',
 	),
-	'state'              => array(
+	'state'                => array(
 		'title'       => __( 'State of sender', 'wc-kshippingargentina' ),
 		'type'        => 'select',
 		'description' => '',
 		'default'     => '',
 		'options'     => $states,
 	),
-	'city'               => array(
+	'city'                 => array(
 		'title'       => __( 'City of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'street'             => array(
+	'street'               => array(
 		'title'       => __( 'Street of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'number'             => array(
+	'number'               => array(
 		'title'       => __( 'Number of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'floor'              => array(
+	'floor'                => array(
 		'title'       => __( 'Floor of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'apartment'          => array(
+	'apartment'            => array(
 		'title'       => __( 'Apartment of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'other'              => array(
+	'other'                => array(
 		'title'       => __( 'Detalle (Entre-calles, etc)', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'fullname'           => array(
+	'fullname'             => array(
 		'title'       => __( 'Full name of sender (Or company name)', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'dni_type'              => array(
+	'dni_type'             => array(
 		'title'   => __( 'DNI type of sender (Only for Andreani)', 'wc-kshippingargentina' ),
 		'type'    => 'select',
 		'default' => 'DNI',
@@ -144,28 +144,28 @@ $r = array(
 			'CUIL' => __( 'CUIL', 'wc-kshippingargentina' ),
 		),
 	),
-	'dni'                   => array(
+	'dni'                  => array(
 		'title'       => __( 'DNI of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'phone'                 => array(
+	'phone'                => array(
 		'title'       => __( 'Phone of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'email'              => array(
+	'email'                => array(
 		'title'       => __( 'E-Mail of sender', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => '',
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'weight'             => array(
+	'weight'               => array(
 		// translators: %s Unit weight.
 		'title'       => sprintf( __( 'Weight default product (In %s)', 'wc-kshippingargentina' ), $from_unit_w ),
 		'type'        => 'text',
@@ -173,7 +173,7 @@ $r = array(
 		'default'     => '0.1',
 		'desc_tip'    => false,
 	),
-	'width'              => array(
+	'width'                => array(
 		// translators: %s Unit dimension.
 		'title'       => sprintf( __( 'Width default product (In %s)', 'wc-kshippingargentina' ), $from_unit_d ),
 		'type'        => 'text',
@@ -181,7 +181,7 @@ $r = array(
 		'default'     => '15',
 		'desc_tip'    => false,
 	),
-	'height'             => array(
+	'height'               => array(
 		// translators: %s Unit dimension.
 		'title'       => sprintf( __( 'Height default product (In %s)', 'wc-kshippingargentina' ), $from_unit_d ),
 		'type'        => 'text',
@@ -189,7 +189,7 @@ $r = array(
 		'default'     => '15',
 		'desc_tip'    => false,
 	),
-	'depth'              => array(
+	'depth'                => array(
 		// translators: %s Unit dimension.
 		'title'       => sprintf( __( 'Depth default product (In %s)', 'wc-kshippingargentina' ), $from_unit_d ),
 		'type'        => 'text',
@@ -197,7 +197,7 @@ $r = array(
 		'default'     => '15',
 		'desc_tip'    => false,
 	),
-	'shipping_mode'      => array(
+	'shipping_mode'        => array(
 		'title'   => __( 'Calculation mode', 'wc-kshippingargentina' ),
 		'type'    => 'select',
 		'default' => '',
@@ -207,7 +207,7 @@ $r = array(
 			'longer_side' => __( 'Use the longer sides of each product.', 'wc-kshippingargentina' ),
 		),
 	),
-	'shipping_mode_calc' => array(
+	'shipping_mode_calc'   => array(
 		'title'   => __( 'Package type', 'wc-kshippingargentina' ),
 		'type'    => 'select',
 		'default' => '',
@@ -218,7 +218,13 @@ $r = array(
 			'one_package_by_unit'    => __( 'One package by unit', 'wc-kshippingargentina' ),
 		),
 	),
-	'conversion_option'  => array(
+	'no_change_in_transit' => array(
+		'title'   => __( 'Do not change to "In Transit"', 'wc-kshippingargentina' ),
+		'type'    => 'checkbox',
+		'label'   => __( 'Deactivate automatic status change to "In Transit" when creating the guide.', 'wc-kshippingargentina' ),
+		'default' => 'no',
+	),
+	'conversion_option'    => array(
 		// translators: %1$s currency origin -  %2$s currency destination.
 		'title'   => sprintf( __( 'Enable %1$s to %2$s conversion', 'wc-kshippingargentina' ), $currency_src, $currency_dst ),
 		'type'    => 'select',
@@ -230,35 +236,35 @@ $r = array(
 			'custom'     => __( 'Use a manual conversion rate', 'wc-kshippingargentina' ),
 		),
 	),
-	'conversion_rate'    => array(
+	'conversion_rate'      => array(
 		// translators: %1$s currency origin -  %2$s currency destination.
 		'title'   => sprintf( __( 'Convert using manual rate from %1$s to %2$s', 'wc-kshippingargentina' ), $currency_src, $currency_dst ),
 		'type'    => 'text',
 		'label'   => __( 'Use a manual conversion rate', 'wc-kshippingargentina' ),
 		'default' => '1.0',
 	),
-	'meta_dni'           => array(
+	'meta_dni'             => array(
 		'title'       => __( 'Meta-key for DNI', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'If you don\'t specify it, the plugin adds it to the checkout form.', 'wc-kshippingargentina' ),
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'meta_phone'         => array(
+	'meta_phone'           => array(
 		'title'       => __( 'Meta-key for Phone', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'If you don\'t specify it, the plugin adds it to the checkout form.', 'wc-kshippingargentina' ),
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'meta_number'        => array(
+	'meta_number'          => array(
 		'title'       => __( 'Meta-key for Altura (Address)', 'wc-kshippingargentina' ),
 		'type'        => 'text',
 		'description' => __( 'If you don\'t specify it, the plugin adds it to the checkout form.', 'wc-kshippingargentina' ),
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
-	'debug'              => array(
+	'debug'                => array(
 		'title'       => __( 'Debug', 'wc-kshippingargentina' ),
 		'type'        => 'checkbox',
 		'label'       => __( 'Enable log', 'wc-kshippingargentina' ),
