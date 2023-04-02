@@ -112,6 +112,9 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 		$this->find[]    = '{order_date}';
 		$this->replace[] = date_i18n( wc_date_format(), strtotime( $this->object->order_date ) );
 
+		$this->find[]    = '{order_id}';
+		$this->replace[] = $this->object->get_order_number();
+
 		$this->find[]    = '{order_number}';
 		$this->replace[] = $this->object->get_order_number();
 
@@ -143,6 +146,8 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 		$this->find[]    = '{kshipping_message}';
 		$this->replace[] = str_replace( '{link}', implode( ', ', $links ), $message );
 
+		$this->heading = str_replace( '{order_id}', $this->object->get_order_number(), $this->heading );
+
 		$billing_address = $this->object->get_address( 'billing' );
 		$this->recipient = $billing_address['email'];
 
@@ -162,10 +167,11 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 			'WC_KNewTracking_Customer_Email trigger sending...',
 			array(
 				$order_id,
+				$this->recipient,
 			)
 		);
 		// woohoo, send the email!
-		$this->send( $this->get_recipient(), str_replace( '{order_id}', $this->object->get_order_number(), $this->get_subject() ), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+		$this->send( $billing_address['email'], str_replace( '{order_id}', $this->object->get_order_number(), $this->get_subject() ), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 	}
 
 	/**
@@ -183,7 +189,11 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 				'email_heading' => $this->get_heading(),
 			)
 		);
-		return ob_get_clean();
+		$data = ob_get_clean();
+		foreach ( $this->find as $key => $keyword ) {
+			$data = str_replace( $keyword, $this->replace[ $key ], $data );
+		}
+		return $data;
 	}
 
 

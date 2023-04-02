@@ -42,6 +42,13 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 	private $mail_message;
 
 	/**
+	 * Mail content.
+	 *
+	 * @var string
+	 */
+	private $mail_content;
+
+	/**
 	 * Set email defaults
 	 *
 	 * @since 1.0
@@ -65,7 +72,7 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 		$this->mail_message = $this->get_option( 'message', __( 'A tracking code has been created for the order #{order_id}, if you want to track it follow this link: {link}. If you want to download the PDF you can do it through this link: {label_link}', 'wc-kshippingargentina' ) );
 
 		// these define the locations of the templates that this email should use, we'll just use the new order template since this email is similar.
-		$plugin_dirname = basename( dirname( __DIR__ ) );
+		$plugin_dirname       = basename( dirname( __DIR__ ) );
 		$this->template_html  = '../../' . $plugin_dirname . '/emails/new-tracking-html.php';
 		$this->template_plain = '../../' . $plugin_dirname . '/emails/new-tracking-plain.php';
 
@@ -112,10 +119,12 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 		$this->find[]    = '{order_date}';
 		$this->replace[] = date_i18n( wc_date_format(), strtotime( $this->object->order_date ) );
 
+		$this->find[]    = '{order_id}';
+		$this->replace[] = $this->object->get_order_number();
+
 		$this->find[]    = '{order_number}';
 		$this->replace[] = $this->object->get_order_number();
 
-		$message = str_replace( '{order_id}', $this->object->get_order_number(), $this->mail_message );
 		$links   = array();
 		$labels  = get_post_meta( $this->object->get_id(), 'kshippingargentina_label_file', true );
 		if ( ! $labels || ! is_array( $labels ) || ! count( $labels ) ) {
@@ -123,7 +132,7 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 				'WC_KNewTracking_Admin_Email trigger no labels',
 				array(
 					$order_id,
-					$labels
+					$labels,
 				)
 			);
 			return;
@@ -146,12 +155,27 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 		if ( ! count( $link_labels ) ) {
 			$link_labels[] = '<b style="color:red">' . __( 'There were problems downloading the labels.', 'wc-kshippingargentina' ) . '</b>';
 		}
+		$message = str_replace(
+			'{order_id}',
+			$this->object->get_order_number(),
+			$this->mail_message
+		);
+		$message = str_replace(
+			'{label_link}',
+			implode( ', ', $link_labels ),
+			str_replace(
+				'{link}',
+				implode( ', ', $links ),
+				$message
+			)
+		);
+
+		$this->mail_content = $message;
 
 		$this->find[]    = '{kshipping_message}';
-		$this->replace[] = str_replace( '{label_link}', implode( ', ', $link_labels ), str_replace( '{link}', implode( ', ', $links ), $message ) );
+		$this->replace[] = $this->mail_content;
 
-		$billing_address = $this->object->get_address( 'billing' );
-		$this->recipient = $billing_address['email'];
+		$this->heading = str_replace( '{order_id}', $this->object->get_order_number(), $this->heading );
 
 		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
 			KShippingArgentina_API::debug(
@@ -190,7 +214,11 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 				'email_heading' => $this->get_heading(),
 			)
 		);
-		return ob_get_clean();
+		$data = ob_get_clean();
+		foreach ( $this->find as $key => $keyword ) {
+			$data = str_replace( $keyword, $this->replace[ $key ], $data );
+		}
+		return $data;
 	}
 
 	/**
@@ -219,13 +247,13 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 	public function init_form_fields() {
 
 		$this->form_fields = array(
-			'enabled'    => array(
+			'enabled'   => array(
 				'title'   => __( 'Enable/Disable', 'wc-kshippingargentina' ),
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable this email notification', 'wc-kshippingargentina' ),
 				'default' => 'yes',
 			),
-			'recipient'  => array(
+			'recipient' => array(
 				'title'       => __( 'Recipient(s)', 'wc-kshippingargentina' ),
 				'type'        => 'text',
 				// translators: %s email example.
@@ -233,7 +261,7 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 				'placeholder' => '',
 				'default'     => get_option( 'admin_email' ),
 			),
-			'subject'    => array(
+			'subject'   => array(
 				'title'       => __( 'Subject', 'wc-kshippingargentina' ),
 				'type'        => 'text',
 				// translators: %s email example.
@@ -241,7 +269,7 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 				'placeholder' => '',
 				'default'     => $this->subject,
 			),
-			'heading'    => array(
+			'heading'   => array(
 				'title'       => __( 'Email Heading', 'wc-kshippingargentina' ),
 				'type'        => 'text',
 				'description' => sprintf(
@@ -252,7 +280,7 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 				'placeholder' => '',
 				'default'     => $this->heading,
 			),
-			'message'    => array(
+			'message'   => array(
 				'title'       => __( 'Message', 'wc-kshippingargentina' ),
 				'type'        => 'textarea',
 				'placeholder' => '',
