@@ -12,41 +12,36 @@ add_filter(
 		foreach ( $order_statuses as $key => $status ) {
 			$new_order_statuses[ $key ] = $status;
 			if ( 'wc-processing' === $key ) {
-				$new_order_statuses['wc-arrival-shipment']   = __( 'Shipment Arrival', 'wc-kshippingargentina' );
-				$new_order_statuses['wc-intransit-shipment'] = __( 'Shipment in Transit', 'wc-kshippingargentina' );
+				$new_order_statuses['wc-arrival']   = __( 'Shipment Arrival', 'wc-kshippingargentina' );
+				$new_order_statuses['wc-intransit'] = __( 'Shipment in Transit', 'wc-kshippingargentina' );
 			}
 		}
 		return $new_order_statuses;
 	}
 );
 
-add_action(
-	'init',
-	function () {
-		register_post_status(
-			'wc-arrival-shipment',
-			array(
-				'label'                     => __( 'Shipment Arrival', 'wc-kshippingargentina' ),
-				'public'                    => true,
-				'show_in_admin_status_list' => true,
-				'show_in_admin_all_list'    => true,
-				'exclude_from_search'       => false,
-				// translators: count.
-				'label_count'               => _n_noop( 'Shipment Arrival <span class="count">(%s)</span>', 'Shipment Arrival <span class="count">(%s)</span>' ),
-			)
+add_filter(
+	'woocommerce_register_shop_order_post_statuses',
+	function ( $order_statuses ) {
+		$order_statuses['wc-arrival']   = array(
+			'label'                     => __( 'Shipment Arrival', 'wc-kshippingargentina' ),
+			'public'                    => true,
+			'show_in_admin_status_list' => true,
+			'show_in_admin_all_list'    => true,
+			'exclude_from_search'       => false,
+			// translators: count.
+			'label_count'               => _n_noop( 'Shipment Arrival <span class="count">(%s)</span>', 'Shipment Arrival <span class="count">(%s)</span>' ),
 		);
-		register_post_status(
-			'wc-intransit-shipment',
-			array(
-				'label'                     => __( 'Shipment in Transit', 'wc-kshippingargentina' ),
-				'public'                    => true,
-				'show_in_admin_status_list' => true,
-				'show_in_admin_all_list'    => true,
-				'exclude_from_search'       => false,
-				// translators: count.
-				'label_count'               => _n_noop( 'Shipment in Transit <span class="count">(%s)</span>', 'Shipment in Transit <span class="count">(%s)</span>' ),
-			)
+		$order_statuses['wc-intransit'] = array(
+			'label'                     => __( 'Shipment in Transit', 'wc-kshippingargentina' ),
+			'public'                    => true,
+			'show_in_admin_status_list' => true,
+			'show_in_admin_all_list'    => true,
+			'exclude_from_search'       => false,
+			// translators: count.
+			'label_count'               => _n_noop( 'Shipment in Transit <span class="count">(%s)</span>', 'Shipment in Transit <span class="count">(%s)</span>' ),
 		);
+		return $order_statuses;
 	}
 );
 

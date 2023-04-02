@@ -1203,7 +1203,7 @@ function kshipping_notify_new_tracking( $order, $shipping ) {
 		)
 	);
 	if ( 'yes' !== $setting['no_change_in_transit'] ) {
-		$order->update_status( 'intransit-shipment' );
+		$order->update_status( 'intransit' );
 	}
 	WC_KNewTracking_Customer_Email::get_instance();
 	WC_KNewTracking_Admin_Email::get_instance();
