@@ -6,6 +6,13 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 	$.post(wc_kshippingargentina_context.ajax_url, { nonce: wc_kshippingargentina_context.token, cmd: "offices_rcv", instance_id: instance_id, postcode: postcode }, function(list_json) {
 		$('.method_instance_id-'+instance_id+' option').remove();
 		let list = jQuery.parseJSON(list_json);
+		/*
+		if(typeof $('.method_instance_id-'+instance_id+' select').selectWoo != 'undefined') {
+			$('.method_instance_id-'+instance_id+' select').selectWoo('destroy');
+		} else if(typeof $('#billing_city').select2 != 'undefined') {
+			$('.method_instance_id-'+instance_id+' select').select2('destroy');
+		}
+		*/
 		for (let i in list) {
 			let o = list[i];
 			let selected = '';
@@ -14,6 +21,14 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 				selected = 'selected';
 			}
 			$('.method_instance_id-'+instance_id+' select').append('<option ' + selected + ' data-map="https://maps.google.com/?q=' + o.lat + ',' + o.lng + '" value="' + o.iso + '#' + o.id + '">' + o.description + ' - ' + o.address + '</option>');
+		}
+		let opts_list = $('.method_instance_id-'+instance_id+' select').find('option');
+		opts_list.sort(function(a, b) { return $(a).text() > $(b).text() ? 1 : -1; });
+		$('.method_instance_id-'+instance_id+' select').html('').append(opts_list);
+		if(typeof $('.method_instance_id-'+instance_id+' select').selectWoo != 'undefined') {
+			$('.method_instance_id-'+instance_id+' select').selectWoo();
+		} else if(typeof $('.method_instance_id-'+instance_id+' select').select2 != 'undefined') {
+			$('.method_instance_id-'+instance_id+' select').select2();
 		}
 	});
 }

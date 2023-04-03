@@ -22,7 +22,7 @@ This plugins adds the most used shipping platforms in Argentina to your WooComme
 
 === Requirements ===
 - WooCommerce
-- X-RapidAPI-Key and X-RapidAPI-Host of this API (Price starts at 5U$D / mo): https://rapidapi.com/kijamve/api/argentina-shipping-cost
+- X-RapidAPI-Key and X-RapidAPI-Host of this API (Price starts at 5U$D / mo): https://rapidapi.com/kijamve/api/transportistas-de-argentina
 - Número de Operativa / Número de Cliente / Cuit if you want to use Quote for OCA e-Pack
 - User and Password for OCA e-Pack if you want generate labels automatically with OCA e-Pack
 - Número de Contrato / Número de Cliente if you want to use Quote for Andreani

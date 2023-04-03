@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
-"POT-Creation-Date: 2023-04-01 23:22-0400\n"
-"PO-Revision-Date: 2023-04-01 23:22-0400\n"
+"POT-Creation-Date: 2023-04-03 01:43-0400\n"
+"PO-Revision-Date: 2023-04-03 01:46-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -34,6 +34,83 @@ msgstr ""
 msgid "WooCommerce"
 msgstr "WooCommerce"
 
+#: functions-boxes.php:15
+msgid "Shipping Boxes"
+msgstr "Cajas de Envío"
+
+#: functions-boxes.php:16
+msgid "Shipping Box"
+msgstr "Caja Envío"
+
+#: functions-boxes.php:17
+msgctxt "admin menu"
+msgid "Shipping Boxes"
+msgstr "Cajas de Envío"
+
+#: functions-boxes.php:18
+msgctxt "admin bar"
+msgid "Shipping Boxes"
+msgstr "Cajas de Envío"
+
+#: functions-boxes.php:19
+msgctxt "add new"
+msgid "Add Box"
+msgstr "Agregar nueva caja"
+
+#: functions-boxes.php:20
+msgid "Add Box"
+msgstr "Agregar nueva caja"
+
+#: functions-boxes.php:21
+msgid "New Box"
+msgstr "Nueva Caja"
+
+#: functions-boxes.php:22
+msgid "Edit Box"
+msgstr "Editar Caja"
+
+#: functions-boxes.php:23
+msgid "View Box"
+msgstr "Ver Caja"
+
+#: functions-boxes.php:24
+msgid "All Boxes"
+msgstr "Todas las Cajas"
+
+#: functions-boxes.php:25
+msgid "Search Box"
+msgstr "Buscar Caja"
+
+#: functions-boxes.php:26
+msgid "No box found."
+msgstr "No se han encontrado cajas."
+
+#: functions-boxes.php:165
+#, fuzzy
+#| msgid "Dimensions (In CM)"
+msgid "Dimensions"
+msgstr "Dimensiones (en CM)"
+
+#: functions-boxes.php:181
+msgid "Width (In CM)"
+msgstr "Ancho (en CM)"
+
+#: functions-boxes.php:185
+msgid "Height (In CM)"
+msgstr "Alto (en CM)"
+
+#: functions-boxes.php:189
+msgid "Depth (In CM)"
+msgstr "Profundidad (en CM)"
+
+#: functions-boxes.php:193 functions-boxes.php:208
+msgid "Max weight (In KG)"
+msgstr "Peso máximo (en KG)"
+
+#: functions-boxes.php:207 templates/order.tpl.php:226
+msgid "Dimensions (In CM)"
+msgstr "Dimensiones (en CM)"
+
 #: functions-labels.php:22
 msgid "You must select at least one order"
 msgstr "Debe seleccionar al menos un pedido"
@@ -61,7 +138,7 @@ msgstr "Este pedido ya tiene códigos de seguimiento asignados"
 
 #: functions-labels.php:190
 msgid "Invalid service type."
-msgstr "Tipo de servicio"
+msgstr "Tipo de servicio invalido."
 
 #: functions-labels.php:232
 msgid ""
@@ -82,7 +159,7 @@ msgstr "La instancia de envío no existe."
 
 #: functions-labels.php:297
 msgid "Shipping type not found:"
-msgstr "Envíos para Argentina"
+msgstr "Tipo de transportista no encontrado:"
 
 #. translators: %s => Tracking code.
 #: functions-labels.php:323 functions-labels.php:341 functions-labels.php:362
@@ -136,119 +213,119 @@ msgstr ""
 msgid "Andreani return with Timeout"
 msgstr "Andreani retorno con Timeout"
 
-#: functions.php:47 functions.php:480
+#: functions.php:15 functions.php:27
 msgid "Shipment Arrival"
 msgstr "Paquete entregado"
 
+#: functions.php:16 functions.php:36
+msgid "Shipment in Transit"
+msgstr "Envío en tránsito"
+
 #. translators: count.
-#: functions.php:53
+#: functions.php:33
 #, php-format
 msgid "Shipment Arrival <span class=\"count\">(%s)</span>"
 msgid_plural "Shipment Arrival <span class=\"count\">(%s)</span>"
 msgstr[0] "Paquete entregado <span class=\"count\">(%s)</span>"
 msgstr[1] "Llegada del envío <span class=\"count\">(%s)</span>"
 
-#: functions.php:59 functions.php:481
-msgid "Shipment in Transit"
-msgstr "Envío en tránsito"
-
 #. translators: count.
-#: functions.php:65
+#: functions.php:42
 #, php-format
 msgid "Shipment in Transit <span class=\"count\">(%s)</span>"
 msgid_plural "Shipment in Transit <span class=\"count\">(%s)</span>"
 msgstr[0] "Envío en tránsito <span class=\"count\">(%s)</span>"
 msgstr[1] "Envío en tránsito <span class=\"count\">(%s)</span>"
 
-#: functions.php:112
+#: functions.php:121
 msgid "Nearest office"
 msgstr "Oficina más cercana"
 
-#: functions.php:117
+#: functions.php:126
 msgid "Choose one..."
 msgstr "Elige uno..."
 
-#: functions.php:196 templates/order.tpl.php:98
+#: functions.php:205 templates/order.tpl.php:98
 msgid "Identification number type"
 msgstr "Tipo de número de identificación"
 
-#: functions.php:206 templates/order.tpl.php:112
+#: functions.php:215 templates/order.tpl.php:112
 msgid "Identification number"
 msgstr "Número de identificación"
 
-#: functions.php:217 templates/order.tpl.php:158
+#: functions.php:226 templates/order.tpl.php:158
 msgid "Mobile Phone Area Code"
 msgstr "Código de área del teléfono móvil"
 
-#: functions.php:226 templates/order.tpl.php:162
+#: functions.php:235 templates/order.tpl.php:162
 msgid "Mobile Phone (No Area Code)"
 msgstr "Teléfono móvil (sin código de área)"
 
-#: functions.php:237 functions.php:248 templates/order.tpl.php:146
+#: functions.php:246 functions.php:257 templates/order.tpl.php:146
 msgid "Height (Enter numbers only)"
 msgstr "Altura (introduzca solo números)"
 
-#: functions.php:260 functions.php:271 templates/order.tpl.php:150
+#: functions.php:269 functions.php:280 templates/order.tpl.php:150
 msgid "Floor"
 msgstr "Piso"
 
-#: functions.php:282 functions.php:293 templates/order.tpl.php:154
+#: functions.php:291 functions.php:302 templates/order.tpl.php:154
 msgid "Apartment"
 msgstr "Apartamento"
 
-#: functions.php:311
+#: functions.php:320
 msgid "Street"
 msgstr "Calle"
 
-#: functions.php:312 templates/order.tpl.php:138
+#: functions.php:321 templates/order.tpl.php:138
 msgid "Street name"
 msgstr "Nombre de calle"
 
-#: functions.php:313 functions.php:314 templates/order.tpl.php:142
+#: functions.php:322 functions.php:323 templates/order.tpl.php:142
 msgid "Detail (Between-streets, etc)"
 msgstr "Detalle (Entre-calles, etc)"
 
-#: functions.php:401
+#: functions.php:410
 msgid "days"
 msgstr "dias"
 
-#: functions.php:402
+#: functions.php:411
 msgid "Your shopping cart is empty"
 msgstr "Tu carrito está vacío"
 
-#: functions.php:403
+#: functions.php:412
 msgid "No carriers found"
 msgstr "No se han encontrado transportistas"
 
-#: functions.php:404
+#: functions.php:413
 msgid "Product not found"
 msgstr "Producto no encontrado"
 
-#: functions.php:405
+#: functions.php:414
 msgid "Server error"
 msgstr "Error del servidor"
 
-#: functions.php:406
+#: functions.php:415
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: functions.php:407
+#: functions.php:416
 msgid "The plugin is not configured correctly..."
 msgstr "El plugin no esta configurado correctamente..."
 
 #. translators: Office.
-#: functions.php:537 functions.php:597
+#: functions.php:531 functions.php:591
 #, php-format
 msgid "Office: %1$s"
 msgstr "Oficina: %1$s"
 
 #. translators: name - (iso / code).
-#: functions.php:550 functions.php:610
+#: functions.php:544 functions.php:604
 #, php-format
 msgid "Office %1$s: %2$s - %3$s (%4$s / %5$s)"
 msgstr "Oficina %1$s: %2$s - %3$s (%4$s / %5$s)"
 
-#: functions.php:648
+#: functions.php:642
 msgid "Shipping"
 msgstr "Envío"
 
@@ -267,26 +344,26 @@ msgstr "El usuario o la contraseña de Andreani no son válidos"
 msgid "Andreani"
 msgstr "Andreani"
 
-#: includes/class-wc-knewtracking-admin-email.php:37
+#: includes/class-wc-knewtracking-admin-email.php:64
 msgid "Admin: New tracking code assigned"
 msgstr "Administrador: Nuevos códigos de seguimiento asignados"
 
-#: includes/class-wc-knewtracking-admin-email.php:40
-#: includes/class-wc-knewtracking-customer-email.php:39
+#: includes/class-wc-knewtracking-admin-email.php:67
+#: includes/class-wc-knewtracking-customer-email.php:59
 msgid ""
 "Send an email to the customer with the tracking number assigned to an order"
 msgstr ""
 "Enviar un correo electrónico al cliente con el número de seguimiento "
 "asignado a un pedido"
 
-#: includes/class-wc-knewtracking-admin-email.php:43
-#: includes/class-wc-knewtracking-admin-email.php:44
-#: includes/class-wc-knewtracking-customer-email.php:42
-#: includes/class-wc-knewtracking-customer-email.php:43
+#: includes/class-wc-knewtracking-admin-email.php:70
+#: includes/class-wc-knewtracking-admin-email.php:71
+#: includes/class-wc-knewtracking-customer-email.php:62
+#: includes/class-wc-knewtracking-customer-email.php:63
 msgid "#{order_id} Tracking code generated"
 msgstr "#{order_id} Código de seguimiento generado"
 
-#: includes/class-wc-knewtracking-admin-email.php:45
+#: includes/class-wc-knewtracking-admin-email.php:72
 msgid ""
 "A tracking code has been created for the order #{order_id}, if you want to "
 "track it follow this link: {link}. If you want to download the PDF you can "
@@ -296,26 +373,26 @@ msgstr ""
 "rastrearlo sigue este enlace: {link}. Si quieres descargar el PDF puedes "
 "hacerlo a través de este enlace: {label_link}"
 
-#: includes/class-wc-knewtracking-admin-email.php:113
+#: includes/class-wc-knewtracking-admin-email.php:156
 msgid "There were problems downloading the labels."
 msgstr "Hubo problemas para descargar las etiquetas."
 
-#: includes/class-wc-knewtracking-admin-email.php:175
-#: includes/class-wc-knewtracking-customer-email.php:162
+#: includes/class-wc-knewtracking-admin-email.php:251
+#: includes/class-wc-knewtracking-customer-email.php:226
 msgid "Enable/Disable"
 msgstr "Activar/Desactivar"
 
-#: includes/class-wc-knewtracking-admin-email.php:177
-#: includes/class-wc-knewtracking-customer-email.php:164
+#: includes/class-wc-knewtracking-admin-email.php:253
+#: includes/class-wc-knewtracking-customer-email.php:228
 msgid "Enable this email notification"
 msgstr "Activar este aviso por correo electrónico"
 
-#: includes/class-wc-knewtracking-admin-email.php:181
+#: includes/class-wc-knewtracking-admin-email.php:257
 msgid "Recipient(s)"
 msgstr "Destinatario(s)"
 
 #. translators: %s email example.
-#: includes/class-wc-knewtracking-admin-email.php:184
+#: includes/class-wc-knewtracking-admin-email.php:260
 #, php-format
 msgid ""
 "Enter recipients (comma separated) for this email. Defaults to <code>%s</"
@@ -324,14 +401,14 @@ msgstr ""
 "Introduce los destinatarios (separados por comas) de este correo "
 "electrónico. Por defecto <code>%s</code>."
 
-#: includes/class-wc-knewtracking-admin-email.php:189
-#: includes/class-wc-knewtracking-customer-email.php:168
+#: includes/class-wc-knewtracking-admin-email.php:265
+#: includes/class-wc-knewtracking-customer-email.php:232
 msgid "Subject"
 msgstr "Asunto"
 
 #. translators: %s email example.
-#: includes/class-wc-knewtracking-admin-email.php:192
-#: includes/class-wc-knewtracking-customer-email.php:171
+#: includes/class-wc-knewtracking-admin-email.php:268
+#: includes/class-wc-knewtracking-customer-email.php:235
 #, php-format
 msgid ""
 "This controls the email subject line. Leave blank to use the default "
@@ -340,14 +417,14 @@ msgstr ""
 "Esto controla la línea del asunto del correo electrónico. Déjalo en blanco "
 "para usar el asunto por defecto: <code>%s</code>."
 
-#: includes/class-wc-knewtracking-admin-email.php:197
-#: includes/class-wc-knewtracking-customer-email.php:176
+#: includes/class-wc-knewtracking-admin-email.php:273
+#: includes/class-wc-knewtracking-customer-email.php:240
 msgid "Email Heading"
 msgstr "Encabezado del correo electrónico"
 
 #. translators: %s email example.
-#: includes/class-wc-knewtracking-admin-email.php:201
-#: includes/class-wc-knewtracking-customer-email.php:180
+#: includes/class-wc-knewtracking-admin-email.php:277
+#: includes/class-wc-knewtracking-customer-email.php:244
 #, php-format
 msgid ""
 "This controls the main heading contained within the email notification. "
@@ -356,16 +433,16 @@ msgstr ""
 "Esto controla la cabecera principal del aviso por correo electrónico. Déjalo "
 "en blanco para usar la cabecera por defecto: <code>%s</code>."
 
-#: includes/class-wc-knewtracking-admin-email.php:208
-#: includes/class-wc-knewtracking-customer-email.php:187
+#: includes/class-wc-knewtracking-admin-email.php:284
+#: includes/class-wc-knewtracking-customer-email.php:251
 msgid "Message"
 msgstr "Mensaje"
 
-#: includes/class-wc-knewtracking-customer-email.php:36
+#: includes/class-wc-knewtracking-customer-email.php:56
 msgid "Customer: New tracking code assigned"
 msgstr "Cliente: Nuevos códigos de seguimiento asignados"
 
-#: includes/class-wc-knewtracking-customer-email.php:44
+#: includes/class-wc-knewtracking-customer-email.php:64
 msgid ""
 "Your tracking code for the order #{order_id} has been created. The link to "
 "track your package is as follows: {link}"
@@ -390,41 +467,27 @@ msgid "Argentina have to be the country of origin."
 msgstr "Argentina tiene que ser el país de origen."
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:561
-#: includes/class-wc-kshippingargentina-shipping.php:631
-#, php-format
-msgid "Product #%s is missing dimensions."
-msgstr "Al producto #%s le faltan dimensiones."
-
-#. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:573
-#: includes/class-wc-kshippingargentina-shipping.php:643
-#, php-format
-msgid "Product #%s is missing dimensions. Aborting."
-msgstr "El producto # %s carece de dimensiones. Abortar."
-
-#. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:721
+#: includes/class-wc-kshippingargentina-shipping.php:625
 #, php-format
 msgid "Product #%s is virtual. Skipping."
 msgstr "El producto #%s es virtual. Saltar."
 
 #. translators: Min and max days of delay.
-#: includes/class-wc-kshippingargentina-shipping.php:891
+#: includes/class-wc-kshippingargentina-shipping.php:797
 #, php-format
 msgid "%1$d to %2$d days"
 msgstr "%1$d a %2$d días"
 
-#: includes/class-wc-kshippingargentina-shipping.php:928
+#: includes/class-wc-kshippingargentina-shipping.php:834
 msgid "- Free Shipping"
 msgstr "- Envío gratuito"
 
 #. translators: ISO Currency.
-#: includes/class-wc-kshippingargentina-shipping.php:945
+#: includes/class-wc-kshippingargentina-shipping.php:851
 msgid "Argentina Shipping"
 msgstr "Envíos en Argentina"
 
-#: includes/class-wc-kshippingargentina-shipping.php:945
+#: includes/class-wc-kshippingargentina-shipping.php:851
 #, php-format
 msgid ""
 "You currency <code>%s</code> can not be supported. Please use ARS or USD."
@@ -443,8 +506,10 @@ msgid "X-RapidAPI-Host"
 msgstr "X-RapidAPI-Host"
 
 #: includes/data-settings-manager.php:31 includes/data-settings-manager.php:37
-msgid "Get this in https://rapidapi.com/kijamve/api/argentina-shipping-cost"
-msgstr "Obtén esto en https://rapidapi.com/kijamve/api/argentina-shipping-cost"
+msgid ""
+"Get this in https://rapidapi.com/kijamve/api/transportistas-de-argentina"
+msgstr ""
+"Obtén esto en https://rapidapi.com/kijamve/api/transportistas-de-argentina"
 
 #: includes/data-settings-manager.php:35
 msgid "X-RapidAPI-Key"
@@ -1179,10 +1244,6 @@ msgstr "Eliminar"
 msgid "Box"
 msgstr "Caja"
 
-#: templates/order.tpl.php:226
-msgid "Dimensions (In CM)"
-msgstr "Dimensiones (en CM)"
-
 #: templates/order.tpl.php:233
 msgid "Weight (In KG)"
 msgstr "Peso (en KG)"
@@ -1215,6 +1276,14 @@ msgstr "Kijam López"
 #. Author URI of the plugin/theme
 msgid "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
 msgstr "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
+
+#, php-format
+#~ msgid "Product #%s is missing dimensions."
+#~ msgstr "Al producto #%s le faltan dimensiones."
+
+#, php-format
+#~ msgid "Product #%s is missing dimensions. Aborting."
+#~ msgstr "El producto # %s carece de dimensiones. Abortar."
 
 #~ msgid "Choose which format of email to send."
 #~ msgstr "Elige el formato en el que se enviarán los emails."

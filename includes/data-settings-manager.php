@@ -28,13 +28,13 @@ $r = array(
 	'api_host'             => array(
 		'title'       => __( 'X-RapidAPI-Host', 'wc-kshippingargentina' ),
 		'type'        => 'text',
-		'description' => __( 'Get this in https://rapidapi.com/kijamve/api/argentina-shipping-cost', 'wc-kshippingargentina' ),
-		'default'     => '',
+		'description' => __( 'Get this in https://rapidapi.com/kijamve/api/transportistas-de-argentina', 'wc-kshippingargentina' ),
+		'default'     => 'transportistas-de-argentina.p.rapidapi.com',
 	),
 	'api_key'              => array(
 		'title'       => __( 'X-RapidAPI-Key', 'wc-kshippingargentina' ),
 		'type'        => 'text',
-		'description' => __( 'Get this in https://rapidapi.com/kijamve/api/argentina-shipping-cost', 'wc-kshippingargentina' ),
+		'description' => __( 'Get this in https://rapidapi.com/kijamve/api/transportistas-de-argentina', 'wc-kshippingargentina' ),
 		'default'     => '',
 	),
 	'andreani_username'    => array(

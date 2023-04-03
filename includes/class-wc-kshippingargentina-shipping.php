@@ -535,165 +535,69 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		 * @return array
 		 */
 		public static function box_shipping( $packages ) {
-			static $max_w       = 30, $max_size = 150, $max_sum_size = 250;
 			$setting            = get_option( 'woocommerce_kshippingargentina-manager_settings' );
 			$default_dimensions = array( self::get_dimension( $setting['width'], 'cm' ), self::get_dimension( $setting['height'], 'cm' ), self::get_dimension( $setting['depth'], 'cm' ) );
-			sort( $default_dimensions, SORT_NUMERIC );
-			KShippingArgentina_API::debug( 'Init box_shipping: ', $packages );
-			$result_box = array(
-				'type'     => array(),
-				'items'    => array(),
+			$result_box         = array(
 				'width'    => array(),
 				'height'   => array(),
 				'depth'    => array(),
 				'weight'   => array(),
+				'items'    => array(),
 				'total'    => array(),
 				'total_wt' => array(),
 				'content'  => array(),
 			);
-			if ( 'longer_side' === $setting['shipping_mode'] ) {
-				foreach ( $packages as $item_id => $values ) {
-					$weight_p = 0;
-					if ( $values['weight'] ) {
-						$weight_p = self::get_weight( $values['weight'], 'kg' );
-					} else {
-						// translators: %s Product ID.
-						KShippingArgentina_API::debug( sprintf( __( 'Product #%s is missing dimensions.', 'wc-kshippingargentina' ), $item_id ), 'error' );
-						$weight_p = self::get_weight( $setting['weight'], 'kg' );
-					}
-					$line_total = $values['line_subtotal'];
-					$dimensions = false;
-					if ( $values['length'] && $values['width'] && $values['height'] ) {
-
-						$dimensions = array( self::get_dimension( $values['length'], 'cm' ), self::get_dimension( $values['width'], 'cm' ), self::get_dimension( $values['height'], 'cm' ) );
-						sort( $dimensions, SORT_NUMERIC );
-
-					} else {
-						// translators: %s Product ID.
-						KShippingArgentina_API::debug( sprintf( __( 'Product #%s is missing dimensions. Aborting.', 'wc-kshippingargentina' ), $item_id ), 'error' );
-						$dimensions = $default_dimensions;
-					}
-					$longer_side = max( $dimensions[0], max( $dimensions[0], $dimensions[0] ) );
-					$w           = $weight_p;
-					$min_id      = 0;
-					if ( 'one_package_by_product' === $setting['shipping_mode_calc'] ) {
-						$min_id = count( $result_box['width'] ) - 1;
-					}
-					$total    = $line_total;
-					$total_wt = $line_total;
-					for ( $q = 0; $q < $values['quantity']; ++$q ) {
-						$found = false;
-						if ( 'one_package_by_unit' !== $setting['shipping_mode_calc'] ) {
-							foreach ( $result_box['weight'] as $i => $rw ) {
-								if ( $min_id <= $i && $rw + $w <= $max_w ) {
-									$found = true;
-									if ( $result_box['width'][ $i ] && $result_box['width'][ $i ] > $longer_side ) {
-										$longer_side = $result_box['width'][ $i ];
-									}
-									if ( $result_box['height'][ $i ] && $result_box['height'][ $i ] > $longer_side ) {
-										$longer_side = $result_box['height'][ $i ];
-									}
-									if ( $result_box['depth'][ $i ] && $result_box['depth'][ $i ] > $longer_side ) {
-										$longer_side = $result_box['depth'][ $i ];
-									}
-									$result_box['width'][ $i ]     = $longer_side;
-									$result_box['height'][ $i ]    = $longer_side;
-									$result_box['depth'][ $i ]     = $longer_side;
-									$result_box['items'][ $i ]    += 1;
-									$result_box['weight'][ $i ]   += $w;
-									$result_box['total'][ $i ]    += $total;
-									$result_box['total_wt'][ $i ] += $total_wt;
-									$result_box['content'][ $i ][] = str_replace( ',', ' -', $values['name'] );
-									break;
-								}
-							}
-						}
-						if ( ! $found ) {
-							$result_box['width'][]    = $longer_side;
-							$result_box['height'][]   = $longer_side;
-							$result_box['depth'][]    = $longer_side;
-							$result_box['weight'][]   = $w;
-							$result_box['total'][]    = $total;
-							$result_box['total_wt'][] = $total_wt;
-							$result_box['items'][]    = 1;
-							$result_box['type'][]     = 'Carton';
-							$result_box['content'][]  = array( str_replace( ',', ' -', $values['name'] ) );
-						}
-					}
+			$products           = array();
+			foreach ( $packages as $item_id => $values ) {
+				$sku = $item_id;
+				if ( $values['weight'] ) {
+					$weight_p = self::get_weight( $values['weight'], 'kg' );
+				} else {
+					$weight_p = self::get_weight( $setting['weight'], 'kg' );
 				}
-			} else {
-				foreach ( $packages as $item_id => $values ) {
-					$weight_p = 0;
-					if ( $values['weight'] ) {
-						$weight_p = self::get_weight( $values['weight'], 'kg' );
-					} else {
-						// translators: %s Product ID.
-						KShippingArgentina_API::debug( sprintf( __( 'Product #%s is missing dimensions.', 'wc-kshippingargentina' ), $item_id ), 'error' );
-						$weight_p = self::get_weight( $setting['weight'], 'kg' );
-					}
-					$line_total = $values['line_subtotal'];
-					$tmp        = false;
-					if ( $values['length'] && $values['width'] && $values['height'] ) {
-
-						$tmp = array( self::get_dimension( $values['length'], 'cm' ), self::get_dimension( $values['width'], 'cm' ), self::get_dimension( $values['height'], 'cm' ) );
-						sort( $tmp, SORT_NUMERIC );
-
-					} else {
-						// translators: %s Product ID.
-						KShippingArgentina_API::debug( sprintf( __( 'Product #%s is missing dimensions. Aborting.', 'wc-kshippingargentina' ), $item_id ), 'error' );
-						$tmp = $default_dimensions;
-					}
-					$total    = $line_total;
-					$total_wt = $line_total;
-					sort( $tmp, SORT_NUMERIC );
-					$w      = $weight_p;
-					$min_id = 0;
-					if ( 'one_package_by_product' === $setting['shipping_mode_calc'] ) {
-						$min_id = count( $result_box['width'] ) - 1;
-					}
-					for ( $q = 0; $q < $values['quantity']; ++$q ) {
-						$found = false;
-						if ( 'one_package_by_unit' !== $setting['shipping_mode_calc'] ) {
-							KShippingArgentina_API::debug( 'List packages in this loop: ', $result_box );
-							foreach ( $result_box['weight'] as $i => $rw ) {
-								KShippingArgentina_API::debug(
-									"Checking: $min_id <= $i && $rw + $w <= $max_w && {$result_box['depth'][$i]} + {$tmp[0]} <= $max_size &&
-								{$result_box['depth'][$i]} + {$tmp[0]} + max({$result_box['width'][$i]}, {$tmp[1]}) + max({$result_box['height'][$i]}, {$tmp[2]}) <= $max_sum_size"
-								);
-								if ( $min_id <= $i && $rw + $w <= $max_w && $result_box['depth'][ $i ] + $tmp[0] <= $max_size &&
-									$result_box['depth'][ $i ] + $tmp[0] + max( $result_box['width'][ $i ], $tmp[1] ) + max( $result_box['height'][ $i ], $tmp[2] ) <= $max_sum_size
-								) {
-									$found = true;
-									KShippingArgentina_API::debug( 'found' );
-									$result_box['depth'][ $i ]    += $tmp[0];
-									$result_box['width'][ $i ]     = max( $result_box['width'][ $i ], $tmp[1] );
-									$result_box['height'][ $i ]    = max( $result_box['height'][ $i ], $tmp[2] );
-									$result_box['items'][ $i ]    += 1;
-									$result_box['weight'][ $i ]   += $w;
-									$result_box['total'][ $i ]    += $total;
-									$result_box['total_wt'][ $i ] += $total_wt;
-									$result_box['content'][ $i ][] = str_replace( ',', ' -', $values['name'] );
-									break;
-								}
-							}
-						}
-						if ( ! $found ) {
-							KShippingArgentina_API::debug( 'not found' );
-							$result_box['width'][]    = $tmp[1];
-							$result_box['height'][]   = $tmp[2];
-							$result_box['depth'][]    = $tmp[0];
-							$result_box['weight'][]   = $w;
-							$result_box['total'][]    = $total;
-							$result_box['total_wt'][] = $total_wt;
-							$result_box['items'][]    = 1;
-							$result_box['type'][]     = 'Carton';
-							$result_box['content'][]  = array( str_replace( ',', ' -', $values['name'] ) );
-						}
-					}
+				$product = array(
+					'sku'    => $sku,
+					'weight' => round( $weight_p, 2 ),
+					'width'  => round( $default_dimensions[0], 2 ),
+					'height' => round( $default_dimensions[1], 2 ),
+					'depth'  => round( $default_dimensions[2], 2 ),
+					'qty'    => (int) $values['quantity'],
+				);
+				if ( $values['length'] > 0 && $values['width'] > 0 && $values['height'] > 0 ) {
+					$product['width']  = round( self::get_dimension( $values['width'], 'cm' ), 2 );
+					$product['height'] = round( self::get_dimension( $values['height'], 'cm' ), 2 );
+					$product['depth']  = round( self::get_dimension( $values['length'], 'cm' ), 2 );
 				}
+				$products[] = $product;
 			}
-			foreach ( $result_box['content'] as $i => $c ) {
-				$result_box['content'][ $i ] = implode( ', ', array_unique( $c ) );
+			$boxes = KShippingArgentina_API::call(
+				'/bins/calculate',
+				array(
+					'boxes'    => kshipping_argentina_boxes(),
+					'products' => $products,
+				),
+				3600 * 24 * 7
+			);
+			if ( ! $boxes || ! is_array( $boxes ) ) {
+				return false;
+			}
+			foreach ( $boxes as $box ) {
+				$result_box['width'][]  = $box['box']['width'];
+				$result_box['height'][] = $box['box']['height'];
+				$result_box['depth'][]  = $box['box']['depth'];
+				$result_box['weight'][] = round( $box['weight'], 2 );
+				$result_box['items'][]  = count( $box['products'], 2 );
+				$contents               = array();
+				$total                  = 0;
+				$total_wt               = 0;
+				foreach ( $box['products'] as $item_id ) {
+					$total     += ( $packages[ $item_id ]['line_subtotal'] ) / $packages[ $item_id ]['quantity'];
+					$total_wt  += ( $packages[ $item_id ]['line_subtotal'] + $packages[ $item_id ]['line_subtotal_tax'] ) / $packages[ $item_id ]['quantity'];
+					$contents[] = $packages[ $item_id ]['name'];
+				}
+				$result_box['total'][]    = round( $total, 2 );
+				$result_box['total_wt'][] = round( $total_wt, 2 );
+				$result_box['content'][]  = implode( ', ', array_unique( $contents ) );
 			}
 			KShippingArgentina_API::debug( 'Result Boxes: ', $result_box );
 			return apply_filters( 'kshippingargentina_box_shipping', $result_box, $packages );
@@ -771,7 +675,10 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				WC()->session->init();
 			}
 			KShippingArgentina_API::debug( 'Destination: ', $package['destination'] );
-			$dim               = self::box_shipping( $packages );
+			$dim = self::box_shipping( $packages );
+			if ( ! $dim ) {
+				return;
+			}
 			$delivery_postcode = $package['destination']['postcode'];
 			$delivery_state    = $package['destination']['state'];
 			$delivery_city     = $package['destination']['city'];
@@ -859,12 +766,11 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			KShippingArgentina_API::debug( 'bultos to delivery_city-> ', $delivery_city );
 			KShippingArgentina_API::debug( 'bultos to delivery_postcode-> ', $delivery_postcode );
 			KShippingArgentina_API::debug( 'bultos to cp-> ', $cp );
-			KShippingArgentina_API::debug( 'bultos to setting-> ', $setting );
 			if ( ! empty( $cp ) ) {
 				$insurance     = 0;
 				$cost          = 0;
 				$list_packages = array();
-				foreach ( $dim['type'] as $idp => $name ) {
+				foreach ( $dim['items'] as $idp => $name ) {
 					$line_price        = (int) round( $to_ars * $dim['total'][ $idp ], 0 );
 					$b                 = array(
 						'width'  => max( 5.0, $dim['width'][ $idp ] ),
@@ -885,7 +791,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				if ( ! $quote ) {
 					return;
 				}
-				$cost = $quote['total'];
+				$cost = $quote['total'] + $insurance;
 				if ( $quote['delay'] > 0 ) {
 					// translators: Min and max days of delay.
 					$delay = sprintf( __( '%1$d to %2$d days', 'wc-kshippingargentina' ), $quote['delay'], $quote['delay'] + 2 );
