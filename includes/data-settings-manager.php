@@ -197,27 +197,6 @@ $r = array(
 		'default'     => '15',
 		'desc_tip'    => false,
 	),
-	'shipping_mode'        => array(
-		'title'   => __( 'Calculation mode', 'wc-kshippingargentina' ),
-		'type'    => 'select',
-		'default' => '',
-		'class'   => 'shipping_mode',
-		'options' => array(
-			'sum_side'    => __( 'Use width and height longest of all. Adding depth of each product.', 'wc-kshippingargentina' ),
-			'longer_side' => __( 'Use the longer sides of each product.', 'wc-kshippingargentina' ),
-		),
-	),
-	'shipping_mode_calc'   => array(
-		'title'   => __( 'Package type', 'wc-kshippingargentina' ),
-		'type'    => 'select',
-		'default' => '',
-		'class'   => 'shipping_mode_calc',
-		'options' => array(
-			'one_package'            => __( 'One package', 'wc-kshippingargentina' ),
-			'one_package_by_product' => __( 'One package by product (One package for all same products)', 'wc-kshippingargentina' ),
-			'one_package_by_unit'    => __( 'One package by unit', 'wc-kshippingargentina' ),
-		),
-	),
 	'no_change_in_transit' => array(
 		'title'   => __( 'Do not change to "In Transit"', 'wc-kshippingargentina' ),
 		'type'    => 'checkbox',

@@ -108,12 +108,6 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		 *
 		 * @var mixed
 		 */
-		public $shipping_mode_calc;
-		/**
-		 * Shipping attribute.
-		 *
-		 * @var mixed
-		 */
 		public $hide_delay;
 		/**
 		 * Shipping attribute.
@@ -181,13 +175,6 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		 * @var mixed
 		 */
 		public $discount_shipping_amount;
-
-		/**
-		 * Shipping attribute.
-		 *
-		 * @var mixed
-		 */
-		public $shipping_mode;
 		/**
 		 * Shipping attribute.
 		 *
@@ -319,7 +306,6 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			$this->product_client   = $this->get_option( 'product_client' );
 
 			$this->delay                        = $this->get_option( 'delay' );
-			$this->shipping_mode_calc           = $this->get_option( 'shipping_mode_calc' );
 			$this->hide_delay                   = 'yes' === $this->get_option( 'hide_delay' );
 			$this->free_shipping                = 'yes' === $this->get_option( 'free_shipping' );
 			$this->free_shipping_amount         = (float) $this->get_option( 'free_shipping_amount' );
@@ -333,7 +319,6 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			$this->discount_shipping_percent    = (float) $this->get_option( 'discount_shipping_percent' );
 			$this->discount_shipping_amount     = (float) $this->get_option( 'discount_shipping_amount' );
 
-			$this->shipping_mode         = $this->get_option( 'shipping_mode' );
 			$this->exclude_state         = $this->get_option( 'exclude_state' );
 			$this->exclude_categories    = $this->get_option( 'exclude_categories' );
 			$this->exclude_products      = (array) $this->get_option( 'exclude_products' );
