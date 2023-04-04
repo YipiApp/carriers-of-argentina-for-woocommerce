@@ -58,7 +58,7 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 		self::$instance = $this;
 
 		// set ID, this simply needs to be a unique name.
-		$this->id = 'wc-knewtracking-customer';
+		$this->id = 'wc-knewtracking-admin';
 
 		// this is the title in WooCommerce Email settings.
 		$this->title = __( 'Admin: New tracking code assigned', 'wc-kshippingargentina' );

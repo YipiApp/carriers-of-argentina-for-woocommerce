@@ -343,10 +343,6 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			}
 			add_action( 'woocommerce_update_options_shipping_' . $this->id, array( $this, 'process_admin_options' ) );
 
-			foreach ( $this->exclude_products as &$id ) {
-				$id = (int) $id;
-			}
-
 			$exclude_categories       = apply_filters( 'kshippingargentina_exclude_categories', is_array( $this->exclude_categories ) ? $this->exclude_categories : array(), $this );
 			$this->exclude_categories = array();
 			foreach ( $exclude_categories as $ids ) {
@@ -358,6 +354,10 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				}
 			}
 
+			$this->exclude_products = apply_filters( 'kshippingargentina_exclude_products', is_array( $this->exclude_products ) ? $this->exclude_products : array(), $this );
+			foreach ( $this->exclude_products as &$id ) {
+				$id = (int) $id;
+			}
 		}
 
 		/**
@@ -600,8 +600,6 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			}
 			$setting            = get_option( 'woocommerce_kshippingargentina-manager_settings' );
 			$total_weight       = 0;
-			$exclude_products   = apply_filters( 'kshippingargentina_exclude_products', is_array( $this->exclude_products ) ? $this->exclude_products : array(), $this );
-			$exclude_categories = $this->exclude_categories;
 
 			$packages = array();
 			foreach ( $package['contents'] as $item_id => &$p ) {
@@ -612,13 +610,13 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				}
 				$r               = array();
 				$r['product_id'] = $p['product_id'];
-				if ( in_array( (int) $r['product_id'], $exclude_products, true ) ) {
+				if ( in_array( (int) $r['product_id'], $this->exclude_products, true ) ) {
 					return; // Este producto esta excluido para ser usado por Shipping Argentina.
 				}
 				$cats = get_the_terms( $r['product_id'], 'product_cat' );
 				if ( $cats && is_array( $cats ) && count( $cats ) > 0 ) {
 					foreach ( $cats as $term ) {
-						if ( in_array( (int) $term->term_id, $exclude_categories, true ) ) {
+						if ( in_array( (int) $term->term_id, $this->exclude_categories, true ) ) {
 							return; // Esta categoria esta excluida para ser usado por Shipping Argentina.
 						}
 					}
@@ -848,6 +846,74 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				return 0;
 			}
 			return ( $a['sort'] < $b['sort'] ) ? -1 : 1;
+		}
+
+		/**
+		 * Generate Multiselect HTML.
+		 *
+		 * @param  mixed $key key.
+		 * @param  mixed $data data.
+		 * @since  1.1.2
+		 * @return string
+		 */
+		public function generate_multiselectmp_html( $key, $data ) {
+			$field_key = $this->get_field_key( $key );
+			$defaults  = array(
+				'title'             => '',
+				'disabled'          => false,
+				'class'             => '',
+				'css'               => '',
+				'placeholder'       => '',
+				'type'              => 'text',
+				'desc_tip'          => false,
+				'description'       => '',
+				'custom_attributes' => array(),
+				'select_buttons'    => false,
+				'options'           => array(),
+			);
+
+			$data  = wp_parse_args( $data, $defaults );
+			$value = (array) $this->get_option( $key, array() );
+
+			ob_start();
+			?>
+			<tr valign="top">
+				<th scope="row" class="titledesc">
+					<?php echo wp_kses_post( $this->get_tooltip_html( $data ) ); ?>
+					<label for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
+				</th>
+				<td class="forminp">
+					<fieldset>
+						<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+						<!-- <select multiple="multiple" class="multiselect <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>[]" id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo wp_kses_post( $this->get_custom_attribute_html( $data ) ); ?>> -->
+						<div style="overflow: auto;height: 150px;min-width:250px;max-width:500px">
+							<?php foreach ( (array) $data['options'] as $option_key => $option_value ) : ?>
+								<input type="checkbox" name="<?php echo esc_attr( $field_key ); ?>[]" value="<?php echo esc_attr( $option_key ); ?>" <?php checked( in_array( $option_key, $value ), true ); ?> /><?php echo esc_attr( $option_value ); ?><br />
+							<?php endforeach; ?>
+						</div>
+						<!-- </select> -->
+						<?php echo wp_kses_post( $this->get_description_html( $data ) ); ?>
+						<?php if ( $data['select_buttons'] ) : ?>
+							<br/><a class="select_all button" href="#"><?php esc_html_e( 'Select all', 'woocommerce' ); ?></a> <a class="select_none button" href="#"><?php esc_html_e( 'Select none', 'woocommerce' ); ?></a>
+						<?php endif; ?>
+					</fieldset>
+				</td>
+			</tr>
+			<?php
+
+			return ob_get_clean();
+		}
+
+		/**
+		 * Validate Multiselect.
+		 *
+		 * @param  mixed $key key.
+		 * @param  mixed $value value.
+		 * @since  1.1.2
+		 * @return bool
+		 */
+		public function validate_multiselectmp_field( $key, $value ) {
+			return is_array( $value ) ? array_map( 'wc_clean', array_map( 'stripslashes', $value ) ) : '';
 		}
 	}
 endif;
