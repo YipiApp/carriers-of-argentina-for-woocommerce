@@ -12,8 +12,8 @@ add_filter(
 		foreach ( $order_statuses as $key => $status ) {
 			$new_order_statuses[ $key ] = $status;
 			if ( 'wc-processing' === $key ) {
-				$new_order_statuses['wc-arrival']   = __( 'Shipment Arrival', 'wc-kshippingargentina' );
-				$new_order_statuses['wc-intransit'] = __( 'Shipment in Transit', 'wc-kshippingargentina' );
+				$new_order_statuses['wc-arrival']   = __( 'Shipment Arrival', 'carriers-of-argentina-for-woocommerce' );
+				$new_order_statuses['wc-intransit'] = __( 'Shipment in Transit', 'carriers-of-argentina-for-woocommerce' );
 			}
 		}
 		return $new_order_statuses;
@@ -24,7 +24,7 @@ add_filter(
 	'woocommerce_register_shop_order_post_statuses',
 	function ( $order_statuses ) {
 		$order_statuses['wc-arrival']   = array(
-			'label'                     => __( 'Shipment Arrival', 'wc-kshippingargentina' ),
+			'label'                     => __( 'Shipment Arrival', 'carriers-of-argentina-for-woocommerce' ),
 			'public'                    => true,
 			'show_in_admin_status_list' => true,
 			'show_in_admin_all_list'    => true,
@@ -33,7 +33,7 @@ add_filter(
 			'label_count'               => _n_noop( 'Shipment Arrival <span class="count">(%s)</span>', 'Shipment Arrival <span class="count">(%s)</span>' ),
 		);
 		$order_statuses['wc-intransit'] = array(
-			'label'                     => __( 'Shipment in Transit', 'wc-kshippingargentina' ),
+			'label'                     => __( 'Shipment in Transit', 'carriers-of-argentina-for-woocommerce' ),
 			'public'                    => true,
 			'show_in_admin_status_list' => true,
 			'show_in_admin_all_list'    => true,
@@ -118,12 +118,12 @@ add_action(
 		woocommerce_form_field(
 			'kshippingargentina_method_office[' . $method->instance_id . ']',
 			array(
-				'label'    => __( 'Nearest office', 'wc-kshippingargentina' ),
+				'label'    => __( 'Nearest office', 'carriers-of-argentina-for-woocommerce' ),
 				'type'     => 'select',
 				'class'    => array( 'form-row-wide office_kshippingargentina' ),
 				'required' => false,
 				'options'  => array(
-					'' => __( 'Choose one...', 'wc-kshippingargentina' ),
+					'' => __( 'Choose one...', 'carriers-of-argentina-for-woocommerce' ),
 				),
 			),
 			isset( $values[ $method->instance_id ] ) ? $values[ $method->instance_id ] : ''
@@ -202,7 +202,7 @@ add_filter(
 		$setting     = get_option( 'woocommerce_kshippingargentina-manager_settings' );
 		if ( ! isset( $setting['meta_dni'] ) || empty( $setting['meta_dni'] ) ) {
 			$fields['billing']['billing_vat_type'] = array(
-				'label'       => __( 'Identification number type', 'wc-kshippingargentina' ),
+				'label'       => __( 'Identification number type', 'carriers-of-argentina-for-woocommerce' ),
 				'type'        => 'select',
 				'required'    => $required,
 				'priority'    => $bp_country - 2,
@@ -212,7 +212,7 @@ add_filter(
 				'clear'       => true,
 			);
 			$fields['billing']['billing_vat']      = array(
-				'label'       => __( 'Identification number', 'wc-kshippingargentina' ),
+				'label'       => __( 'Identification number', 'carriers-of-argentina-for-woocommerce' ),
 				'type'        => 'text',
 				'priority'    => $bp_country - 1,
 				'required'    => $required,
@@ -223,7 +223,7 @@ add_filter(
 		}
 		if ( ! isset( $setting['meta_phone'] ) || empty( $setting['meta_phone'] ) ) {
 			$fields['billing']['billing_kphone_prefix'] = array(
-				'label'       => __( 'Mobile Phone Area Code', 'wc-kshippingargentina' ),
+				'label'       => __( 'Mobile Phone Area Code', 'carriers-of-argentina-for-woocommerce' ),
 				'type'        => 'text',
 				'priority'    => $bp_phone + 1,
 				'required'    => $required,
@@ -232,7 +232,7 @@ add_filter(
 				'clear'       => true,
 			);
 			$fields['billing']['billing_kphone']        = array(
-				'label'       => __( 'Mobile Phone (No Area Code)', 'wc-kshippingargentina' ),
+				'label'       => __( 'Mobile Phone (No Area Code)', 'carriers-of-argentina-for-woocommerce' ),
 				'type'        => 'text',
 				'priority'    => $bp_phone + 2,
 				'required'    => $required,
@@ -243,7 +243,7 @@ add_filter(
 		}
 		if ( ! isset( $setting['meta_number'] ) || empty( $setting['meta_number'] ) ) {
 			$fields['billing']['billing_number']   = array(
-				'label'             => __( 'Height (Enter numbers only)', 'wc-kshippingargentina' ),
+				'label'             => __( 'Height (Enter numbers only)', 'carriers-of-argentina-for-woocommerce' ),
 				'type'              => 'text',
 				'priority'          => $bp_address2 + 1,
 				'custom_attributes' => array( 'pattern' => '[0-9]{1,8}' ),
@@ -254,7 +254,7 @@ add_filter(
 				'clear'             => true,
 			);
 			$fields['shipping']['shipping_number'] = array(
-				'label'             => __( 'Height (Enter numbers only)', 'wc-kshippingargentina' ),
+				'label'             => __( 'Height (Enter numbers only)', 'carriers-of-argentina-for-woocommerce' ),
 				'type'              => 'text',
 				'priority'          => $sp_address2 + 1,
 				'custom_attributes' => array( 'pattern' => '[0-9]{1,8}' ),
@@ -266,7 +266,7 @@ add_filter(
 			);
 		}
 		$fields['billing']['billing_floor']       = array(
-			'label'             => __( 'Floor', 'wc-kshippingargentina' ),
+			'label'             => __( 'Floor', 'carriers-of-argentina-for-woocommerce' ),
 			'type'              => 'text',
 			'priority'          => $bp_address2 + 3,
 			'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
@@ -277,7 +277,7 @@ add_filter(
 			'clear'             => true,
 		);
 		$fields['shipping']['shipping_floor']     = array(
-			'label'             => __( 'Floor', 'wc-kshippingargentina' ),
+			'label'             => __( 'Floor', 'carriers-of-argentina-for-woocommerce' ),
 			'type'              => 'text',
 			'priority'          => $sp_address2 + 3,
 			'required'          => false,
@@ -288,7 +288,7 @@ add_filter(
 			'clear'             => true,
 		);
 		$fields['billing']['billing_apartment']   = array(
-			'label'             => __( 'Apartment', 'wc-kshippingargentina' ),
+			'label'             => __( 'Apartment', 'carriers-of-argentina-for-woocommerce' ),
 			'type'              => 'text',
 			'priority'          => $bp_address2 + 4,
 			'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
@@ -299,7 +299,7 @@ add_filter(
 			'clear'             => true,
 		);
 		$fields['shipping']['shipping_apartment'] = array(
-			'label'             => __( 'Apartment', 'wc-kshippingargentina' ),
+			'label'             => __( 'Apartment', 'carriers-of-argentina-for-woocommerce' ),
 			'type'              => 'text',
 			'priority'          => $sp_address2 + 4,
 			'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
@@ -317,10 +317,10 @@ add_filter(
 add_filter(
 	'woocommerce_default_address_fields',
 	function ( $address_fields ) {
-		$address_fields['address_1']['label']       = __( 'Street', 'wc-kshippingargentina' );
-		$address_fields['address_1']['placeholder'] = __( 'Street name', 'wc-kshippingargentina' );
-		$address_fields['address_2']['label']       = __( 'Detail (Between-streets, etc)', 'wc-kshippingargentina' );
-		$address_fields['address_2']['placeholder'] = __( 'Detail (Between-streets, etc)', 'wc-kshippingargentina' );
+		$address_fields['address_1']['label']       = __( 'Street', 'carriers-of-argentina-for-woocommerce' );
+		$address_fields['address_1']['placeholder'] = __( 'Street name', 'carriers-of-argentina-for-woocommerce' );
+		$address_fields['address_2']['label']       = __( 'Detail (Between-streets, etc)', 'carriers-of-argentina-for-woocommerce' );
+		$address_fields['address_2']['placeholder'] = __( 'Detail (Between-streets, etc)', 'carriers-of-argentina-for-woocommerce' );
 		return $address_fields;
 	}
 );
@@ -397,7 +397,7 @@ function kshippingargentina_hook_js() {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 	}
 	$values = WC_KShippingArgentina::woocommerce_instance()->checkout->get_value( 'kshippingargentina_method_office' );
-	wp_enqueue_script( 'wc-kshippingargentina-js', plugins_url( 'wc-kshippingargentina/kshippingargentina_script.js', basename( __FILE__ ) ), array( 'jquery' ), WC_KShippingArgentina::VERSION, true );
+	wp_enqueue_script( 'wc-kshippingargentina-js', plugins_url( 'kshippingargentina_script.js', __FILE__ ), array( 'jquery' ), WC_KShippingArgentina::VERSION, true );
 	wp_localize_script(
 		'wc-kshippingargentina-js',
 		'wc_kshippingargentina_context',
@@ -407,13 +407,13 @@ function kshippingargentina_hook_js() {
 			'home_url'                  => home_url(),
 			'office_kshippingargentina' => $values,
 			'messages'                  => array(
-				'days'              => __( 'days', 'wc-kshippingargentina' ),
-				'empty_cart'        => __( 'Your shopping cart is empty', 'wc-kshippingargentina' ),
-				'carrier_empty'     => __( 'No carriers found', 'wc-kshippingargentina' ),
-				'product_not_found' => __( 'Product not found', 'wc-kshippingargentina' ),
-				'server_error'      => __( 'Server error', 'wc-kshippingargentina' ),
-				'server_loading'    => __( 'Loading...', 'wc-kshippingargentina' ),
-				'not_installed'     => __( 'The plugin is not configured correctly...', 'wc-kshippingargentina' ),
+				'days'              => __( 'days', 'carriers-of-argentina-for-woocommerce' ),
+				'empty_cart'        => __( 'Your shopping cart is empty', 'carriers-of-argentina-for-woocommerce' ),
+				'carrier_empty'     => __( 'No carriers found', 'carriers-of-argentina-for-woocommerce' ),
+				'product_not_found' => __( 'Product not found', 'carriers-of-argentina-for-woocommerce' ),
+				'server_error'      => __( 'Server error', 'carriers-of-argentina-for-woocommerce' ),
+				'server_loading'    => __( 'Loading...', 'carriers-of-argentina-for-woocommerce' ),
+				'not_installed'     => __( 'The plugin is not configured correctly...', 'carriers-of-argentina-for-woocommerce' ),
 			),
 		)
 	);
@@ -528,7 +528,7 @@ add_filter(
 			}
 			$fields['shipping_office'] = sprintf(
 				// translators: Office.
-				__( 'Office: %1$s', 'wc-kshippingargentina' ),
+				__( 'Office: %1$s', 'carriers-of-argentina-for-woocommerce' ),
 				$office . ' - ' . $state_name
 			);
 			$postcode = preg_replace(
@@ -541,7 +541,7 @@ add_filter(
 				$o                         = $offices[ $office ];
 				$fields['shipping_office'] = sprintf(
 					// translators: name - (iso / code).
-					__( 'Office %1$s: %2$s - %3$s (%4$s / %5$s)', 'wc-kshippingargentina' ),
+					__( 'Office %1$s: %2$s - %3$s (%4$s / %5$s)', 'carriers-of-argentina-for-woocommerce' ),
 					$state_name,
 					$o['description'],
 					$o['address'],
@@ -588,7 +588,7 @@ add_filter(
 			}
 			$fields['shipping_office'] = sprintf(
 				// translators: Office.
-				__( 'Office: %1$s', 'wc-kshippingargentina' ),
+				__( 'Office: %1$s', 'carriers-of-argentina-for-woocommerce' ),
 				$office . ' - ' . $state_name
 			);
 			$postcode = preg_replace(
@@ -601,7 +601,7 @@ add_filter(
 				$o                         = $offices[ $office ];
 				$fields['shipping_office'] = sprintf(
 					// translators: name - (iso / code).
-					__( 'Office %1$s: %2$s - %3$s (%4$s / %5$s)', 'wc-kshippingargentina' ),
+					__( 'Office %1$s: %2$s - %3$s (%4$s / %5$s)', 'carriers-of-argentina-for-woocommerce' ),
 					$state_name,
 					$o['description'],
 					$o['address'],
@@ -639,7 +639,7 @@ add_filter(
 		foreach ( $columns as $key => $data ) {
 			$return[ $key ] = $data;
 			if ( 'order_number' === $key ) {
-				$return['shipping_name'] = __( 'Shipping', 'wc-kshippingargentina' );
+				$return['shipping_name'] = __( 'Shipping', 'carriers-of-argentina-for-woocommerce' );
 			}
 		}
 		return $return;

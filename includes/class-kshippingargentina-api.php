@@ -161,7 +161,7 @@ class KShippingArgentina_API {
 		foreach ( $cities as $city ) {
 			$return[ $city['name'] ] = $city['name'];
 		}
-		return count( $return ) > 0 ? $return : array( '' => __( 'Cities not found...', 'wc-kshippingargentina' ) );
+		return count( $return ) > 0 ? $return : array( '' => __( 'Cities not found...', 'carriers-of-argentina-for-woocommerce' ) );
 	}
 
 	/**
@@ -277,13 +277,8 @@ class KShippingArgentina_API {
 			return false;
 		} elseif ( ! empty( $result ) ) {
 			$api_arr = json_decode( $result, true );
-			if ( $api_arr ) {
-				if ( isset( $api_arr['statusCode'] ) && ( $api_arr['statusCode'] < 200 || $api_arr['statusCode'] > 299 ) ) {
-					return false;
-				}
-				return $api_arr;
-			}
-			return false;
+			self::debug( 'From Cache: ', array( $url, $post_data, $api_arr ) );
+			return $api_arr ? $api_arr : false;
 		}
 		$config = array(
 			'timeout' => 10,
@@ -304,7 +299,7 @@ class KShippingArgentina_API {
 			self::set_cache( $cache_id, $data['body'], $ttl );
 			$api_arr = json_decode( $data['body'], true );
 			if ( $api_arr ) {
-				if ( isset( $api_arr['statusCode'] ) && ( $api_arr['statusCode'] < 200 || $api_arr['statusCode'] > 299 ) ) {
+				if ( isset( $api_arr['statusCode'] ) && ( $api_arr['statusCode'] < 200 || $api_arr['statusCode'] > 400 ) ) {
 					self::set_cache( $cache_id, 'error', 3600 );
 					return false;
 				}
@@ -362,12 +357,12 @@ class KShippingArgentina_API {
 			if ( ! is_wp_error( $login ) ) {
 				$token = wp_remote_retrieve_header( $login, 'x-authorization-token' );
 				if ( ! $token ) {
-					$error = __( 'User or Password of Andreani is invalid', 'wc-kshippingargentina' );
+					$error = __( 'User or Password of Andreani is invalid', 'carriers-of-argentina-for-woocommerce' );
 					return false;
 				}
 				self::set_cache( $cache_id, $token, 3600 );
 			} else {
-				$error = __( 'User or Password of Andreani is invalid', 'wc-kshippingargentina' );
+				$error = __( 'User or Password of Andreani is invalid', 'carriers-of-argentina-for-woocommerce' );
 				return false;
 			}
 		}
@@ -406,7 +401,7 @@ class KShippingArgentina_API {
 			return $pdf['body'];
 		}
 		if ( isset( $pdf['body'] ) && ! empty( $pdf['body'] ) ) {
-			$error = __( 'Andreani', 'wc-kshippingargentina' ) . ': ' . $pdf['body'];
+			$error = __( 'Andreani', 'carriers-of-argentina-for-woocommerce' ) . ': ' . $pdf['body'];
 		}
 		return false;
 	}
@@ -451,7 +446,7 @@ class KShippingArgentina_API {
 			}
 		}
 		if ( isset( $tracking_code['body'] ) && ! empty( $tracking_code['body'] ) ) {
-			$error = __( 'Andreani', 'wc-kshippingargentina' ) . ': ' . $tracking_code['body'];
+			$error = __( 'Andreani', 'carriers-of-argentina-for-woocommerce' ) . ': ' . $tracking_code['body'];
 		}
 		return false;
 	}
@@ -829,7 +824,7 @@ class KShippingArgentina_API {
 		self::init();
 		if ( self::$show_debug && is_string( $message ) && ! empty( $message ) ) {
 			$logger  = wc_get_logger();
-			$context = array( 'source' => 'wc-kshippingargentina' );
+			$context = array( 'source' => 'carriers-of-argentina-for-woocommerce' );
 			$logger->debug( $message . ( $data ? ' DATA->#' . wp_json_encode( $data ) . '#' : '' ), $context );
 		}
 	}

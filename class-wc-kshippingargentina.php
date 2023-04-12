@@ -59,7 +59,7 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 */
 		private function __construct() {
 			// Load plugin text domain.
-			add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+			$this->load_plugin_textdomain();
 
 			// Checks with WooCommerce is installed.
 			if ( class_exists( 'WC_Shipping_Method' ) ) {
@@ -97,10 +97,9 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 * @return void
 		 */
 		public function load_plugin_textdomain() {
-			$locale = apply_filters( 'plugin_locale', get_locale(), 'wc-kshippingargentina' );
-
-			load_textdomain( 'wc-kshippingargentina', trailingslashit( WP_LANG_DIR ) . 'wc-kshippingargentina/wc-kshippingargentina-' . $locale . '.mo' );
-			load_plugin_textdomain( 'wc-kshippingargentina', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+			$locale = apply_filters( 'plugin_locale', get_locale(), 'carriers-of-argentina-for-woocommerce' );
+			load_textdomain( 'arriers-of-argentina-for-woocommerce', trailingslashit( WP_LANG_DIR ) . 'carriers-of-argentina-for-woocommerce/carriers-of-argentina-for-woocommerce-' . $locale . '.mo' );
+			load_plugin_textdomain( 'carriers-of-argentina-for-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 		}
 
 		/**
@@ -149,7 +148,7 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 */
 		public function woocommerce_missing_notice() {
 			// translators: %s Version of WooCommerce.
-			echo '<div class="error"><p>' . esc_html( sprintf( __( 'WooCommerce Shipping Argentina depends on the last version of %s to work!', 'wc-kshippingargentina' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">' . __( 'WooCommerce', 'wc-kshippingargentina' ) . '</a>' ) ) . '</p></div>';
+			echo '<div class="error"><p>' . esc_html( sprintf( __( 'WooCommerce Shipping Argentina depends on the last version of %s to work!', 'carriers-of-argentina-for-woocommerce' ), '<a href="http://wordpress.org/extend/plugins/woocommerce/">' . __( 'WooCommerce', 'carriers-of-argentina-for-woocommerce' ) . '</a>' ) ) . '</p></div>';
 		}
 
 		/**
@@ -206,11 +205,6 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		global $theorder;
 		return $theorder;
 	}
-
-	add_action( 'plugins_loaded', array( 'WC_KShippingArgentina', 'get_instance' ), 0 );
-	load_textdomain( 'wc-kshippingargentina', trailingslashit( WP_LANG_DIR ) . 'wc-kshippingargentina/wc-kshippingargentina-' . apply_filters( 'plugin_locale', get_locale(), 'wc-kshippingargentina' ) . '.mo' );
-	load_plugin_textdomain( 'wc-kshippingargentina', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
 
 	/**
 	 * Install function.
@@ -271,5 +265,7 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 	include_once 'functions.php';
 	include_once 'functions-labels.php';
 	include_once 'functions-boxes.php';
+
+	add_action( 'plugins_loaded', array( 'WC_KShippingArgentina', 'get_instance' ), 0 );
 
 endif;

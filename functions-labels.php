@@ -19,15 +19,15 @@ add_action(
 					$('.check-column input[type=checkbox]:checked').each(function() {
 						list_posts.push($(this).attr('value'));
 					});
-					if (list_posts.length < 1) { alert('<?php echo esc_html_e( 'You must select at least one order', 'wc-kshippingargentina' ); ?>'); return; }
+					if (list_posts.length < 1) { alert('<?php echo esc_html_e( 'You must select at least one order', 'carriers-of-argentina-for-woocommerce' ); ?>'); return; }
 					if (kshippingargentina_metabox_loading) return;
 					kshippingargentina_metabox_loading = true;
 					var url = 'edit.php?post_type=shop_order&generate_massive_tracking_code=1&';
 					url += 'kca_posts='+list_posts.join(',')+'&';
 					url += 'kshippingargentina_massive_label_nonce='+kshippingargentina_metabox_nonce;
-					$('#kshippingargentinao_generate_label').html('<?php echo esc_html_e( 'Cargando...', 'wc-kshippingargentina' ); ?>');
+					$('#kshippingargentinao_generate_label').html('<?php echo esc_html_e( 'Cargando...', 'carriers-of-argentina-for-woocommerce' ); ?>');
 					$.get(url, function(list) {
-						$('#kshippingargentinao_generate_label').html('<?php echo esc_html_e( 'Generate Label', 'wc-kshippingargentina' ); ?>');
+						$('#kshippingargentinao_generate_label').html('<?php echo esc_html_e( 'Generate Label', 'carriers-of-argentina-for-woocommerce' ); ?>');
 						kshippingargentina_metabox_loading = false;
 						var list = jQuery.parseJSON(list);
 						kshippingargentina_metabox_nonce = list.new_nonce;
@@ -44,9 +44,9 @@ add_action(
 						if (typeof list.url_zip != 'undefined' && list.url_zip)
 							document.location.href = list.url_zip;
 					}).fail(function() {
-						$('#kshippingargentinao_generate_label').html('<?php echo esc_html_e( 'Generate Label', 'wc-kshippingargentina' ); ?>');
+						$('#kshippingargentinao_generate_label').html('<?php echo esc_html_e( 'Generate Label', 'carriers-of-argentina-for-woocommerce' ); ?>');
 						kshippingargentina_metabox_loading = false;
-						alert('<?php echo esc_html_e( 'Internal server error', 'wc-kshippingargentina' ); ?>');
+						alert('<?php echo esc_html_e( 'Internal server error', 'carriers-of-argentina-for-woocommerce' ); ?>');
 					});
 				}
 				var kca_wait_jQuery = setInterval(function(){
@@ -60,7 +60,7 @@ add_action(
 				}, 100);
 			</script>
 			<div id="kca_form" style="float: right;border-left: 1px solid black;border-right: 1px solid black;margin: 0 1px;padding: 0 3px;">
-				<button class="button action" id="kshippingargentinao_generate_label" type="button" onclick="generateLabelsShippingArgentina()"><?php echo esc_html_e( 'Generate Label', 'wc-kshippingargentina' ); ?></button>
+				<button class="button action" id="kshippingargentinao_generate_label" type="button" onclick="generateLabelsShippingArgentina()"><?php echo esc_html_e( 'Generate Label', 'carriers-of-argentina-for-woocommerce' ); ?></button>
 			</div> 
 			<?php
 		}
@@ -118,7 +118,7 @@ add_action(
 					wp_json_encode(
 						array(
 							'ok'    => false,
-							'error' => __( 'Invalid tracking codes', 'wc-kshippingargentina' ),
+							'error' => __( 'Invalid tracking codes', 'carriers-of-argentina-for-woocommerce' ),
 						)
 					)
 				);
@@ -132,7 +132,7 @@ add_action(
 						wp_json_encode(
 							array(
 								'ok'    => false,
-								'error' => __( 'This order already has tracking codes assigned', 'wc-kshippingargentina' ),
+								'error' => __( 'This order already has tracking codes assigned', 'carriers-of-argentina-for-woocommerce' ),
 							)
 						)
 					);
@@ -187,7 +187,7 @@ add_action(
 				wp_json_encode(
 					array(
 						'ok'    => false,
-						'error' => __( 'Invalid service type.', 'wc-kshippingargentina' ),
+						'error' => __( 'Invalid service type.', 'carriers-of-argentina-for-woocommerce' ),
 					)
 				)
 			);
@@ -229,7 +229,7 @@ add_action(
 				wp_json_encode(
 					array(
 						'ok'    => false,
-						'error' => $file && isset( $file['error'] ) && $file['error'] ? $file['error'] : __( 'The label for this order could not be generated, you can verify what happens from the plugin log if you have it active in the configuration.', 'wc-kshippingargentina' ),
+						'error' => $file && isset( $file['error'] ) && $file['error'] ? $file['error'] : __( 'The label for this order could not be generated, you can verify what happens from the plugin log if you have it active in the configuration.', 'carriers-of-argentina-for-woocommerce' ),
 						'data'  => $label,
 					)
 				)
@@ -259,7 +259,7 @@ add_action(
 					$status = $order->get_status();
 					if ( in_array( $status, array( 'pending', 'on-hold', 'cancelled', 'refunded', 'failed' ), true ) ) {
 						$errors[] = array(
-							'msg'      => __( 'Invalid Status:', 'wc-kshippingargentina' ) . ' ' . $status,
+							'msg'      => __( 'Invalid Status:', 'carriers-of-argentina-for-woocommerce' ) . ' ' . $status,
 							'order_id' => $order_id,
 						);
 						continue;
@@ -272,7 +272,7 @@ add_action(
 					}
 					if ( ! $shipping || ! isset( $shipping->service_type ) || empty( $shipping->service_type ) ) {
 						$errors[] = array(
-							'msg'      => __( 'Shipping instance not exists.', 'wc-kshippingargentina' ),
+							'msg'      => __( 'Shipping instance not exists.', 'carriers-of-argentina-for-woocommerce' ),
 							'order_id' => $order_id,
 						);
 						continue;
@@ -294,7 +294,7 @@ add_action(
 						);
 					} else {
 						$errors[] = array(
-							'msg'      => __( 'Shipping type not found:', 'wc-kshippingargentina' ) . ' ' . $shipping->service_type,
+							'msg'      => __( 'Shipping type not found:', 'carriers-of-argentina-for-woocommerce' ) . ' ' . $shipping->service_type,
 							'order_id' => $order_id,
 						);
 						continue;
@@ -525,7 +525,7 @@ function kshippingargentina_metabox_cb( $order = false, $is_dokan = false ) {
 		$order    = wc_get_order( $order_id );
 	}
 	if ( ! (int) $order_id ) {
-		esc_html_e( 'The client asked that it not be sent by an Argentine carrier.', 'wc-kshippingargentina' );
+		esc_html_e( 'The client asked that it not be sent by an Argentine carrier.', 'carriers-of-argentina-for-woocommerce' );
 		return;
 	}
 
@@ -535,19 +535,19 @@ function kshippingargentina_metabox_cb( $order = false, $is_dokan = false ) {
 		$shipping = WC_KShippingArgentina_Shipping::get_instance( $instance_id );
 	}
 	if ( ! $shipping || ! isset( $shipping->service_type ) || empty( $shipping->service_type ) ) {
-		esc_html_e( 'This carrier not is supported.', 'wc-kshippingargentina' );
+		esc_html_e( 'This carrier not is supported.', 'carriers-of-argentina-for-woocommerce' );
 		return;
 	}
 
 	$status = $order->get_status();
 	if ( in_array( $status, array( 'pending', 'on-hold', 'cancelled', 'refunded', 'failed' ), true ) ) {
-		esc_html_e( 'Invalid status, payment is not completed.', 'wc-kshippingargentina' );
+		esc_html_e( 'Invalid status, payment is not completed.', 'carriers-of-argentina-for-woocommerce' );
 		return;
 	}
 
 	$tracking_code = get_post_meta( $order_id, 'kshippingargentina_tracking_code', true );
 	if ( $tracking_code && ! empty( $tracking_code ) ) {
-		esc_html_e( 'Current tracking code:', 'wc-kshippingargentina' ) . ': ' . $tracking_code;
+		esc_html_e( 'Current tracking code:', 'carriers-of-argentina-for-woocommerce' ) . ': ' . $tracking_code;
 		return;
 	}
 
@@ -569,7 +569,7 @@ function kshippingargentina_metabox_cb( $order = false, $is_dokan = false ) {
 add_action(
 	'add_meta_boxes',
 	function () {
-		add_meta_box( 'kshippingargentina-metabox', __( 'Data of the Argentine carrier', 'wc-kshippingargentina' ), 'kshippingargentina_metabox_cb', 'shop_order', 'normal', 'high' );
+		add_meta_box( 'kshippingargentina-metabox', __( 'Data of the Argentine carrier', 'carriers-of-argentina-for-woocommerce' ), 'kshippingargentina_metabox_cb', 'shop_order', 'normal', 'high' );
 	}
 );
 
@@ -580,7 +580,7 @@ add_action(
 			?>
 		<div class="" style="width:100%">
 				<div class="dokan-panel dokan-panel-default">
-						<div class="dokan-panel-heading"><strong><?php esc_html_e( 'Datos Correo Argentino', 'wc-kshippingargentina' ); ?></div>
+						<div class="dokan-panel-heading"><strong><?php esc_html_e( 'Datos Correo Argentino', 'carriers-of-argentina-for-woocommerce' ); ?></div>
 					<div class="dokan-panel-body" id="kshippingargentina-metabox">
 							<?php
 							kshippingargentina_metabox_cb( $order, true );
@@ -823,15 +823,15 @@ function kshipping_generate_label_oca( $order, $label, $shipping ) {
 	$error   = array();
 
 	if ( isset( $data['Errores'] ) ) {
-		$error[] = __( 'Error generating OCA order', 'wc-kshippingargentina' ) . ': ' . ( (string) $data['Errores']['Error']['Descripcion'] );
+		$error[] = __( 'Error generating OCA order', 'carriers-of-argentina-for-woocommerce' ) . ': ' . ( (string) $data['Errores']['Error']['Descripcion'] );
 	}
 
 	$tracking_code = array();
 
 	if ( isset( $data['Error'] ) ) {
-		$error[] = __( 'Error generating OCA order', 'wc-kshippingargentina' ) . ': ' . ( (string) $data['Error']['Descripcion'] );
+		$error[] = __( 'Error generating OCA order', 'carriers-of-argentina-for-woocommerce' ) . ': ' . ( (string) $data['Error']['Descripcion'] );
 	} elseif ( ! isset( $data['Resumen'] ) ) {
-		$error[] = __( 'Error generating OCA order', 'wc-kshippingargentina' ) . ': ' . wp_json_encode( $data );
+		$error[] = __( 'Error generating OCA order', 'carriers-of-argentina-for-woocommerce' ) . ': ' . wp_json_encode( $data );
 	} elseif ( isset( $data['DetalleIngresos'] ) && isset( $data['DetalleIngresos']['NumeroEnvio'] ) ) {
 		update_post_meta( $order_id, 'kshippingargentina_oca_tracking_reference', (int) $data['DetalleIngresos']['OrdenRetiro'] );
 		update_post_meta( $order_id, 'kshippingargentina_oca_operation_code', (int) $data['Resumen']['CodigoOperacion'] );
@@ -853,7 +853,7 @@ function kshipping_generate_label_oca( $order, $label, $shipping ) {
 		'tracking_code' => $tracking_code,
 	);
 	if ( ! count( $tracking_code ) ) {
-		$result['error'] = count( $error ) ? implode( ', ', $error ) : __( 'An error occurred connecting to OCA, try again later, if the error persists you should check the plugin logs with technical support.', 'wc-kshippingargentina' );
+		$result['error'] = count( $error ) ? implode( ', ', $error ) : __( 'An error occurred connecting to OCA, try again later, if the error persists you should check the plugin logs with technical support.', 'carriers-of-argentina-for-woocommerce' );
 	}
 	return apply_filters(
 		'kshipping_generate_label_andreani',
@@ -994,7 +994,7 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
 		return apply_filters(
 			'kshipping_generate_label_andreani',
 			array(
-				'error'         => $api_error ? $api_error : __( 'Andreani return with Timeout', 'wc-kshippingargentina' ),
+				'error'         => $api_error ? $api_error : __( 'Andreani return with Timeout', 'carriers-of-argentina-for-woocommerce' ),
 				'tracking_code' => false,
 			),
 			$order,

@@ -39,7 +39,7 @@ class WC_KShippingArgentina_Manager extends WC_Integration {
 	public function __construct() {
 		$this->id           = 'kshippingargentina-manager';
 		$this->has_fields   = false;
-		$this->method_title = __( 'Shipping for Argentina', 'wc-kshippingargentina' );
+		$this->method_title = __( 'Shipping for Argentina', 'carriers-of-argentina-for-woocommerce' );
 
 		// Load the settings.
 		$this->init_settings();

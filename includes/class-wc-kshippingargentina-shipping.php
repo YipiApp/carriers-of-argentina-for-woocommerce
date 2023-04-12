@@ -255,8 +255,8 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		public function __construct( $instance_id = 0 ) {
 			$this->id                 = 'kshippingargentina-shipping';
 			$this->instance_id        = absint( $instance_id );
-			$this->method_title       = __( 'Correo Argentino/Andreani/OCA e-Pack', 'wc-kshippingargentina' );
-			$this->method_description = __( 'Use a shipping company from Argentina in this area', 'wc-kshippingargentina' );
+			$this->method_title       = __( 'Correo Argentino/Andreani/OCA e-Pack', 'carriers-of-argentina-for-woocommerce' );
+			$this->method_description = __( 'Use a shipping company from Argentina in this area', 'carriers-of-argentina-for-woocommerce' );
 			$this->supports           = array(
 				'shipping-zones',
 				'instance-settings',
@@ -409,7 +409,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		private function environment_check() {
 			if ( ! in_array( WC_KShippingArgentina::woocommerce_instance()->countries->get_base_country(), array( 'AR' ), true ) ) {
 				echo '<div class="error">
-					<p>' . esc_html( __( 'Argentina have to be the country of origin.', 'wc-kshippingargentina' ) ) . '</p>
+					<p>' . esc_html( __( 'Argentina have to be the country of origin.', 'carriers-of-argentina-for-woocommerce' ) ) . '</p>
 				</div>';
 			}
 		}
@@ -605,7 +605,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			foreach ( $package['contents'] as $item_id => &$p ) {
 				if ( ! $p['data']->needs_shipping() ) {
 					// translators: %s Product ID.
-					KShippingArgentina_API::debug( sprintf( __( 'Product #%s is virtual. Skipping.', 'wc-kshippingargentina' ), $item_id ), 'error' );
+					KShippingArgentina_API::debug( sprintf( __( 'Product #%s is virtual. Skipping.', 'carriers-of-argentina-for-woocommerce' ), $item_id ), 'error' );
 					continue;
 				}
 				$r               = array();
@@ -777,7 +777,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				$cost = $quote['total'] + $insurance;
 				if ( $quote['delay'] > 0 ) {
 					// translators: Min and max days of delay.
-					$delay = sprintf( __( '%1$d to %2$d days', 'wc-kshippingargentina' ), $quote['delay'], $quote['delay'] + 2 );
+					$delay = sprintf( __( '%1$d to %2$d days', 'carriers-of-argentina-for-woocommerce' ), $quote['delay'], $quote['delay'] + 2 );
 				} else {
 					$delay = $this->delay;
 				}
@@ -814,7 +814,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 						'kshippingargentina_price',
 						array(
 							'id'    => 'kshippingargentina-' . $this->instance_id,
-							'label' => $this->title . ( $this->hide_delay ? '' : ' (' . $delay . ')' ) . ( $free_shipping ? ' ' . __( '- Free Shipping', 'wc-kshippingargentina' ) : '' ),
+							'label' => $this->title . ( $this->hide_delay ? '' : ' (' . $delay . ')' ) . ( $free_shipping ? ' ' . __( '- Free Shipping', 'carriers-of-argentina-for-woocommerce' ) : '' ),
 							'cost'  => $free_shipping ? '0' : (float) $price,
 							'taxes' => false, // Evita cobrar impuesto, el precio ya lo incluye.
 						),
@@ -831,7 +831,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		 */
 		public function currency_not_supported_message() {
 			// translators: ISO Currency.
-			echo '<div class="error"><p><strong>' . esc_html( __( 'Argentina Shipping', 'wc-kshippingargentina' ) ) . '</strong>: ' . esc_html( sprintf( __( 'You currency <code>%s</code> can not be supported. Please use ARS or USD.', 'wc-kshippingargentina' ), get_woocommerce_currency() ) ) . '</p></div>';
+			echo '<div class="error"><p><strong>' . esc_html( __( 'Argentina Shipping', 'carriers-of-argentina-for-woocommerce' ) ) . '</strong>: ' . esc_html( sprintf( __( 'You currency <code>%s</code> can not be supported. Please use ARS or USD.', 'carriers-of-argentina-for-woocommerce' ), get_woocommerce_currency() ) ) . '</p></div>';
 		}
 
 		/**

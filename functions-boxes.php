@@ -12,18 +12,18 @@ add_action(
 			'kshipping-box',
 			array(
 				'labels'              => array(
-					'name'           => __( 'Shipping Boxes', 'wc-kshippingargentina' ),
-					'singular_name'  => __( 'Shipping Box', 'wc-kshippingargentina' ),
-					'menu_name'      => _x( 'Shipping Boxes', 'admin menu', 'wc-kshippingargentina' ),
-					'name_admin_bar' => _x( 'Shipping Boxes', 'admin bar', 'wc-kshippingargentina' ),
-					'add_new'        => _x( 'Add Box', 'add new', 'wc-kshippingargentina' ),
-					'add_new_item'   => __( 'Add Box', 'wc-kshippingargentina' ),
-					'new_item'       => __( 'New Box', 'wc-kshippingargentina' ),
-					'edit_item'      => __( 'Edit Box', 'wc-kshippingargentina' ),
-					'view_item'      => __( 'View Box', 'wc-kshippingargentina' ),
-					'all_items'      => __( 'All Boxes', 'wc-kshippingargentina' ),
-					'search_items'   => __( 'Search Box', 'wc-kshippingargentina' ),
-					'not_found'      => __( 'No box found.', 'wc-kshippingargentina' ),
+					'name'           => __( 'Shipping Boxes', 'carriers-of-argentina-for-woocommerce' ),
+					'singular_name'  => __( 'Shipping Box', 'carriers-of-argentina-for-woocommerce' ),
+					'menu_name'      => _x( 'Shipping Boxes', 'admin menu', 'carriers-of-argentina-for-woocommerce' ),
+					'name_admin_bar' => _x( 'Shipping Boxes', 'admin bar', 'carriers-of-argentina-for-woocommerce' ),
+					'add_new'        => _x( 'Add Box', 'add new', 'carriers-of-argentina-for-woocommerce' ),
+					'add_new_item'   => __( 'Add Box', 'carriers-of-argentina-for-woocommerce' ),
+					'new_item'       => __( 'New Box', 'carriers-of-argentina-for-woocommerce' ),
+					'edit_item'      => __( 'Edit Box', 'carriers-of-argentina-for-woocommerce' ),
+					'view_item'      => __( 'View Box', 'carriers-of-argentina-for-woocommerce' ),
+					'all_items'      => __( 'All Boxes', 'carriers-of-argentina-for-woocommerce' ),
+					'search_items'   => __( 'Search Box', 'carriers-of-argentina-for-woocommerce' ),
+					'not_found'      => __( 'No box found.', 'carriers-of-argentina-for-woocommerce' ),
 				),
 				'supports'            => array(
 					'title',
@@ -162,7 +162,7 @@ add_action(
 	function () {
 		add_meta_box(
 			'kshipping-box',
-			__( 'Dimensions', 'wc-kshippingargentina' ),
+			__( 'Dimensions', 'carriers-of-argentina-for-woocommerce' ),
 			function () {
 				global $post;
 				$sizes = get_post_meta( $post->ID, 'kshipping_sizes', true );
@@ -178,19 +178,19 @@ add_action(
 				<input type="hidden" name="kshipping_box_nonce" value="<?php echo esc_html( wp_create_nonce( 'kshipping_box_nonce' ) ); ?>">
 				<table>
 					<tr>
-						<td><b><?php esc_html_e( 'Width (In CM)', 'wc-kshippingargentina' ); ?>:</b></td>
+						<td><b><?php esc_html_e( 'Width (In CM)', 'carriers-of-argentina-for-woocommerce' ); ?>:</b></td>
 						<td><input name="kshipping_box[width]" type="text" value="<?php echo esc_html( $sizes['width'] ); ?>"/></td></td>
 					</tr>
 					<tr>
-						<td><b><?php esc_html_e( 'Height (In CM)', 'wc-kshippingargentina' ); ?>:</b></td>
+						<td><b><?php esc_html_e( 'Height (In CM)', 'carriers-of-argentina-for-woocommerce' ); ?>:</b></td>
 						<td><input name="kshipping_box[height]" type="text" value="<?php echo esc_html( $sizes['height'] ); ?>"/></td></td>
 					</tr>
 					<tr>
-						<td><b><?php esc_html_e( 'Depth (In CM)', 'wc-kshippingargentina' ); ?>:</b></td>
+						<td><b><?php esc_html_e( 'Depth (In CM)', 'carriers-of-argentina-for-woocommerce' ); ?>:</b></td>
 						<td><input name="kshipping_box[depth]" type="text" value="<?php echo esc_html( $sizes['depth'] ); ?>"/></td></td>
 					</tr>
 					<tr>
-						<td><b><?php esc_html_e( 'Max weight (In KG)', 'wc-kshippingargentina' ); ?>:</b></td>
+						<td><b><?php esc_html_e( 'Max weight (In KG)', 'carriers-of-argentina-for-woocommerce' ); ?>:</b></td>
 						<td><input name="kshipping_box[maxWeight]" type="text" value="<?php echo esc_html( $sizes['maxWeight'] ); ?>"/></td></td>
 					</tr>
 				</table>
@@ -204,8 +204,8 @@ add_action(
 add_filter(
 	'manage_edit-kshipping-box_columns',
 	function ( $columns ) {
-		$columns['dimensions'] = __( 'Dimensions (In CM)', 'wc-kshippingargentina' );
-		$columns['maxWeight']  = __( 'Max weight (In KG)', 'wc-kshippingargentina' );
+		$columns['dimensions'] = __( 'Dimensions (In CM)', 'carriers-of-argentina-for-woocommerce' );
+		$columns['maxWeight']  = __( 'Max weight (In KG)', 'carriers-of-argentina-for-woocommerce' );
 		return $columns;
 	}
 );

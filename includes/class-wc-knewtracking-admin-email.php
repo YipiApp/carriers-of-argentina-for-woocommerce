@@ -61,15 +61,15 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 		$this->id = 'wc-knewtracking-admin';
 
 		// this is the title in WooCommerce Email settings.
-		$this->title = __( 'Admin: New tracking code assigned', 'wc-kshippingargentina' );
+		$this->title = __( 'Admin: New tracking code assigned', 'carriers-of-argentina-for-woocommerce' );
 
 		// this is the description in WooCommerce email settings.
-		$this->description = __( 'Send an email to the customer with the tracking number assigned to an order', 'wc-kshippingargentina' );
+		$this->description = __( 'Send an email to the customer with the tracking number assigned to an order', 'carriers-of-argentina-for-woocommerce' );
 
 		// these are the default heading and subject lines that can be overridden using the settings.
-		$this->heading      = $this->get_option( 'heading', __( '#{order_id} Tracking code generated', 'wc-kshippingargentina' ) );
-		$this->subject      = $this->get_option( 'subject', __( '#{order_id} Tracking code generated', 'wc-kshippingargentina' ) );
-		$this->mail_message = $this->get_option( 'message', __( 'A tracking code has been created for the order #{order_id}, if you want to track it follow this link: {link}. If you want to download the PDF you can do it through this link: {label_link}', 'wc-kshippingargentina' ) );
+		$this->heading      = $this->get_option( 'heading', __( '#{order_id} Tracking code generated', 'carriers-of-argentina-for-woocommerce' ) );
+		$this->subject      = $this->get_option( 'subject', __( '#{order_id} Tracking code generated', 'carriers-of-argentina-for-woocommerce' ) );
+		$this->mail_message = $this->get_option( 'message', __( 'A tracking code has been created for the order #{order_id}, if you want to track it follow this link: {link}. If you want to download the PDF you can do it through this link: {label_link}', 'carriers-of-argentina-for-woocommerce' ) );
 
 		// these define the locations of the templates that this email should use, we'll just use the new order template since this email is similar.
 		$plugin_dirname       = basename( dirname( __DIR__ ) );
@@ -153,7 +153,7 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 			}
 		}
 		if ( ! count( $link_labels ) ) {
-			$link_labels[] = '<b style="color:red">' . __( 'There were problems downloading the labels.', 'wc-kshippingargentina' ) . '</b>';
+			$link_labels[] = '<b style="color:red">' . __( 'There were problems downloading the labels.', 'carriers-of-argentina-for-woocommerce' ) . '</b>';
 		}
 		$message = str_replace(
 			'{order_id}',
@@ -248,40 +248,40 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 
 		$this->form_fields = array(
 			'enabled'   => array(
-				'title'   => __( 'Enable/Disable', 'wc-kshippingargentina' ),
+				'title'   => __( 'Enable/Disable', 'carriers-of-argentina-for-woocommerce' ),
 				'type'    => 'checkbox',
-				'label'   => __( 'Enable this email notification', 'wc-kshippingargentina' ),
+				'label'   => __( 'Enable this email notification', 'carriers-of-argentina-for-woocommerce' ),
 				'default' => 'yes',
 			),
 			'recipient' => array(
-				'title'       => __( 'Recipient(s)', 'wc-kshippingargentina' ),
+				'title'       => __( 'Recipient(s)', 'carriers-of-argentina-for-woocommerce' ),
 				'type'        => 'text',
 				// translators: %s email example.
-				'description' => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to <code>%s</code>.', 'wc-kshippingargentina' ), esc_attr( get_option( 'admin_email' ) ) ),
+				'description' => sprintf( __( 'Enter recipients (comma separated) for this email. Defaults to <code>%s</code>.', 'carriers-of-argentina-for-woocommerce' ), esc_attr( get_option( 'admin_email' ) ) ),
 				'placeholder' => '',
 				'default'     => get_option( 'admin_email' ),
 			),
 			'subject'   => array(
-				'title'       => __( 'Subject', 'wc-kshippingargentina' ),
+				'title'       => __( 'Subject', 'carriers-of-argentina-for-woocommerce' ),
 				'type'        => 'text',
 				// translators: %s email example.
-				'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'wc-kshippingargentina' ), $this->subject ),
+				'description' => sprintf( __( 'This controls the email subject line. Leave blank to use the default subject: <code>%s</code>.', 'carriers-of-argentina-for-woocommerce' ), $this->subject ),
 				'placeholder' => '',
 				'default'     => $this->subject,
 			),
 			'heading'   => array(
-				'title'       => __( 'Email Heading', 'wc-kshippingargentina' ),
+				'title'       => __( 'Email Heading', 'carriers-of-argentina-for-woocommerce' ),
 				'type'        => 'text',
 				'description' => sprintf(
 					// translators: %s email example.
-					__( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'wc-kshippingargentina' ),
+					__( 'This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>.', 'carriers-of-argentina-for-woocommerce' ),
 					$this->heading
 				),
 				'placeholder' => '',
 				'default'     => $this->heading,
 			),
 			'message'   => array(
-				'title'       => __( 'Message', 'wc-kshippingargentina' ),
+				'title'       => __( 'Message', 'carriers-of-argentina-for-woocommerce' ),
 				'type'        => 'textarea',
 				'placeholder' => '',
 				'default'     => $this->mail_message,
