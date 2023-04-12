@@ -571,7 +571,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				$result_box['height'][] = $box['box']['height'];
 				$result_box['depth'][]  = $box['box']['depth'];
 				$result_box['weight'][] = round( $box['weight'], 2 );
-				$result_box['items'][]  = count( $box['products'], 2 );
+				$result_box['items'][]  = count( $box['products'] );
 				$contents               = array();
 				$total                  = 0;
 				$total_wt               = 0;
