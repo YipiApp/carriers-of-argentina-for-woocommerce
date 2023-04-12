@@ -299,10 +299,6 @@ class KShippingArgentina_API {
 			self::set_cache( $cache_id, $data['body'], $ttl );
 			$api_arr = json_decode( $data['body'], true );
 			if ( $api_arr ) {
-				if ( isset( $api_arr['statusCode'] ) && ( $api_arr['statusCode'] < 200 || $api_arr['statusCode'] > 400 ) ) {
-					self::set_cache( $cache_id, 'error', 3600 );
-					return false;
-				}
 				return $api_arr;
 			}
 			self::set_cache( $cache_id, 'error', 3600 );
