@@ -3,26 +3,32 @@ Contributors: Kijam Lopez
 Tags: woocommerce, oca, correo argentino, andreani, argentina, envio, transportista, shipping
 Requires at least: 4.0
 Tested up to: 6.2
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2
 
 Add Correo Argentino / Andreani / Oca ePack to the WooCommerce plugin
 
 === Descripción en Español ===
-Este plugins agrega las plataformas de envío mas usadas en Argentina a su tienda WooCommerce. Soporta: Correo Argentino / Andreani / Oca e-Pack. Con este plugin podras:
-- Cotizar Envios (Incluyendo Correo Argentino)
+Correo Argentino / Andreani / Oca e-Pack para WooCommerce.
+
+Este plugins agrega las plataformas de envío más usadas en Argentina a su tienda WooCommerce. Soporta: Correo Argentino / Andreani / Oca e-Pack. Con este plugin podrás:
+- Cotizar Envíos (Incluyendo Correo Argentino)
 - Solicitar la sucursal de destino a tus clientes (Para envíos a Sucursal)
-- Generar etiquetas de forma automatica (Solo Andreani y OCA).
+- Generar etiquetas de forma automática (Solo Andreani y OCA).
 
 === Description ===
+Correo Argentino / Andreani / Oca e-Pack for WooCommerce.
+
 This plugins adds the most used shipping platforms in Argentina to your WooCommerce store. Supports: Correo Argentino / Andreani / Oca ePack. With this plugin you can:
 - Quote Shipping (Including Correo Argentino)
 - Request the offices of destination to your customers (For shipments to offices)
 - Generate labels automatically (Only Andreani and OCA).
 
+[youtube https://www.youtube.com/watch?v=AHM8YmcfEgA]
+
 === Requirements ===
 - WooCommerce
-- X-RapidAPI-Key and X-RapidAPI-Host of this API (Price starts at 5U$D / mo): https://rapidapi.com/kijamve/api/transportistas-de-argentina
+- [X-RapidAPI-Key and X-RapidAPI-Host](https://rapidapi.com/kijamve/api/transportistas-de-argentina/pricing) of this API (Price starts at 1.00 U$D / mo)
 - Número de Operativa / Número de Cliente / Cuit if you want to use Quote for OCA e-Pack
 - User and Password for OCA e-Pack if you want generate labels automatically with OCA e-Pack
 - Número de Contrato / Número de Cliente if you want to use Quote for Andreani
