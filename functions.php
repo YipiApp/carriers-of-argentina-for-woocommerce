@@ -416,7 +416,6 @@ function kshippingargentina_hook_js() {
 			),
 		)
 	);
-	wp_enqueue_style( 'wc-kshippingargentina-css', plugins_url( 'kshippingargentina_style.css', __FILE__ ), array(), WC_KShippingArgentina::VERSION );
 }
 
 add_action( 'wc_ajax_wc_kshippingargentina_ajax', 'wc_kshippingargentina_ajax' );
