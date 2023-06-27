@@ -382,12 +382,11 @@ if ( ! function_exists( 'array_key_first' ) ) {
 	}
 }
 
-add_action( 'wp_enqueue_scripts', 'kshippingargentina_hook_js' );
-add_action( 'admin_enqueue_scripts', 'kshippingargentina_hook_js' );
-
 /**
  * Hook js function.
  */
+add_action( 'wp_enqueue_scripts', 'kshippingargentina_hook_js' );
+add_action( 'admin_enqueue_scripts', 'kshippingargentina_hook_js' );
 function kshippingargentina_hook_js() {
 	if ( ! WC()->session ) {
 		WC()->session = new WC_Session_Handler();
@@ -417,6 +416,7 @@ function kshippingargentina_hook_js() {
 			),
 		)
 	);
+	wp_enqueue_style( 'wc-kshippingargentina-css', plugins_url( 'kshippingargentina_style.css', __FILE__ ), array(), WC_KShippingArgentina::VERSION );
 }
 
 add_action( 'wc_ajax_wc_kshippingargentina_ajax', 'wc_kshippingargentina_ajax' );

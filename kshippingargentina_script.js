@@ -54,7 +54,7 @@ jQuery(document).ready(function() {
 		$('.custom-office_kshippingargentina').each(function() {
 			let li = $('select', this).closest('li');
 			let radio = $('input[type=radio]', li);
-			if($(radio).is(':checked')) {
+			if(radio.length == 0 || $(radio).is(':checked')) {
 				$(this).show();
 			} else {
 				$(this).hide();
@@ -165,7 +165,7 @@ jQuery(document).ready(function() {
 				if ($('#shipping_country').val() == 'AR') {
 					let class_city = $('#shipping_city').attr('class');
 					let val_city = $('#shipping_city').val();
-					$('input#shipping_city').replaceWith('<select class="'+class_city+'" name="billing_city" id="billing_city" /></select>');
+					$('input#shipping_city').replaceWith('<select class="'+class_city+'" name="shipping_city" id="shipping_city" /></select>');
 					$('#shipping_city option').remove();
 					$('#shipping_city').append('<option value="">Cargando...</option>');
 					if(typeof $('select#shipping_city').selectWoo != 'undefined') {
@@ -177,7 +177,7 @@ jQuery(document).ready(function() {
 						$('#shipping_city option').remove();
 						//$('#shipping_city').append('<option value="">Seleccione...</option>');
 						let list = jQuery.parseJSON(list_json);
-						let city = $('#billing_city').val();
+						let city = $('#shipping_city').val();
 						for (let i in list) {
 							let o = list[i];
 							let selected = '';
@@ -209,7 +209,7 @@ jQuery(document).ready(function() {
 					} else if(typeof $('#shipping_city').select2 != 'undefined') {
 						$('select#shipping_city').select2('destroy');
 					}
-					$('select#shipping_city').replaceWith('<input type="text" class="'+class_city+'" name="billing_city" id="billing_city" />');
+					$('select#shipping_city').replaceWith('<input type="text" class="'+class_city+'" name="shipping_city" id="shipping_city" />');
 				}
 			});
 			$('#shipping_postcode').change(function() {
