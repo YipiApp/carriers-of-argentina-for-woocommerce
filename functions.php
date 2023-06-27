@@ -665,3 +665,12 @@ add_action(
 	10,
 	2
 );
+
+add_action(
+	'wp_enqueue_scripts',
+	function() {
+		if ( is_checkout() && ! is_wc_endpoint_url() ) {
+			wp_enqueue_style( 'kshippingargentina_style', plugin_dir_url( __FILE__ ) . 'kshippingargentina_style.css', array(), WC_KShippingArgentina::VERSION );
+		}
+	}
+);
