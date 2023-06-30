@@ -242,7 +242,7 @@ add_filter(
 			);
 		}
 		if ( ! isset( $setting['meta_number'] ) || empty( $setting['meta_number'] ) ) {
-			$fields['billing']['billing_number']   = array(
+			$fields['billing']['billing_number'] = array(
 				'label'             => __( 'Height (Enter numbers only)', 'carriers-of-argentina-for-woocommerce' ),
 				'type'              => 'text',
 				'priority'          => $bp_address2 + 1,
@@ -253,6 +253,8 @@ add_filter(
 				'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
 				'clear'             => true,
 			);
+		}
+		if ( ! isset( $setting['meta_number_shipping'] ) || empty( $setting['meta_number_shipping'] ) ) {
 			$fields['shipping']['shipping_number'] = array(
 				'label'             => __( 'Height (Enter numbers only)', 'carriers-of-argentina-for-woocommerce' ),
 				'type'              => 'text',
@@ -265,50 +267,58 @@ add_filter(
 				'clear'             => true,
 			);
 		}
-		$fields['billing']['billing_floor']       = array(
-			'label'             => __( 'Floor', 'carriers-of-argentina-for-woocommerce' ),
-			'type'              => 'text',
-			'priority'          => $bp_address2 + 3,
-			'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
-			'maxlength'         => 3,
-			'required'          => false,
-			'class'             => apply_filters( 'kshippingargentina_form_row_field', array( 'form-group', 'col-sm-12', 'col-md-12' ) ),
-			'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
-			'clear'             => true,
-		);
-		$fields['shipping']['shipping_floor']     = array(
-			'label'             => __( 'Floor', 'carriers-of-argentina-for-woocommerce' ),
-			'type'              => 'text',
-			'priority'          => $sp_address2 + 3,
-			'required'          => false,
-			'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
-			'maxlength'         => 3,
-			'class'             => apply_filters( 'kshippingargentina_form_row_field', array( 'form-group', 'col-sm-12', 'col-md-12' ) ),
-			'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
-			'clear'             => true,
-		);
-		$fields['billing']['billing_apartment']   = array(
-			'label'             => __( 'Apartment', 'carriers-of-argentina-for-woocommerce' ),
-			'type'              => 'text',
-			'priority'          => $bp_address2 + 4,
-			'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
-			'maxlength'         => 3,
-			'required'          => false,
-			'class'             => apply_filters( 'kshippingargentina_form_row_field', array( 'form-group', 'col-sm-12', 'col-md-12' ) ),
-			'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
-			'clear'             => true,
-		);
-		$fields['shipping']['shipping_apartment'] = array(
-			'label'             => __( 'Apartment', 'carriers-of-argentina-for-woocommerce' ),
-			'type'              => 'text',
-			'priority'          => $sp_address2 + 4,
-			'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
-			'maxlength'         => 3,
-			'required'          => false,
-			'class'             => apply_filters( 'kshippingargentina_form_row_field', array( 'form-group', 'col-sm-12', 'col-md-12' ) ),
-			'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
-			'clear'             => true,
-		);
+		if ( ! isset( $setting['meta_floor'] ) || empty( $setting['meta_floor'] ) ) {
+			$fields['billing']['billing_floor'] = array(
+				'label'             => __( 'Floor', 'carriers-of-argentina-for-woocommerce' ),
+				'type'              => 'text',
+				'priority'          => $bp_address2 + 3,
+				'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
+				'maxlength'         => 3,
+				'required'          => false,
+				'class'             => apply_filters( 'kshippingargentina_form_row_field', array( 'form-group', 'col-sm-12', 'col-md-12' ) ),
+				'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
+				'clear'             => true,
+			);
+		}
+		if ( ! isset( $setting['meta_number_shipping'] ) || empty( $setting['meta_number_shipping'] ) ) {
+			$fields['shipping']['shipping_floor'] = array(
+				'label'             => __( 'Floor', 'carriers-of-argentina-for-woocommerce' ),
+				'type'              => 'text',
+				'priority'          => $sp_address2 + 3,
+				'required'          => false,
+				'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
+				'maxlength'         => 3,
+				'class'             => apply_filters( 'kshippingargentina_form_row_field', array( 'form-group', 'col-sm-12', 'col-md-12' ) ),
+				'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
+				'clear'             => true,
+			);
+		}
+		if ( ! isset( $setting['meta_apartment'] ) || empty( $setting['meta_apartment'] ) ) {
+			$fields['billing']['billing_apartment'] = array(
+				'label'             => __( 'Apartment', 'carriers-of-argentina-for-woocommerce' ),
+				'type'              => 'text',
+				'priority'          => $bp_address2 + 4,
+				'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
+				'maxlength'         => 3,
+				'required'          => false,
+				'class'             => apply_filters( 'kshippingargentina_form_row_field', array( 'form-group', 'col-sm-12', 'col-md-12' ) ),
+				'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
+				'clear'             => true,
+			);
+		}
+		if ( ! isset( $setting['meta_apartment_shipping'] ) || empty( $setting['meta_apartment_shipping'] ) ) {
+			$fields['shipping']['shipping_apartment'] = array(
+				'label'             => __( 'Apartment', 'carriers-of-argentina-for-woocommerce' ),
+				'type'              => 'text',
+				'priority'          => $sp_address2 + 4,
+				'custom_attributes' => array( 'pattern' => '[a-zA-Z0-9 ]{0,3}' ),
+				'maxlength'         => 3,
+				'required'          => false,
+				'class'             => apply_filters( 'kshippingargentina_form_row_field', array( 'form-group', 'col-sm-12', 'col-md-12' ) ),
+				'input_class'       => apply_filters( 'kshippingargentina_form_row_input', array( 'form-control' ) ),
+				'clear'             => true,
+			);
+		}
 		return $fields;
 	},
 	5
@@ -382,11 +392,11 @@ if ( ! function_exists( 'array_key_first' ) ) {
 	}
 }
 
+add_action( 'wp_enqueue_scripts', 'kshippingargentina_hook_js' );
+add_action( 'admin_enqueue_scripts', 'kshippingargentina_hook_js' );
 /**
  * Hook js function.
  */
-add_action( 'wp_enqueue_scripts', 'kshippingargentina_hook_js' );
-add_action( 'admin_enqueue_scripts', 'kshippingargentina_hook_js' );
 function kshippingargentina_hook_js() {
 	if ( ! WC()->session ) {
 		WC()->session = new WC_Session_Handler();
@@ -500,11 +510,30 @@ add_filter(
 add_filter(
 	'woocommerce_order_formatted_billing_address',
 	function ( $fields, $order ) {
+		$setting                      = get_option( 'woocommerce_kshippingargentina-manager_settings' );
 		$fields['shipping_number']    = $order->get_meta( '_billing_number' );
 		$fields['shipping_floor']     = $order->get_meta( '_billing_floor' );
 		$fields['shipping_apartment'] = $order->get_meta( '_billing_apartment' );
-		$shipping                     = false;
-		$offices                      = $order->get_meta( '_office_kshippingargentina' );
+		if ( empty( $fields['shipping_number'] ) && isset( $setting['meta_number'] ) && ! empty( $setting['meta_number'] ) ) {
+			$fields['shipping_number'] = $order->get_meta( $setting['meta_number'] );
+			if ( ! $fields['shipping_number'] ) {
+				$fields['shipping_number'] = $order->get_meta( '_' . $setting['meta_number'] );
+			}
+		}
+		if ( empty( $fields['shipping_floor'] ) && isset( $setting['meta_floor'] ) && ! empty( $setting['meta_floor'] ) ) {
+			$fields['shipping_floor'] = $order->get_meta( $setting['meta_floor'] );
+			if ( ! $fields['shipping_floor'] ) {
+				$fields['shipping_floor'] = $order->get_meta( '_' . $setting['meta_floor'] );
+			}
+		}
+		if ( empty( $fields['shipping_apartment'] ) && isset( $setting['meta_apartment'] ) && ! empty( $setting['meta_apartment'] ) ) {
+			$fields['shipping_apartment'] = $order->get_meta( $setting['meta_apartment'] );
+			if ( ! $fields['shipping_apartment'] ) {
+				$fields['shipping_apartment'] = $order->get_meta( '_' . $setting['meta_apartment'] );
+			}
+		}
+		$shipping = false;
+		$offices  = $order->get_meta( '_office_kshippingargentina' );
 
 		$instance_id = get_post_meta( $order->get_id(), 'kshippingargentina_instance_id', true );
 
@@ -560,11 +589,30 @@ add_filter(
 add_filter(
 	'woocommerce_order_formatted_shipping_address',
 	function ( $fields, $order ) {
+		$setting                      = get_option( 'woocommerce_kshippingargentina-manager_settings' );
 		$fields['shipping_number']    = $order->get_meta( '_shipping_number' );
 		$fields['shipping_floor']     = $order->get_meta( '_shipping_floor' );
 		$fields['shipping_apartment'] = $order->get_meta( '_shipping_apartment' );
-		$shipping                     = false;
-		$offices                      = $order->get_meta( '_office_kshippingargentina' );
+		if ( empty( $fields['shipping_number'] ) && isset( $setting['meta_number_shipping'] ) && ! empty( $setting['meta_number_shipping'] ) ) {
+			$fields['shipping_number'] = $order->get_meta( $setting['meta_number_shipping'] );
+			if ( ! $fields['shipping_number'] ) {
+				$fields['shipping_number'] = $order->get_meta( '_' . $setting['meta_number_shipping'] );
+			}
+		}
+		if ( empty( $fields['shipping_floor'] ) && isset( $setting['meta_floor_shipping'] ) && ! empty( $setting['meta_floor_shipping'] ) ) {
+			$fields['shipping_floor'] = $order->get_meta( $setting['meta_floor_shipping'] );
+			if ( ! $fields['shipping_floor'] ) {
+				$fields['shipping_floor'] = $order->get_meta( '_' . $setting['meta_floor_shipping'] );
+			}
+		}
+		if ( empty( $fields['shipping_apartment'] ) && isset( $setting['meta_apartment_shipping'] ) && ! empty( $setting['meta_apartment_shipping'] ) ) {
+			$fields['shipping_apartment'] = $order->get_meta( $setting['meta_apartment_shipping'] );
+			if ( ! $fields['shipping_apartment'] ) {
+				$fields['shipping_apartment'] = $order->get_meta( '_' . $setting['meta_apartment_shipping'] );
+			}
+		}
+		$shipping = false;
+		$offices  = $order->get_meta( '_office_kshippingargentina' );
 
 		$instance_id = get_post_meta( $order->get_id(), 'kshippingargentina_instance_id', true );
 

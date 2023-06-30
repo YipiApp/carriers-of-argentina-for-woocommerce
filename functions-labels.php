@@ -642,12 +642,48 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 	$number    = $order->get_meta( '_shipping_number' );
 	$floor     = $order->get_meta( '_shipping_floor' );
 	$apartment = $order->get_meta( '_shipping_apartment' );
+	if ( empty( $number ) && isset( $setting['meta_number_shipping'] ) && ! empty( $setting['meta_number_shipping'] ) ) {
+		$number = $order->get_meta( $setting['meta_number_shipping'] );
+		if ( ! $number ) {
+			$number = $order->get_meta( '_' . $setting['meta_number_shipping'] );
+		}
+	}
+	if ( empty( $apartment ) && isset( $setting['meta_apartment_shipping'] ) && ! empty( $setting['meta_apartment_shipping'] ) ) {
+		$apartment = $order->get_meta( $setting['meta_apartment_shipping'] );
+		if ( ! $apartment ) {
+			$apartment = $order->get_meta( '_' . $setting['meta_apartment_shipping'] );
+		}
+	}
+	if ( empty( $floor ) && isset( $setting['meta_floor_shipping'] ) && ! empty( $setting['meta_floor_shipping'] ) ) {
+		$floor = $order->get_meta( $setting['meta_floor_shipping'] );
+		if ( ! $floor ) {
+			$floor = $order->get_meta( '_' . $setting['meta_floor_shipping'] );
+		}
+	}
 	if ( empty( $postcode ) ) {
 		$shipping_address = $billing_address;
 		$postcode         = $billing_address['postcode'];
 		$number           = $order->get_meta( '_billing_number' );
 		$floor            = $order->get_meta( '_billing_floor' );
 		$apartment        = $order->get_meta( '_billing_apartment' );
+		if ( empty( $number ) && isset( $setting['meta_number'] ) && ! empty( $setting['meta_number'] ) ) {
+			$number = $order->get_meta( $setting['meta_number'] );
+			if ( ! $number ) {
+				$number = $order->get_meta( '_' . $setting['meta_number'] );
+			}
+		}
+		if ( empty( $apartment ) && isset( $setting['meta_apartment'] ) && ! empty( $setting['meta_apartment'] ) ) {
+			$apartment = $order->get_meta( $setting['meta_apartment'] );
+			if ( ! $apartment ) {
+				$apartment = $order->get_meta( '_' . $setting['meta_apartment'] );
+			}
+		}
+		if ( empty( $floor ) && isset( $setting['meta_floor'] ) && ! empty( $setting['meta_floor'] ) ) {
+			$floor = $order->get_meta( $setting['meta_floor'] );
+			if ( ! $floor ) {
+				$floor = $order->get_meta( '_' . $setting['meta_floor'] );
+			}
+		}
 	}
 
 	$state          = $shipping_address['state'];

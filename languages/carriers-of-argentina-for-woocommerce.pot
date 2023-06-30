@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
-"POT-Creation-Date: 2023-04-03 01:46-0400\n"
+"POT-Creation-Date: 2023-06-30 15:58-0400\n"
 "PO-Revision-Date: 2023-03-27 12:56-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -23,13 +23,13 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
 #. translators: %s Version of WooCommerce.
-#: class-wc-kshippingargentina.php:152
+#: class-wc-kshippingargentina.php:151
 #, php-format
 msgid ""
 "WooCommerce Shipping Argentina depends on the last version of %s to work!"
 msgstr ""
 
-#: class-wc-kshippingargentina.php:152
+#: class-wc-kshippingargentina.php:151
 msgid "WooCommerce"
 msgstr ""
 
@@ -188,17 +188,17 @@ msgstr ""
 msgid "Datos Correo Argentino"
 msgstr ""
 
-#: functions-labels.php:826 functions-labels.php:832 functions-labels.php:834
+#: functions-labels.php:862 functions-labels.php:868 functions-labels.php:870
 msgid "Error generating OCA order"
 msgstr ""
 
-#: functions-labels.php:856
+#: functions-labels.php:892
 msgid ""
 "An error occurred connecting to OCA, try again later, if the error persists "
 "you should check the plugin logs with technical support."
 msgstr ""
 
-#: functions-labels.php:997
+#: functions-labels.php:1033
 msgid "Andreani return with Timeout"
 msgstr ""
 
@@ -250,71 +250,71 @@ msgstr ""
 msgid "Mobile Phone (No Area Code)"
 msgstr ""
 
-#: functions.php:246 functions.php:257 templates/order.tpl.php:146
+#: functions.php:246 functions.php:259 templates/order.tpl.php:146
 msgid "Height (Enter numbers only)"
 msgstr ""
 
-#: functions.php:269 functions.php:280 templates/order.tpl.php:150
+#: functions.php:272 functions.php:285 templates/order.tpl.php:150
 msgid "Floor"
 msgstr ""
 
-#: functions.php:291 functions.php:302 templates/order.tpl.php:154
+#: functions.php:298 functions.php:311 templates/order.tpl.php:154
 msgid "Apartment"
 msgstr ""
 
-#: functions.php:320
+#: functions.php:330
 msgid "Street"
 msgstr ""
 
-#: functions.php:321 templates/order.tpl.php:138
+#: functions.php:331 templates/order.tpl.php:138
 msgid "Street name"
 msgstr ""
 
-#: functions.php:322 functions.php:323 templates/order.tpl.php:142
+#: functions.php:332 functions.php:333 templates/order.tpl.php:142
 msgid "Detail (Between-streets, etc)"
 msgstr ""
 
-#: functions.php:410
+#: functions.php:419
 msgid "days"
 msgstr ""
 
-#: functions.php:411
+#: functions.php:420
 msgid "Your shopping cart is empty"
 msgstr ""
 
-#: functions.php:412
+#: functions.php:421
 msgid "No carriers found"
 msgstr ""
 
-#: functions.php:413
+#: functions.php:422
 msgid "Product not found"
 msgstr ""
 
-#: functions.php:414
+#: functions.php:423
 msgid "Server error"
 msgstr ""
 
-#: functions.php:415
+#: functions.php:424
 msgid "Loading..."
 msgstr ""
 
-#: functions.php:416
+#: functions.php:425
 msgid "The plugin is not configured correctly..."
 msgstr ""
 
 #. translators: Office.
-#: functions.php:531 functions.php:591
+#: functions.php:559 functions.php:638
 #, php-format
 msgid "Office: %1$s"
 msgstr ""
 
 #. translators: name - (iso / code).
-#: functions.php:544 functions.php:604
+#: functions.php:572 functions.php:651
 #, php-format
 msgid "Office %1$s: %2$s - %3$s (%4$s / %5$s)"
 msgstr ""
 
-#: functions.php:642
+#: functions.php:689
 msgid "Shipping"
 msgstr ""
 
@@ -322,13 +322,13 @@ msgstr ""
 msgid "Cities not found..."
 msgstr ""
 
-#: includes/class-kshippingargentina-api.php:365
-#: includes/class-kshippingargentina-api.php:370
+#: includes/class-kshippingargentina-api.php:356
+#: includes/class-kshippingargentina-api.php:361
 msgid "User or Password of Andreani is invalid"
 msgstr ""
 
-#: includes/class-kshippingargentina-api.php:409
-#: includes/class-kshippingargentina-api.php:454
+#: includes/class-kshippingargentina-api.php:400
+#: includes/class-kshippingargentina-api.php:445
 #: includes/data-settings-shipping.php:46
 msgid "Andreani"
 msgstr ""
@@ -430,43 +430,51 @@ msgstr ""
 msgid "Shipping for Argentina"
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:271
+#: includes/class-wc-kshippingargentina-shipping.php:258
 msgid "Correo Argentino/Andreani/OCA e-Pack"
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:272
+#: includes/class-wc-kshippingargentina-shipping.php:259
 msgid "Use a shipping company from Argentina in this area"
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:427
+#: includes/class-wc-kshippingargentina-shipping.php:412
 msgid "Argentina have to be the country of origin."
 msgstr ""
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:625
+#: includes/class-wc-kshippingargentina-shipping.php:608
 #, php-format
 msgid "Product #%s is virtual. Skipping."
 msgstr ""
 
 #. translators: Min and max days of delay.
-#: includes/class-wc-kshippingargentina-shipping.php:797
+#: includes/class-wc-kshippingargentina-shipping.php:780
 #, php-format
 msgid "%1$d to %2$d days"
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:834
+#: includes/class-wc-kshippingargentina-shipping.php:817
 msgid "- Free Shipping"
 msgstr ""
 
 #. translators: ISO Currency.
-#: includes/class-wc-kshippingargentina-shipping.php:851
+#: includes/class-wc-kshippingargentina-shipping.php:834
 msgid "Argentina Shipping"
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:851
+#: includes/class-wc-kshippingargentina-shipping.php:834
 #, php-format
 msgid ""
 "You currency <code>%s</code> can not be supported. Please use ARS or USD."
+msgstr ""
+
+#: includes/class-wc-kshippingargentina-shipping.php:897
+msgid "Select all"
+msgstr ""
+
+#: includes/class-wc-kshippingargentina-shipping.php:897
+msgid "Select none"
 msgstr ""
 
 #: includes/data-settings-manager.php:23
@@ -628,96 +636,90 @@ msgid "Depth default product (In %s)"
 msgstr ""
 
 #: includes/data-settings-manager.php:201
-msgid "Calculation mode"
-msgstr ""
-
-#: includes/data-settings-manager.php:206
-msgid "Use width and height longest of all. Adding depth of each product."
-msgstr ""
-
-#: includes/data-settings-manager.php:207
-msgid "Use the longer sides of each product."
-msgstr ""
-
-#: includes/data-settings-manager.php:211
-msgid "Package type"
-msgstr ""
-
-#: includes/data-settings-manager.php:216
-msgid "One package"
-msgstr ""
-
-#: includes/data-settings-manager.php:217
-msgid "One package by product (One package for all same products)"
-msgstr ""
-
-#: includes/data-settings-manager.php:218
-msgid "One package by unit"
-msgstr ""
-
-#: includes/data-settings-manager.php:222
 msgid "Do not change to \"In Transit\""
 msgstr ""
 
-#: includes/data-settings-manager.php:224
+#: includes/data-settings-manager.php:203
 msgid ""
 "Deactivate automatic status change to \"In Transit\" when creating the guide."
 msgstr ""
 
 #. translators: %1$s currency origin -  %2$s currency destination.
-#: includes/data-settings-manager.php:229
+#: includes/data-settings-manager.php:208
 #, php-format
 msgid "Enable %1$s to %2$s conversion"
 msgstr ""
 
-#: includes/data-settings-manager.php:231
+#: includes/data-settings-manager.php:210
 msgid "Activate the plugin by converting the amounts to the gateway currency"
 msgstr ""
 
-#: includes/data-settings-manager.php:234
+#: includes/data-settings-manager.php:213
 msgid "Disable module"
 msgstr ""
 
-#: includes/data-settings-manager.php:235
+#: includes/data-settings-manager.php:214
 msgid "Use the official conversion rate"
 msgstr ""
 
-#: includes/data-settings-manager.php:236 includes/data-settings-manager.php:243
+#: includes/data-settings-manager.php:215 includes/data-settings-manager.php:222
 msgid "Use a manual conversion rate"
 msgstr ""
 
 #. translators: %1$s currency origin -  %2$s currency destination.
-#: includes/data-settings-manager.php:241
+#: includes/data-settings-manager.php:220
 #, php-format
 msgid "Convert using manual rate from %1$s to %2$s"
 msgstr ""
 
-#: includes/data-settings-manager.php:247
+#: includes/data-settings-manager.php:226
 msgid "Meta-key for DNI"
 msgstr ""
 
-#: includes/data-settings-manager.php:249 includes/data-settings-manager.php:256
-#: includes/data-settings-manager.php:263
+#: includes/data-settings-manager.php:228 includes/data-settings-manager.php:235
+#: includes/data-settings-manager.php:242 includes/data-settings-manager.php:249
+#: includes/data-settings-manager.php:256 includes/data-settings-manager.php:263
+#: includes/data-settings-manager.php:270 includes/data-settings-manager.php:277
 msgid "If you don't specify it, the plugin adds it to the checkout form."
 msgstr ""
 
-#: includes/data-settings-manager.php:254
+#: includes/data-settings-manager.php:233
 msgid "Meta-key for Phone"
 msgstr ""
 
+#: includes/data-settings-manager.php:240
+msgid "Meta-key for Altura (Billing Address)"
+msgstr ""
+
+#: includes/data-settings-manager.php:247
+msgid "Meta-key for Altura (Shipping Address)"
+msgstr ""
+
+#: includes/data-settings-manager.php:254
+msgid "Meta-key for Aparment (Billing Address)"
+msgstr ""
+
 #: includes/data-settings-manager.php:261
-msgid "Meta-key for Altura (Address)"
+msgid "Meta-key for Aparment (Shipping Address)"
 msgstr ""
 
 #: includes/data-settings-manager.php:268
+msgid "Meta-key for Floor (Billing Address)"
+msgstr ""
+
+#: includes/data-settings-manager.php:275
+msgid "Meta-key for Floor (Shipping Address)"
+msgstr ""
+
+#: includes/data-settings-manager.php:282
 msgid "Debug"
 msgstr ""
 
-#: includes/data-settings-manager.php:270
+#: includes/data-settings-manager.php:284
 msgid "Enable log"
 msgstr ""
 
-#: includes/data-settings-manager.php:272
+#: includes/data-settings-manager.php:286
 msgid "See in WooCommerce logs"
 msgstr ""
 
