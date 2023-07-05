@@ -195,6 +195,12 @@ class KShippingArgentina_API {
 		$velocity
 	) {
 		self::init();
+		$postcode_src = preg_replace( '/[^0-9]/', '', $postcode_src );
+		$postcode_dst = preg_replace( '/[^0-9]/', '', $postcode_dst );
+		if ( ! $postcode_src || ! $postcode_dst || strlen( $postcode_src ) != 4 || strlen( $postcode_dst ) != 4 ) {
+			self::debug( 'Invalid postcode: ', array( $postcode_src, $postcode_dst ) );
+			return false;
+		}
 		$total       = 0;
 		$delay       = 0;
 		$fiscal_type = strtolower( $fiscal_type );

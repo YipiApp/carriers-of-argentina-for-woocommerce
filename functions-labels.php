@@ -660,7 +660,7 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 			$floor = $order->get_meta( '_' . $setting['meta_floor_shipping'] );
 		}
 	}
-	if ( empty( $postcode ) ) {
+	if ( empty( $postcode ) || empty( $number ) ) {
 		$shipping_address = $billing_address;
 		$postcode         = $billing_address['postcode'];
 		$number           = $order->get_meta( '_billing_number' );
@@ -869,7 +869,7 @@ function kshipping_generate_label_oca( $order, $label, $shipping ) {
 	} elseif ( ! isset( $data['Resumen'] ) ) {
 		$error[] = __( 'Error generating OCA order', 'carriers-of-argentina-for-woocommerce' ) . ': ' . wp_json_encode( $data );
 	} elseif ( isset( $data['DetalleIngresos'] ) && isset( $data['DetalleIngresos']['NumeroEnvio'] ) ) {
-		update_post_meta( $order_id, 'kshippingargentina_oca_tracking_reference', (int) $data['DetalleIngresos']['OrdenRetiro'] );
+		update_post_meta( $order_id, 'kshippingargentina_oca_tracking_reference', $data['DetalleIngresos']['OrdenRetiro'] );
 		update_post_meta( $order_id, 'kshippingargentina_oca_operation_code', (int) $data['Resumen']['CodigoOperacion'] );
 		$tc        = (string) $data['DetalleIngresos']['NumeroEnvio'];
 		$pdf_error = false;
