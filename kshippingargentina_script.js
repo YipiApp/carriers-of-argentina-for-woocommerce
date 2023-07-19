@@ -1,10 +1,14 @@
 var kijam_update_checkout_request = false;
 var kshippingargentina_old_service_val = {};
-
+function checkOfficeSelectedArgentinaOffice(ev) {
+	const selector = ev.target;
+	jQuery('.method_office_name', jQuery(selector).closest('.custom-office_kshippingargentina')).val(jQuery('option:selected', selector).text());
+}
 function checkKShippingArgentinaOffice(postcode, instance_id) {
 	let $ = jQuery;
 	$.post(wc_kshippingargentina_context.ajax_url, { nonce: wc_kshippingargentina_context.token, cmd: "offices_rcv", instance_id: instance_id, postcode: postcode }, function(list_json) {
 		$('.method_instance_id-'+instance_id+' option').remove();
+		// $('.method_instance_id-'+instance_id+' .method_office_name').val(list_json);
 		let list = jQuery.parseJSON(list_json);
 		/*
 		if(typeof $('.method_instance_id-'+instance_id+' select').selectWoo != 'undefined') {
@@ -13,14 +17,20 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 			$('.method_instance_id-'+instance_id+' select').select2('destroy');
 		}
 		*/
+		
+		let found = false;
 		for (let i in list) {
 			let o = list[i];
 			let selected = '';
 			if (wc_kshippingargentina_context.office_kshippingargentina == o.iso + '#' + o.id) {
 				found = true;
 				selected = 'selected';
+				$('.method_instance_id-'+instance_id+' .method_office_name').val(o.description + ' - ' + o.address);
 			}
 			$('.method_instance_id-'+instance_id+' select').append('<option ' + selected + ' data-map="https://maps.google.com/?q=' + o.lat + ',' + o.lng + '" value="' + o.iso + '#' + o.id + '">' + o.description + ' - ' + o.address + '</option>');
+		}
+		if (!found) {
+			$('.method_instance_id-'+instance_id+' .method_office_name').val($('.method_instance_id-'+instance_id+' select option:selected').text());
 		}
 		let opts_list = $('.method_instance_id-'+instance_id+' select').find('option');
 		opts_list.sort(function(a, b) { return $(a).text() > $(b).text() ? 1 : -1; });
@@ -30,6 +40,7 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 		} else if(typeof $('.method_instance_id-'+instance_id+' select').select2 != 'undefined') {
 			$('.method_instance_id-'+instance_id+' select').select2();
 		}
+		$('.method_instance_id-'+instance_id+' select').on('change', checkOfficeSelectedArgentinaOffice);
 	});
 }
 jQuery(document).ready(function() {

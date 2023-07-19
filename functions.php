@@ -107,12 +107,14 @@ add_action(
 			return;
 		}
 		$t_setting = get_option( 'woocommerce_kshippingargentina-shipping_' . $method->instance_id . '_settings' );
-		if ( 'office' !== $t_setting['type'] ) {
+		if ( ! isset( $t_setting['type'] ) || 'office' !== $t_setting['type'] ) {
 			return;
 		}
+		$office_name = WC_KShippingArgentina::woocommerce_instance()->checkout->get_value( 'kshippingargentina_method_office_name' );
 		echo '<div data-instance_id="' . esc_html( $method->instance_id ) . '" class="custom-office_kshippingargentina method_instance_id-' . esc_html( $method->instance_id ) . '" style="display: flex;padding-left: 20px;">
 		<input class="method_nonce" name="kshippingargentina_method_nonce[' . esc_html( $method->instance_id ) . ']" value="' . esc_html( wp_create_nonce( 'office_kshippingargentina_' . $method->instance_id ) ) . '" type="hidden" />
 		<input class="method_instance_id" value="' . esc_html( $method->instance_id ) . '" type="hidden" />
+		<input class="method_office_name" name="kshippingargentina_method_office_name[' . esc_html( $method->instance_id ) . ']" type="hidden" value="' . esc_html( $office_name && isset( $office_name[ $method->instance_id ] ) ? $office_name[ $method->instance_id ] : '' ) . '" />
 		';
 		$values = WC_KShippingArgentina::woocommerce_instance()->checkout->get_value( 'kshippingargentina_method_office' );
 		woocommerce_form_field(
@@ -159,6 +161,7 @@ add_action(
 									'method_id'    => $m->id,
 									'instance_id'  => $m->instance_id,
 									'service_type' => $shipping->service_type,
+									'office_name'  => isset( $_POST['kshippingargentina_method_office_name'][ $m->instance_id ] ) ? sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office_name'][ $m->instance_id ] ) ) : '',
 									'office'       => sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office'][ $m->instance_id ] ) ),
 								);
 							}
@@ -551,6 +554,7 @@ add_filter(
 			$state         = $address['state'];
 			$state_name    = $state;
 			$office        = $offices [ $instance_id ]['office'];
+			$office_name   = isset( $offices [ $instance_id ]['office_name'] ) && ! empty( $offices [ $instance_id ]['office_name'] ) ? $offices [ $instance_id ]['office_name'] : false;
 			if ( isset( $states[ $state ] ) ) {
 				$state_name = $states[ $state ];
 			}
@@ -564,17 +568,11 @@ add_filter(
 				'',
 				$address['postcode']
 			);
-			$offices  = KShippingArgentina_API::get_office( $shipping->service_type, $postcode, null, true );
-			if ( isset( $offices[ $office ] ) ) {
-				$o                         = $offices[ $office ];
+			if ( $office_name ) {
 				$fields['shipping_office'] = sprintf(
-					// translators: name - (iso / code).
-					__( 'Office %1$s: %2$s - %3$s (%4$s / %5$s)', 'carriers-of-argentina-for-woocommerce' ),
-					$state_name,
-					$o['description'],
-					$o['address'],
-					$o['iso'],
-					$o['id']
+					// translators: Office.
+					__( 'Office: %1$s', 'carriers-of-argentina-for-woocommerce' ),
+					$office_name . ' (' . $office . ') - ' . $state_name
 				);
 			}
 		} else {
@@ -630,6 +628,7 @@ add_filter(
 			$state         = $address['state'];
 			$state_name    = $state;
 			$office        = $offices [ $instance_id ]['office'];
+			$office_name   = isset( $offices [ $instance_id ]['office_name'] ) && ! empty( $offices [ $instance_id ]['office_name'] ) ? $offices [ $instance_id ]['office_name'] : false;
 			if ( isset( $states[ $state ] ) ) {
 				$state_name = $states[ $state ];
 			}
@@ -643,17 +642,11 @@ add_filter(
 				'',
 				$address['postcode']
 			);
-			$offices  = KShippingArgentina_API::get_office( $shipping->service_type, $postcode, null, true );
-			if ( isset( $offices[ $office ] ) ) {
-				$o                         = $offices[ $office ];
+			if ( $office_name ) {
 				$fields['shipping_office'] = sprintf(
-					// translators: name - (iso / code).
-					__( 'Office %1$s: %2$s - %3$s (%4$s / %5$s)', 'carriers-of-argentina-for-woocommerce' ),
-					$state_name,
-					$o['description'],
-					$o['address'],
-					$o['iso'],
-					$o['id']
+					// translators: Office.
+					__( 'Office: %1$s', 'carriers-of-argentina-for-woocommerce' ),
+					$office_name . ' (' . $office . ') - ' . $state_name
 				);
 			}
 		} else {

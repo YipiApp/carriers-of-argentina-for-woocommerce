@@ -214,7 +214,7 @@ class KShippingArgentina_API {
 				$costs = self::call( "/quotes/postcode/correo_argentino/{$package['weight']}/$postcode_src/$postcode_dst" );
 				if ( $costs && is_array( $costs ) ) {
 					foreach ( $costs as $cost ) {
-						if ( $cost['fiscalType'] === $fiscal_type ) {
+						if ( isset( $cost['fiscalType'] ) && $cost['fiscalType'] === $fiscal_type ) {
 							foreach ( $cost['quotes'] as $quote ) {
 								if ( $quote['name'] === $velocity ) {
 									$total += $quote[ $type ];
@@ -304,15 +304,15 @@ class KShippingArgentina_API {
 			self::debug( 'From API: ', array( $url, $post_data, $data['body'] ) );
 			self::set_cache( $cache_id, $data['body'], $ttl );
 			$api_arr = json_decode( $data['body'], true );
-			if ( $api_arr ) {
+			if ( $api_arr && ! stristr( $data['body'], 'You have exceeded the' ) ) {
 				return $api_arr;
 			}
-			self::set_cache( $cache_id, 'error', 3600 );
+			self::set_cache( $cache_id, 'error', 5 * 60 );
 			return false;
 		} else {
 			self::debug( 'From API error: ', array( $url, $post_data, $data ) );
 		}
-		self::set_cache( $cache_id, 'error', 3600 );
+		self::set_cache( $cache_id, 'error', 5 * 60 );
 		return false;
 	}
 
@@ -831,6 +831,18 @@ class KShippingArgentina_API {
 		}
 	}
 
+	// ##################################################################
+	// ##################################################################
+	// ##################################################################
+	// ##################################################################
+
+	// ############################ IS CACHE ############################
+
+	// ##################################################################
+	// ##################################################################
+	// ##################################################################
+	// ##################################################################
+
 	/**
 	 * Get cache data.
 	 *
@@ -876,19 +888,6 @@ class KShippingArgentina_API {
 		}
 		return $data;
 	}
-
-
-	// ##################################################################
-	// ##################################################################
-	// ##################################################################
-	// ##################################################################
-
-	// ############################ IS CACHE ############################
-
-	// ##################################################################
-	// ##################################################################
-	// ##################################################################
-	// ##################################################################
 
 	/**
 	 * Set cache data.
