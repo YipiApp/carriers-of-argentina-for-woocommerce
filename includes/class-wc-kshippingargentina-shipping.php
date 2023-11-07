@@ -561,7 +561,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 					'boxes'    => kshipping_argentina_boxes(),
 					'products' => $products,
 				),
-				3600 * 24 * 7
+				3600 * 24 * 120
 			);
 			if ( ! $boxes || ! is_array( $boxes ) ) {
 				return false;

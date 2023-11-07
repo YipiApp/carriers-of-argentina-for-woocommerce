@@ -205,6 +205,14 @@ add_action(
 			$shipping = WC_KShippingArgentina_Shipping::get_instance( (int) $_POST['kshippingargentina_instance_id'] );
 			update_post_meta( $order->get_id(), 'kshippingargentina_label_data', $label );
 			$file = false;
+			KShippingArgentina_API::debug(
+				'Massive Label',
+				array(
+					'service_type' => $shipping->service_type,
+					'label'        => $label,
+					'shipping'     => $shipping,
+				)
+			);
 			if ( 'correo_argentino' === $shipping->service_type ) {
 				$file = kshipping_generate_label_correo_argentino( $order, $label, $shipping );
 			} elseif ( 'andreani' === $shipping->service_type ) {
@@ -330,7 +338,15 @@ add_action(
 							continue;
 						}
 						$label = kshippingargentina_order_to_label_data( $to_label['order'], $to_label['shipping'] );
-						$file  = kshipping_generate_label_correo_argentino( $to_label['order'], $label, $to_label['shipping'] );
+						KShippingArgentina_API::debug(
+							'New Label',
+							array(
+								'service_type' => 'correo_argentino',
+								'label'        => $label,
+								'shipping'     => $to_label['shipping'],
+							)
+						);
+						$file = kshipping_generate_label_correo_argentino( $to_label['order'], $label, $to_label['shipping'] );
 						if ( ! $file['error'] ) {
 							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
 							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
@@ -366,9 +382,18 @@ add_action(
 								}
 							}
 							$files[] = $tracking_codes;
+							continue;
 						}
 						$label = kshippingargentina_order_to_label_data( $to_label['order'], $to_label['shipping'] );
-						$file  = kshipping_generate_label_oca( $to_label['order'], $label, $to_label['shipping'] );
+						KShippingArgentina_API::debug(
+							'New Label',
+							array(
+								'service_type' => 'oca',
+								'label'        => $label,
+								'shipping'     => $to_label['shipping'],
+							)
+						);
+						$file = kshipping_generate_label_oca( $to_label['order'], $label, $to_label['shipping'] );
 						if ( ! $file['error'] ) {
 							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
 							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
@@ -407,7 +432,15 @@ add_action(
 							continue;
 						}
 						$label = kshippingargentina_order_to_label_data( $to_label['order'], $to_label['shipping'] );
-						$file  = kshipping_generate_label_andreani( $to_label['order'], $label, $to_label['shipping'] );
+						KShippingArgentina_API::debug(
+							'New Label',
+							array(
+								'service_type' => 'andreani',
+								'label'        => $label,
+								'shipping'     => $to_label['shipping'],
+							)
+						);
+						$file = kshipping_generate_label_andreani( $to_label['order'], $label, $to_label['shipping'] );
 						if ( ! $file['error'] ) {
 							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
 							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
@@ -787,6 +820,7 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 		'office'       => false,
 		'postcode_src' => $setting['postcode'],
 		'office_src'   => $iso_office_src,
+		'office_sfull' => $shipping->office_src,
 	);
 	foreach ( $dim['weight'] as $b_id => $weight ) {
 		$data['box']['width'][]   = $dim['width'][ $b_id ];

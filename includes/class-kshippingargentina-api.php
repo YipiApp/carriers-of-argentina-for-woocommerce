@@ -46,6 +46,8 @@ class KShippingArgentina_API {
 		'v1' => 'https://api.qa.andreani.com',
 	);
 
+	private static $mutex_file = null;
+
 
 	/**
 	 * OCA Clients array.
@@ -135,7 +137,7 @@ class KShippingArgentina_API {
 	 */
 	public static function get_office( $service, $postcode, $sender = null, $receiver = null ) {
 		self::init();
-		$offices = self::call( "/offices/postcode/$service/$postcode", false, 3600 * 24 * 7 );
+		$offices = self::call( "/offices/postcode/$service/$postcode", false, 3600 * 24 * 60 );
 		$return  = array();
 		foreach ( $offices as $office ) {
 			if ( ! $sender || isset( $office['is_sender'] ) && $office['is_sender'] ) {
@@ -156,7 +158,7 @@ class KShippingArgentina_API {
 	 */
 	public static function get_cities( $state ) {
 		self::init();
-		$cities = self::call( "/cities/states/$state", false, 3600 * 24 * 31 );
+		$cities = self::call( "/cities/states/$state", false, 3600 * 24 * 120 );
 		$return = array();
 		foreach ( $cities as $city ) {
 			$return[ $city['name'] ] = $city['name'];
@@ -254,7 +256,35 @@ class KShippingArgentina_API {
 			'delay' => $delay,
 		) : false;
 	}
+	/**
+	 * Locks a mutex to ensure exclusive access to a critical section of code.
+	 *
+	 * @return bool true if the mutex was successfully acquired, false otherwise.
+	 */
+	private static function mutex() {
+		global $wpdb;
+		$wp_content_dir = WP_CONTENT_DIR;
+		$lock_file_path = $wp_content_dir . '/wc-kshippingargentina.lock';
+		$lock           = fopen( $lock_file_path, 'w' );
+		if ( $lock && flock( $lock, LOCK_EX ) ) {
+			self::$mutex_file = $lock;
+			return true;
+		}
+		return false;
+	}
 
+	/**
+	 * Unlocks the mutex for the kshipping_argentina_mutex.
+	 *
+	 * @return void
+	 */
+	private static function unmutex() {
+		if ( self::$mutex_file ) {
+			flock( self::$mutex_file, LOCK_UN );
+			fclose( self::$mutex_file );
+			self::$mutex_file = null;
+		}
+	}
 	/**
 	 * Call api request.
 	 *
@@ -279,12 +309,18 @@ class KShippingArgentina_API {
 			$cache_id = 'call_get_' . md5( self::$config['api_key'] . $url );
 		}
 		$result = self::get_cache( $cache_id );
-		if ( 'error' === $result ) {
+		if ( stristr( $result, 'Too many requests' ) || stristr( $result, 'You have exceeded the' ) ) {
+			self::set_cache( $cache_id, 'error', 1 );
+		} elseif ( 'error' === $result ) {
 			return false;
 		} elseif ( ! empty( $result ) ) {
 			$api_arr = json_decode( $result, true );
-			self::debug( 'From Cache: ', array( $url, $post_data, $api_arr ) );
-			return $api_arr ? $api_arr : false;
+			if ( ! $api_arr ) {
+				self::debug( 'Json decode error from CACHE: ' . $result );
+				self::set_cache( $cache_id, 'error', 1 );
+			} else {
+				return $api_arr;
+			}
 		}
 		$config = array(
 			'timeout' => 10,
@@ -293,6 +329,29 @@ class KShippingArgentina_API {
 				'X-RapidAPI-Key'  => self::$config['api_key'],
 			),
 		);
+		if ( ! self::mutex() ) {
+			self::debug( 'Mutex error: ' . $url . ' POST_DATA: ' . $post_data );
+			return false;
+		}
+		$result = self::get_cache( $cache_id );
+		if ( 'error' !== $result && ! empty( $result ) ) {
+			$api_arr = json_decode( $result, true );
+			if ( ! $api_arr ) {
+				self::debug( 'Json decode error from CACHE: ' . $result );
+				self::set_cache( $cache_id, 'error', 1 );
+			} else {
+				self::unmutex();
+				return $api_arr;
+			}
+		}
+		$last_request = (int) self::get_cache( 'kshippingargentina-last-request', false );
+		self::debug( 'Last request: ' . $last_request );
+		$now = time();
+		if ( $last_request >= $now - 3 ) {
+			self::debug( 'Wait...' );
+			sleep( max( 1, 3 - ( $now - $last_request ) ) );
+			self::debug( 'End wait.' );
+		}
 		if ( $post_data ) {
 			$config['body']                    = $post_data;
 			$config['headers']['Content-Type'] = 'application/json; charset=utf-8';
@@ -300,14 +359,19 @@ class KShippingArgentina_API {
 		} else {
 			$data = wp_remote_get( $url, $config );
 		}
+		self::debug( 'End request: ' . time() );
+		self::set_cache( 'kshippingargentina-last-request', time() );
+		self::unmutex();
 		if ( ! is_wp_error( $data ) ) {
 			self::debug( 'From API: ', array( $url, $post_data, $data['body'] ) );
-			self::set_cache( $cache_id, $data['body'], $ttl );
 			$api_arr = json_decode( $data['body'], true );
-			if ( $api_arr && ! stristr( $data['body'], 'You have exceeded the' ) ) {
+			if ( $api_arr && ! stristr( $data['body'], 'Too many requests' ) && ! stristr( $data['body'], 'You have exceeded the' ) ) {
+				self::set_cache( $cache_id, $data['body'], $ttl );
 				return $api_arr;
 			}
-			self::set_cache( $cache_id, 'error', 5 * 60 );
+			if ( ! stristr( $data['body'], 'Too many requests' ) && ! stristr( $data['body'], 'You have exceeded the' ) ) {
+				self::set_cache( $cache_id, 'error', 5 * 60 );
+			}
 			return false;
 		} else {
 			self::debug( 'From API error: ', array( $url, $post_data, $data ) );
@@ -595,10 +659,14 @@ class KShippingArgentina_API {
 		$countries_obj = new WC_Countries();
 		$states        = $countries_obj->get_states( 'AR' );
 
-		if ( $from_door ) {
+		$from_door_office = explode( '#', $label['office_src'] );
+		if ( ! isset( $from_door_office[1] ) ) {
+			$from_door_office = explode( '#', $shipping->office_src );
+		}
+		if ( ! isset( $from_door_office[1] ) ) {
 			$origin_imposition_center_id = '';
 		} else {
-			$origin_imposition_center_id = explode( '#', $label['office_src'] )[1];
+			$origin_imposition_center_id = $from_door_office[1];
 		}
 		$cost_center = $from_door ? '1' : '0';
 		$idci        = ! $to_door ? (string) explode( '#', $label['office'] )[1] : '0';
@@ -850,9 +918,9 @@ class KShippingArgentina_API {
 	 *
 	 * @return mixed
 	 */
-	public static function get_cache( $cache_id ) {
+	public static function get_cache( $cache_id, $force_local_cache = true ) {
 		$data = false;
-		if ( isset( self::$module_cache[ $cache_id ] ) && self::$module_cache[ $cache_id ] ) {
+		if ( $force_local_cache && isset( self::$module_cache[ $cache_id ] ) && self::$module_cache[ $cache_id ] ) {
 			$data = self::$module_cache[ $cache_id ];
 			return $data;
 		}

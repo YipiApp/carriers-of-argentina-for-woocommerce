@@ -15,7 +15,7 @@ $offices     = array(
 	'' => __( 'Not founded offices in your postcode.', 'carriers-of-argentina-for-woocommerce' ),
 );
 $setting     = get_option( 'woocommerce_kshippingargentina-manager_settings' );
-if ( isset( $setting['postcode'] ) && ! empty( $this->service_type ) ) {
+if ( is_admin() && isset( $setting['postcode'] ) && ! empty( $this->service_type ) && ! empty( $setting['postcode'] ) ) {
 	$list = KShippingArgentina_API::get_office( $this->service_type, $setting['postcode'], true );
 	if ( $list ) {
 		$offices = array();

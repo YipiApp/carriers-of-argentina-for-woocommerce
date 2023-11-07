@@ -114,7 +114,7 @@ if ( 'correo_argentino' === $shipping->service_type ) {
 			</p>
 			<p class="form-field form-field-wide">
 				<label for="kshipping_state"><?php esc_html_e( 'State', 'carriers-of-argentina-for-woocommerce' ); ?>:</label>
-				<select class="kshipping_state" name="kshipping[state]" id="kshipping_state">
+				<br /><select class="kshipping_state" name="kshipping[state]" id="kshipping_state">
 					<?php
 					foreach ( $states as $s_key => $s_name ) {
 						if ( $s_key === $state ) {
@@ -280,7 +280,8 @@ if ( 'correo_argentino' === $shipping->service_type ) {
 	}
 
 	#kshippingargentina-container select {
-		width: 100%;
+		width: 100% !important;
+		max-width: 350px !important;
 	}
 
 	#kshippingargentina-container .order_data_column {

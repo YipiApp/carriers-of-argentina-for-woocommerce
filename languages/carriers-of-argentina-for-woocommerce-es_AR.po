@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
-"POT-Creation-Date: 2023-06-30 15:59-0400\n"
-"PO-Revision-Date: 2023-06-30 16:00-0400\n"
+"POT-Creation-Date: 2023-10-26 12:17-0400\n"
+"PO-Revision-Date: 2023-10-26 12:17-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: class-wc-kshippingargentina.php\n"
@@ -235,95 +235,89 @@ msgid_plural "Shipment in Transit <span class=\"count\">(%s)</span>"
 msgstr[0] "Envío en tránsito <span class=\"count\">(%s)</span>"
 msgstr[1] "Envío en tránsito <span class=\"count\">(%s)</span>"
 
-#: functions.php:121
+#: functions.php:123
 msgid "Nearest office"
 msgstr "Oficina más cercana"
 
-#: functions.php:126
+#: functions.php:128
 msgid "Choose one..."
 msgstr "Elige uno..."
 
-#: functions.php:205 templates/order.tpl.php:98
+#: functions.php:208 templates/order.tpl.php:98
 msgid "Identification number type"
 msgstr "Tipo de número de identificación"
 
-#: functions.php:215 templates/order.tpl.php:112
+#: functions.php:218 templates/order.tpl.php:112
 msgid "Identification number"
 msgstr "Número de identificación"
 
-#: functions.php:226 templates/order.tpl.php:158
+#: functions.php:229 templates/order.tpl.php:158
 msgid "Mobile Phone Area Code"
 msgstr "Código de área del teléfono móvil"
 
-#: functions.php:235 templates/order.tpl.php:162
+#: functions.php:238 templates/order.tpl.php:162
 msgid "Mobile Phone (No Area Code)"
 msgstr "Teléfono móvil (sin código de área)"
 
-#: functions.php:246 functions.php:259 templates/order.tpl.php:146
+#: functions.php:249 functions.php:262 templates/order.tpl.php:146
 msgid "Height (Enter numbers only)"
 msgstr "Altura (introduzca solo números)"
 
-#: functions.php:272 functions.php:285 templates/order.tpl.php:150
+#: functions.php:275 functions.php:288 templates/order.tpl.php:150
 msgid "Floor"
 msgstr "Piso"
 
-#: functions.php:298 functions.php:311 templates/order.tpl.php:154
+#: functions.php:301 functions.php:314 templates/order.tpl.php:154
 msgid "Apartment"
 msgstr "Apartamento"
 
-#: functions.php:330
+#: functions.php:333
 msgid "Street"
 msgstr "Calle"
 
-#: functions.php:331 templates/order.tpl.php:138
+#: functions.php:334 templates/order.tpl.php:138
 msgid "Street name"
 msgstr "Nombre de calle"
 
-#: functions.php:332 functions.php:333 templates/order.tpl.php:142
+#: functions.php:335 functions.php:336 templates/order.tpl.php:142
 msgid "Detail (Between-streets, etc)"
 msgstr "Detalle (Entre-calles, etc)"
 
-#: functions.php:419
+#: functions.php:422
 msgid "days"
 msgstr "dias"
 
-#: functions.php:420
+#: functions.php:423
 msgid "Your shopping cart is empty"
 msgstr "Tu carrito está vacío"
 
-#: functions.php:421
+#: functions.php:424
 msgid "No carriers found"
 msgstr "No se han encontrado transportistas"
 
-#: functions.php:422
+#: functions.php:425
 msgid "Product not found"
 msgstr "Producto no encontrado"
 
-#: functions.php:423
+#: functions.php:426
 msgid "Server error"
 msgstr "Error del servidor"
 
-#: functions.php:424
+#: functions.php:427
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: functions.php:425
+#: functions.php:428
 msgid "The plugin is not configured correctly..."
 msgstr "El plugin no esta configurado correctamente..."
 
 #. translators: Office.
-#: functions.php:559 functions.php:638
+#: functions.php:563 functions.php:574 functions.php:637 functions.php:648
 #, php-format
 msgid "Office: %1$s"
 msgstr "Oficina: %1$s"
 
-#. translators: name - (iso / code).
-#: functions.php:572 functions.php:651
-#, php-format
-msgid "Office %1$s: %2$s - %3$s (%4$s / %5$s)"
-msgstr "Oficina %1$s: %2$s - %3$s (%4$s / %5$s)"
-
-#: functions.php:689
+#: functions.php:682
 msgid "Shipping"
 msgstr "Envío"
 
@@ -331,13 +325,13 @@ msgstr "Envío"
 msgid "Cities not found..."
 msgstr "Ciudades no encontradas..."
 
-#: includes/class-kshippingargentina-api.php:356
-#: includes/class-kshippingargentina-api.php:361
+#: includes/class-kshippingargentina-api.php:394
+#: includes/class-kshippingargentina-api.php:399
 msgid "User or Password of Andreani is invalid"
 msgstr "El usuario o la contraseña de Andreani no son válidos"
 
-#: includes/class-kshippingargentina-api.php:400
-#: includes/class-kshippingargentina-api.php:445
+#: includes/class-kshippingargentina-api.php:438
+#: includes/class-kshippingargentina-api.php:483
 #: includes/data-settings-shipping.php:46
 msgid "Andreani"
 msgstr "Andreani"
@@ -1197,7 +1191,7 @@ msgstr "Apellido"
 
 #: templates/order.tpl.php:116
 msgid "State"
-msgstr "Estado"
+msgstr "Provincia"
 
 #: templates/order.tpl.php:130
 msgid "City"
@@ -1275,6 +1269,10 @@ msgstr "Kijam López"
 #. Author URI of the plugin/theme
 msgid "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
 msgstr "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
+
+#, php-format
+#~ msgid "Office %1$s: %2$s - %3$s (%4$s / %5$s)"
+#~ msgstr "Oficina %1$s: %2$s - %3$s (%4$s / %5$s)"
 
 #~ msgid "Calculation mode"
 #~ msgstr "Modo de cálculo"
