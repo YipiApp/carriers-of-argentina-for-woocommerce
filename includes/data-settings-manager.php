@@ -26,15 +26,14 @@ $r = array(
 		'default' => 'yes',
 	),
 	'api_host'             => array(
-		'title'       => __( 'X-RapidAPI-Host', 'carriers-of-argentina-for-woocommerce' ),
+		'title'       => __( 'API Host', 'carriers-of-argentina-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get this in https://rapidapi.com/kijamve/api/transportistas-de-argentina', 'carriers-of-argentina-for-woocommerce' ),
-		'default'     => 'transportistas-de-argentina.p.rapidapi.com',
+		'default'     => 'shipping.yipi.app',
 	),
 	'api_key'              => array(
-		'title'       => __( 'X-RapidAPI-Key', 'carriers-of-argentina-for-woocommerce' ),
+		'title'       => __( 'API Key or Yipi License Key', 'carriers-of-argentina-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Get this in https://rapidapi.com/kijamve/api/transportistas-de-argentina', 'carriers-of-argentina-for-woocommerce' ),
+		'description' => __( 'Get this in https://yipi.app/p/membresia/', 'carriers-of-argentina-for-woocommerce' ),
 		'default'     => '',
 	),
 	'andreani_username'    => array(

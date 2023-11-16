@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
-"POT-Creation-Date: 2023-10-26 12:17-0400\n"
-"PO-Revision-Date: 2023-10-26 12:17-0400\n"
+"POT-Creation-Date: 2023-11-16 13:16-0400\n"
+"PO-Revision-Date: 2023-11-16 13:16-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: class-wc-kshippingargentina.php\n"
@@ -138,7 +138,7 @@ msgstr "Este pedido ya tiene códigos de seguimiento asignados"
 msgid "Invalid service type."
 msgstr "Tipo de servicio invalido."
 
-#: functions-labels.php:232
+#: functions-labels.php:240
 msgid ""
 "The label for this order could not be generated, you can verify what happens "
 "from the plugin log if you have it active in the configuration."
@@ -147,21 +147,21 @@ msgstr ""
 "sucede desde el registro del complemento si lo tiene activo en la "
 "configuración."
 
-#: functions-labels.php:262
+#: functions-labels.php:270
 msgid "Invalid Status:"
 msgstr "Estado no válido:"
 
-#: functions-labels.php:275
+#: functions-labels.php:283
 msgid "Shipping instance not exists."
 msgstr "La instancia de envío no existe."
 
-#: functions-labels.php:297
+#: functions-labels.php:305
 msgid "Shipping type not found:"
 msgstr "Tipo de transportista no encontrado:"
 
 #. translators: %s => Tracking code.
-#: functions-labels.php:323 functions-labels.php:341 functions-labels.php:362
-#: functions-labels.php:379 functions-labels.php:400 functions-labels.php:418
+#: functions-labels.php:331 functions-labels.php:357 functions-labels.php:378
+#: functions-labels.php:404 functions-labels.php:425 functions-labels.php:451
 #, php-format
 msgid ""
 "Label %s generated, but the pdf was impossible to get because of an error in "
@@ -170,35 +170,35 @@ msgstr ""
 "La etiqueta %s se generó, pero el pdf fue imposible de obtener debido a un "
 "error en el proveedor de servicios."
 
-#: functions-labels.php:528
+#: functions-labels.php:561
 msgid "The client asked that it not be sent by an Argentine carrier."
 msgstr "El cliente pidió que no fuera enviado por un transportista argentino."
 
-#: functions-labels.php:538
+#: functions-labels.php:571
 msgid "This carrier not is supported."
 msgstr "Este operador no es compatible."
 
-#: functions-labels.php:544
+#: functions-labels.php:577
 msgid "Invalid status, payment is not completed."
 msgstr "Estado no válido, el pago no se ha completado."
 
-#: functions-labels.php:550
+#: functions-labels.php:583
 msgid "Current tracking code:"
 msgstr "Código de seguimiento actual:"
 
-#: functions-labels.php:572
+#: functions-labels.php:605
 msgid "Data of the Argentine carrier"
 msgstr "Datos del transportista argentino"
 
-#: functions-labels.php:583
+#: functions-labels.php:616
 msgid "Datos Correo Argentino"
 msgstr "Correo Argentino"
 
-#: functions-labels.php:862 functions-labels.php:868 functions-labels.php:870
+#: functions-labels.php:896 functions-labels.php:902 functions-labels.php:904
 msgid "Error generating OCA order"
 msgstr "Error al generar el pedido OCA"
 
-#: functions-labels.php:892
+#: functions-labels.php:926
 msgid ""
 "An error occurred connecting to OCA, try again later, if the error persists "
 "you should check the plugin logs with technical support."
@@ -207,7 +207,7 @@ msgstr ""
 "error persiste, debe verificar los registros del complemento con soporte "
 "técnico."
 
-#: functions-labels.php:1033
+#: functions-labels.php:1067
 msgid "Andreani return with Timeout"
 msgstr "Andreani retorno con Timeout"
 
@@ -321,17 +321,17 @@ msgstr "Oficina: %1$s"
 msgid "Shipping"
 msgstr "Envío"
 
-#: includes/class-kshippingargentina-api.php:164
+#: includes/class-kshippingargentina-api.php:166
 msgid "Cities not found..."
 msgstr "Ciudades no encontradas..."
 
-#: includes/class-kshippingargentina-api.php:394
-#: includes/class-kshippingargentina-api.php:399
+#: includes/class-kshippingargentina-api.php:440
+#: includes/class-kshippingargentina-api.php:445
 msgid "User or Password of Andreani is invalid"
 msgstr "El usuario o la contraseña de Andreani no son válidos"
 
-#: includes/class-kshippingargentina-api.php:438
-#: includes/class-kshippingargentina-api.php:483
+#: includes/class-kshippingargentina-api.php:484
+#: includes/class-kshippingargentina-api.php:529
 #: includes/data-settings-shipping.php:46
 msgid "Andreani"
 msgstr "Andreani"
@@ -459,37 +459,37 @@ msgid "Argentina have to be the country of origin."
 msgstr "Argentina tiene que ser el país de origen."
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:608
+#: includes/class-wc-kshippingargentina-shipping.php:615
 #, php-format
 msgid "Product #%s is virtual. Skipping."
 msgstr "El producto #%s es virtual. Saltar."
 
 #. translators: Min and max days of delay.
-#: includes/class-wc-kshippingargentina-shipping.php:780
+#: includes/class-wc-kshippingargentina-shipping.php:787
 #, php-format
 msgid "%1$d to %2$d days"
 msgstr "%1$d a %2$d días"
 
-#: includes/class-wc-kshippingargentina-shipping.php:817
+#: includes/class-wc-kshippingargentina-shipping.php:824
 msgid "- Free Shipping"
 msgstr "- Envío gratuito"
 
 #. translators: ISO Currency.
-#: includes/class-wc-kshippingargentina-shipping.php:834
+#: includes/class-wc-kshippingargentina-shipping.php:841
 msgid "Argentina Shipping"
 msgstr "Envíos en Argentina"
 
-#: includes/class-wc-kshippingargentina-shipping.php:834
+#: includes/class-wc-kshippingargentina-shipping.php:841
 #, php-format
 msgid ""
 "You currency <code>%s</code> can not be supported. Please use ARS or USD."
 msgstr "Su moneda <code>%s</code> no puede ser compatible. Utilice ARS o USD."
 
-#: includes/class-wc-kshippingargentina-shipping.php:897
+#: includes/class-wc-kshippingargentina-shipping.php:904
 msgid "Select all"
 msgstr "Seleccionar todos"
 
-#: includes/class-wc-kshippingargentina-shipping.php:897
+#: includes/class-wc-kshippingargentina-shipping.php:904
 msgid "Select none"
 msgstr "Selecciona ninguno"
 
@@ -502,251 +502,249 @@ msgid "Enable Shipping Argentina"
 msgstr "Activar Envíos para Argentina"
 
 #: includes/data-settings-manager.php:29
-msgid "X-RapidAPI-Host"
-msgstr "X-RapidAPI-Host"
+msgid "API Host"
+msgstr "API Host"
 
-#: includes/data-settings-manager.php:31 includes/data-settings-manager.php:37
-msgid ""
-"Get this in https://rapidapi.com/kijamve/api/transportistas-de-argentina"
-msgstr ""
-"Obtén esto en https://rapidapi.com/kijamve/api/transportistas-de-argentina"
+#: includes/data-settings-manager.php:34
+msgid "API Key or Yipi License Key"
+msgstr "Clave API o licencia de Yipi"
 
-#: includes/data-settings-manager.php:35
-msgid "X-RapidAPI-Key"
-msgstr "X-RapidAPI-Key"
+#: includes/data-settings-manager.php:36
+msgid "Get this in https://yipi.app/p/membresia/"
+msgstr "Obtén esto en https://yipi.app/p/membresia/"
 
-#: includes/data-settings-manager.php:41
+#: includes/data-settings-manager.php:40
 msgid "Andreani API Username (Optional)"
 msgstr "Nombre de usuario de la API de Andreani (opcional)"
 
-#: includes/data-settings-manager.php:43 includes/data-settings-manager.php:55
-#: includes/data-settings-manager.php:61
+#: includes/data-settings-manager.php:42 includes/data-settings-manager.php:54
+#: includes/data-settings-manager.php:60
 msgid "Optional, only for generation of label"
 msgstr "Opcional, solo para la generación de etiquetas"
 
-#: includes/data-settings-manager.php:47
+#: includes/data-settings-manager.php:46
 msgid "Andreani API Password (Optional)"
 msgstr "Contraseña de la API de Andreani (opcional)"
 
-#: includes/data-settings-manager.php:49
+#: includes/data-settings-manager.php:48
 msgid "Only for generation of label"
 msgstr "Solo para generación de etiqueta"
 
-#: includes/data-settings-manager.php:53
+#: includes/data-settings-manager.php:52
 msgid "OCA e-Pack API Username (Optional)"
 msgstr "Nombre de usuario de la API de OCA e-Pack (opcional)"
 
-#: includes/data-settings-manager.php:59
+#: includes/data-settings-manager.php:58
 msgid "OCA e-Pack API Password (Optional)"
 msgstr "Contraseña de la API de OCA e-Pack (opcional)"
 
-#: includes/data-settings-manager.php:65
+#: includes/data-settings-manager.php:64
 msgid "OCA collections time slot"
 msgstr "Intervalo de tiempo de retiros de paquetería en tienda para OCA"
 
-#: includes/data-settings-manager.php:69
+#: includes/data-settings-manager.php:68
 msgid "8:00 - 17:00"
 msgstr "8:00 - 17:00"
 
-#: includes/data-settings-manager.php:70
+#: includes/data-settings-manager.php:69
 msgid "8:00 - 12:00"
 msgstr "8:00 - 12:00"
 
-#: includes/data-settings-manager.php:71
+#: includes/data-settings-manager.php:70
 msgid "14:00 - 17:00"
 msgstr "14:00 - 17:00"
 
-#: includes/data-settings-manager.php:76
+#: includes/data-settings-manager.php:75
 msgid "Sender Post Code"
 msgstr "Código postal del remitente"
 
-#: includes/data-settings-manager.php:82
+#: includes/data-settings-manager.php:81
 msgid "State of sender"
 msgstr "Provincia del remitente"
 
-#: includes/data-settings-manager.php:89
+#: includes/data-settings-manager.php:88
 msgid "City of sender"
 msgstr "Ciudad del remitente"
 
-#: includes/data-settings-manager.php:96
+#: includes/data-settings-manager.php:95
 msgid "Street of sender"
 msgstr "Calle del remitente"
 
-#: includes/data-settings-manager.php:103
+#: includes/data-settings-manager.php:102
 msgid "Number of sender"
 msgstr "Altura de remitentes"
 
-#: includes/data-settings-manager.php:110
+#: includes/data-settings-manager.php:109
 msgid "Floor of sender"
 msgstr "Piso del remitente"
 
-#: includes/data-settings-manager.php:117
+#: includes/data-settings-manager.php:116
 msgid "Apartment of sender"
 msgstr "Apartamento"
 
-#: includes/data-settings-manager.php:124
+#: includes/data-settings-manager.php:123
 msgid "Detalle (Entre-calles, etc)"
 msgstr "Detalle (Entre-calles, etc)"
 
-#: includes/data-settings-manager.php:131
+#: includes/data-settings-manager.php:130
 msgid "Full name of sender (Or company name)"
 msgstr "Nombre completo del remitente (o nombre de la empresa)"
 
-#: includes/data-settings-manager.php:138
+#: includes/data-settings-manager.php:137
 msgid "DNI type of sender (Only for Andreani)"
 msgstr "Tipo de remitente DNI (solo para Andreani)"
 
-#: includes/data-settings-manager.php:142
+#: includes/data-settings-manager.php:141
 msgid "DNI"
 msgstr "DNI"
 
-#: includes/data-settings-manager.php:143
+#: includes/data-settings-manager.php:142
 msgid "CUIT"
 msgstr "CUIT"
 
-#: includes/data-settings-manager.php:144
+#: includes/data-settings-manager.php:143
 msgid "CUIL"
 msgstr "CUIL"
 
-#: includes/data-settings-manager.php:148
+#: includes/data-settings-manager.php:147
 msgid "DNI of sender"
 msgstr "DNI del remitente"
 
-#: includes/data-settings-manager.php:155
+#: includes/data-settings-manager.php:154
 msgid "Phone of sender"
 msgstr "Teléfono del remitente"
 
-#: includes/data-settings-manager.php:162
+#: includes/data-settings-manager.php:161
 msgid "E-Mail of sender"
 msgstr "Correo electrónico del remitente"
 
 #. translators: %s Unit weight.
-#: includes/data-settings-manager.php:170
+#: includes/data-settings-manager.php:169
 #, php-format
 msgid "Weight default product (In %s)"
 msgstr "Peso predeterminado del producto (en %s)"
 
-#: includes/data-settings-manager.php:172
+#: includes/data-settings-manager.php:171
 msgid "Only numbers value, for example: 0.1"
 msgstr "Solo valor numérico, por ejemplo: 0.1"
 
 #. translators: %s Unit dimension.
-#: includes/data-settings-manager.php:178
+#: includes/data-settings-manager.php:177
 #, php-format
 msgid "Width default product (In %s)"
 msgstr "Anchura predeterminada del producto (en %s)"
 
-#: includes/data-settings-manager.php:180
-#: includes/data-settings-manager.php:188
-#: includes/data-settings-manager.php:196
+#: includes/data-settings-manager.php:179
+#: includes/data-settings-manager.php:187
+#: includes/data-settings-manager.php:195
 msgid "Only numbers value, for example: 10"
 msgstr "Solo valor numérico, por ejemplo: 10"
 
 #. translators: %s Unit dimension.
-#: includes/data-settings-manager.php:186
+#: includes/data-settings-manager.php:185
 #, php-format
 msgid "Height default product (In %s)"
 msgstr "Altura predeterminada del producto (en %s)"
 
 #. translators: %s Unit dimension.
-#: includes/data-settings-manager.php:194
+#: includes/data-settings-manager.php:193
 #, php-format
 msgid "Depth default product (In %s)"
 msgstr "Profundidad predeterminada del producto (en %s)"
 
-#: includes/data-settings-manager.php:201
+#: includes/data-settings-manager.php:200
 msgid "Do not change to \"In Transit\""
 msgstr "No cambie a \"En tránsito\""
 
-#: includes/data-settings-manager.php:203
+#: includes/data-settings-manager.php:202
 msgid ""
 "Deactivate automatic status change to \"In Transit\" when creating the guide."
 msgstr ""
 "Desactive el cambio de estado automático a \"En tránsito\" al crear la guía."
 
 #. translators: %1$s currency origin -  %2$s currency destination.
-#: includes/data-settings-manager.php:208
+#: includes/data-settings-manager.php:207
 #, php-format
 msgid "Enable %1$s to %2$s conversion"
 msgstr "Habilitar conversión de %1$s a %2$s"
 
-#: includes/data-settings-manager.php:210
+#: includes/data-settings-manager.php:209
 msgid "Activate the plugin by converting the amounts to the gateway currency"
 msgstr ""
 "Active el plugin convirtiendo el precio de la moneda de la tienda a la del "
 "plugin"
 
-#: includes/data-settings-manager.php:213
+#: includes/data-settings-manager.php:212
 msgid "Disable module"
 msgstr "Desactivar Modulo"
 
-#: includes/data-settings-manager.php:214
+#: includes/data-settings-manager.php:213
 msgid "Use the official conversion rate"
 msgstr "Usar tasa oficial"
 
-#: includes/data-settings-manager.php:215
-#: includes/data-settings-manager.php:222
+#: includes/data-settings-manager.php:214
+#: includes/data-settings-manager.php:221
 msgid "Use a manual conversion rate"
 msgstr "Usar una tasa manual"
 
 #. translators: %1$s currency origin -  %2$s currency destination.
-#: includes/data-settings-manager.php:220
+#: includes/data-settings-manager.php:219
 #, php-format
 msgid "Convert using manual rate from %1$s to %2$s"
 msgstr "Convierta usando la tasa manual de  %1$s a %2$s"
 
-#: includes/data-settings-manager.php:226
+#: includes/data-settings-manager.php:225
 msgid "Meta-key for DNI"
 msgstr "Meta-clave para DNI"
 
-#: includes/data-settings-manager.php:228
-#: includes/data-settings-manager.php:235
-#: includes/data-settings-manager.php:242
-#: includes/data-settings-manager.php:249
-#: includes/data-settings-manager.php:256
-#: includes/data-settings-manager.php:263
-#: includes/data-settings-manager.php:270
-#: includes/data-settings-manager.php:277
+#: includes/data-settings-manager.php:227
+#: includes/data-settings-manager.php:234
+#: includes/data-settings-manager.php:241
+#: includes/data-settings-manager.php:248
+#: includes/data-settings-manager.php:255
+#: includes/data-settings-manager.php:262
+#: includes/data-settings-manager.php:269
+#: includes/data-settings-manager.php:276
 msgid "If you don't specify it, the plugin adds it to the checkout form."
 msgstr "Si no lo especifica, el complemento lo agrega al formulario de pago."
 
-#: includes/data-settings-manager.php:233
+#: includes/data-settings-manager.php:232
 msgid "Meta-key for Phone"
 msgstr "Meta-clave para teléfono"
 
-#: includes/data-settings-manager.php:240
+#: includes/data-settings-manager.php:239
 msgid "Meta-key for Altura (Billing Address)"
 msgstr "Meta-clave para Altura (Dirección de Facturación)"
 
-#: includes/data-settings-manager.php:247
+#: includes/data-settings-manager.php:246
 msgid "Meta-key for Altura (Shipping Address)"
 msgstr "Meta-clave para Altura (Dirección de Envío)"
 
-#: includes/data-settings-manager.php:254
+#: includes/data-settings-manager.php:253
 msgid "Meta-key for Aparment (Billing Address)"
 msgstr "Meta-clave para Apartamento  (Dirección de Facturación)"
 
-#: includes/data-settings-manager.php:261
+#: includes/data-settings-manager.php:260
 msgid "Meta-key for Aparment (Shipping Address)"
 msgstr "Meta-clave para Apartamento (Dirección de Envío)"
 
-#: includes/data-settings-manager.php:268
+#: includes/data-settings-manager.php:267
 msgid "Meta-key for Floor (Billing Address)"
 msgstr "Meta-clave para Piso (Dirección de Facturación)"
 
-#: includes/data-settings-manager.php:275
+#: includes/data-settings-manager.php:274
 msgid "Meta-key for Floor (Shipping Address)"
 msgstr "Meta-clave para Piso (Dirección de Envío)"
 
-#: includes/data-settings-manager.php:282
+#: includes/data-settings-manager.php:281
 msgid "Debug"
 msgstr "Debug"
 
-#: includes/data-settings-manager.php:284
+#: includes/data-settings-manager.php:283
 msgid "Enable log"
 msgstr "Activar Log"
 
-#: includes/data-settings-manager.php:286
+#: includes/data-settings-manager.php:285
 msgid "See in WooCommerce logs"
 msgstr "Ver en los registros de WooCommerce"
 
@@ -1269,6 +1267,14 @@ msgstr "Kijam López"
 #. Author URI of the plugin/theme
 msgid "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
 msgstr "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
+
+#~ msgid ""
+#~ "Get this in https://rapidapi.com/kijamve/api/transportistas-de-argentina"
+#~ msgstr ""
+#~ "Obtén esto en https://rapidapi.com/kijamve/api/transportistas-de-argentina"
+
+#~ msgid "X-RapidAPI-Key"
+#~ msgstr "X-RapidAPI-Key"
 
 #, php-format
 #~ msgid "Office %1$s: %2$s - %3$s (%4$s / %5$s)"

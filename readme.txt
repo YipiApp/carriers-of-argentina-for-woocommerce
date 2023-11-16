@@ -2,8 +2,8 @@
 Contributors: Kijam Lopez
 Tags: woocommerce, oca, correo argentino, andreani, argentina, envio, transportista, shipping
 Requires at least: 4.0
-Tested up to: 6.2
-Stable tag: 1.1.8
+Tested up to: 6.4
+Stable tag: 1.3.1
 License: GPLv2
 
 Add Correo Argentino / Andreani / Oca ePack to the WooCommerce plugin
@@ -28,7 +28,7 @@ This plugins adds the most used shipping platforms in Argentina to your WooComme
 
 === Requirements ===
 - WooCommerce
-- [X-RapidAPI-Key and X-RapidAPI-Host](https://rapidapi.com/kijamve/api/transportistas-de-argentina/pricing) of this API (Price starts at 1.00 U$D / mo)
+- [Yipi Membership](https://yipi.app/p/membresia/) of this API (Price starts at 6.00 U$D / mo)
 - Número de Operativa / Número de Cliente / Cuit if you want to use Quote for OCA e-Pack
 - User and Password for OCA e-Pack if you want generate labels automatically with OCA e-Pack
 - Número de Contrato / Número de Cliente if you want to use Quote for Andreani

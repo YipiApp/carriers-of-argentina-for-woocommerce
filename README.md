@@ -16,7 +16,7 @@ Este plugins agrega las plataformas de envío mas usadas en Argentina a su tiend
 
 ## Requirements ##
 - WooCommerce
-- X-RapidAPI-Key and X-RapidAPI-Host of this API (Price starts at 1 U$D / mo): https://rapidapi.com/kijamve/api/transportistas-de-argentina
+- Yipi Membership (Price starts at 6 U$D / mo): https://yipi.app/p/membresia/
 - Número de Operativa / Número de Cliente / Cuit if you want to use Quote for OCA e-Pack
 - User and Password for OCA e-Pack if you want generate labels automatically with OCA e-Pack
 - Número de Contrato / Número de Cliente if you want to use Quote for Andreani

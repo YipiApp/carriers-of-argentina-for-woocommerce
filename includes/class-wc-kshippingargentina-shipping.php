@@ -567,6 +567,10 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				return false;
 			}
 			foreach ( $boxes as $box ) {
+				if ( ! isset( $box['products'] ) || ! is_array( $box['products'] ) || ! count( $box['products'] ) ) {
+					KShippingArgentina_API::debug( 'Invalid Box: ', $box );
+					continue;
+				}
 				$result_box['width'][]  = $box['box']['width'];
 				$result_box['height'][] = $box['box']['height'];
 				$result_box['depth'][]  = $box['box']['depth'];
@@ -583,6 +587,9 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				$result_box['total'][]    = round( $total, 2 );
 				$result_box['total_wt'][] = round( $total_wt, 2 );
 				$result_box['content'][]  = implode( ', ', array_unique( $contents ) );
+			}
+			if ( ! count( $result_box['width'] ) ) {
+				return false;
 			}
 			KShippingArgentina_API::debug( 'Result Boxes: ', $result_box );
 			return apply_filters( 'kshippingargentina_box_shipping', $result_box, $packages );

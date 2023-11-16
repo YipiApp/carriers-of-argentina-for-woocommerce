@@ -239,7 +239,22 @@ function kshipping_argentina_boxes() {
 	);
 	$result = array();
 	foreach ( $boxes as $post ) {
-		$result[] = get_post_meta( $post->ID, 'kshipping_sizes', true );
+		$box = get_post_meta( $post->ID, 'kshipping_sizes', true );
+		if ( $box && isset( $box['width'] ) && isset( $box['height'] ) && isset( $box['depth'] ) && isset( $box['maxWeight'] ) ) {
+			if ( ! is_numeric( $box['width'] ) ) {
+				continue;
+			}
+			if ( ! is_numeric( $box['height'] ) ) {
+				continue;
+			}
+			if ( ! is_numeric( $box['depth'] ) ) {
+				continue;
+			}
+			if ( ! is_numeric( $box['maxWeight'] ) ) {
+				continue;
+			}
+			$result[] = $box;
+		}
 	}
 	return $result;
 }
