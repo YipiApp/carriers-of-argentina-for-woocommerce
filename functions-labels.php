@@ -807,7 +807,7 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 		'vat'          => $vat,
 		'state'        => $state,
 		'city'         => $city,
-		'postcode'     => $postcode,
+		'postcode'     => preg_replace( '/[^0-9]/', '', $postcode ),
 		'address_1'    => $address_1,
 		'address_2'    => $address_2,
 		'number'       => $number,
@@ -818,7 +818,7 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 		'phone'        => $phone,
 		'other_phone'  => $other_phone,
 		'office'       => false,
-		'postcode_src' => $setting['postcode'],
+		'postcode_src' => preg_replace( '/[^0-9]/', '', $setting['postcode'] ),
 		'office_src'   => $iso_office_src,
 		'office_sfull' => $shipping->office_src,
 	);
@@ -1038,7 +1038,7 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
 				),
 				array(
 					'meta'      => 'observaciones',
-					'contenido' => isset( $label['address_2'] ) && ! empty( $label['address_2'] ) ? $label['address_2'] : '',
+					'contenido' => ( isset( $label['address_2'] ) && ! empty( $label['address_2'] ) ? $label['address_2'] : '' ) . ' - ' . $label['box']['content'][ $i ],
 				),
 			),
 		);
