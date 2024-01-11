@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
-"POT-Creation-Date: 2023-11-16 13:16-0400\n"
-"PO-Revision-Date: 2023-11-16 13:16-0400\n"
+"POT-Creation-Date: 2024-01-11 00:05-0400\n"
+"PO-Revision-Date: 2024-01-11 00:06-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: class-wc-kshippingargentina.php\n"
@@ -126,19 +126,23 @@ msgstr "Generar etiqueta"
 msgid "Internal server error"
 msgstr "Error interno del servidor"
 
-#: functions-labels.php:121
+#: functions-labels.php:88
+msgid "The order could not be found"
+msgstr "No se pudo encontrar el pedido"
+
+#: functions-labels.php:133
 msgid "Invalid tracking codes"
 msgstr "Códigos de seguimiento no válidos"
 
-#: functions-labels.php:135
+#: functions-labels.php:148
 msgid "This order already has tracking codes assigned"
 msgstr "Este pedido ya tiene códigos de seguimiento asignados"
 
-#: functions-labels.php:190
+#: functions-labels.php:206
 msgid "Invalid service type."
 msgstr "Tipo de servicio invalido."
 
-#: functions-labels.php:240
+#: functions-labels.php:258
 msgid ""
 "The label for this order could not be generated, you can verify what happens "
 "from the plugin log if you have it active in the configuration."
@@ -147,21 +151,21 @@ msgstr ""
 "sucede desde el registro del complemento si lo tiene activo en la "
 "configuración."
 
-#: functions-labels.php:270
+#: functions-labels.php:288
 msgid "Invalid Status:"
 msgstr "Estado no válido:"
 
-#: functions-labels.php:283
+#: functions-labels.php:301
 msgid "Shipping instance not exists."
 msgstr "La instancia de envío no existe."
 
-#: functions-labels.php:305
+#: functions-labels.php:323
 msgid "Shipping type not found:"
 msgstr "Tipo de transportista no encontrado:"
 
 #. translators: %s => Tracking code.
-#: functions-labels.php:331 functions-labels.php:357 functions-labels.php:378
-#: functions-labels.php:404 functions-labels.php:425 functions-labels.php:451
+#: functions-labels.php:349 functions-labels.php:376 functions-labels.php:397
+#: functions-labels.php:424 functions-labels.php:445 functions-labels.php:472
 #, php-format
 msgid ""
 "Label %s generated, but the pdf was impossible to get because of an error in "
@@ -170,35 +174,35 @@ msgstr ""
 "La etiqueta %s se generó, pero el pdf fue imposible de obtener debido a un "
 "error en el proveedor de servicios."
 
-#: functions-labels.php:561
+#: functions-labels.php:582
 msgid "The client asked that it not be sent by an Argentine carrier."
 msgstr "El cliente pidió que no fuera enviado por un transportista argentino."
 
-#: functions-labels.php:571
+#: functions-labels.php:592
 msgid "This carrier not is supported."
 msgstr "Este operador no es compatible."
 
-#: functions-labels.php:577
+#: functions-labels.php:598
 msgid "Invalid status, payment is not completed."
 msgstr "Estado no válido, el pago no se ha completado."
 
-#: functions-labels.php:583
+#: functions-labels.php:604
 msgid "Current tracking code:"
 msgstr "Código de seguimiento actual:"
 
-#: functions-labels.php:605
+#: functions-labels.php:627
 msgid "Data of the Argentine carrier"
 msgstr "Datos del transportista argentino"
 
-#: functions-labels.php:616
+#: functions-labels.php:638
 msgid "Datos Correo Argentino"
 msgstr "Correo Argentino"
 
-#: functions-labels.php:896 functions-labels.php:902 functions-labels.php:904
+#: functions-labels.php:919 functions-labels.php:925 functions-labels.php:927
 msgid "Error generating OCA order"
 msgstr "Error al generar el pedido OCA"
 
-#: functions-labels.php:926
+#: functions-labels.php:950
 msgid ""
 "An error occurred connecting to OCA, try again later, if the error persists "
 "you should check the plugin logs with technical support."
@@ -207,7 +211,7 @@ msgstr ""
 "error persiste, debe verificar los registros del complemento con soporte "
 "técnico."
 
-#: functions-labels.php:1067
+#: functions-labels.php:1091
 msgid "Andreani return with Timeout"
 msgstr "Andreani retorno con Timeout"
 
@@ -243,81 +247,81 @@ msgstr "Oficina más cercana"
 msgid "Choose one..."
 msgstr "Elige uno..."
 
-#: functions.php:208 templates/order.tpl.php:98
+#: functions.php:210 templates/order.tpl.php:98
 msgid "Identification number type"
 msgstr "Tipo de número de identificación"
 
-#: functions.php:218 templates/order.tpl.php:112
+#: functions.php:220 templates/order.tpl.php:112
 msgid "Identification number"
 msgstr "Número de identificación"
 
-#: functions.php:229 templates/order.tpl.php:158
+#: functions.php:231 templates/order.tpl.php:158
 msgid "Mobile Phone Area Code"
 msgstr "Código de área del teléfono móvil"
 
-#: functions.php:238 templates/order.tpl.php:162
+#: functions.php:240 templates/order.tpl.php:162
 msgid "Mobile Phone (No Area Code)"
 msgstr "Teléfono móvil (sin código de área)"
 
-#: functions.php:249 functions.php:262 templates/order.tpl.php:146
+#: functions.php:251 functions.php:264 templates/order.tpl.php:146
 msgid "Height (Enter numbers only)"
 msgstr "Altura (introduzca solo números)"
 
-#: functions.php:275 functions.php:288 templates/order.tpl.php:150
+#: functions.php:277 functions.php:290 templates/order.tpl.php:150
 msgid "Floor"
 msgstr "Piso"
 
-#: functions.php:301 functions.php:314 templates/order.tpl.php:154
+#: functions.php:303 functions.php:316 templates/order.tpl.php:154
 msgid "Apartment"
 msgstr "Apartamento"
 
-#: functions.php:333
+#: functions.php:335
 msgid "Street"
 msgstr "Calle"
 
-#: functions.php:334 templates/order.tpl.php:138
+#: functions.php:336 templates/order.tpl.php:138
 msgid "Street name"
 msgstr "Nombre de calle"
 
-#: functions.php:335 functions.php:336 templates/order.tpl.php:142
+#: functions.php:337 functions.php:338 templates/order.tpl.php:142
 msgid "Detail (Between-streets, etc)"
 msgstr "Detalle (Entre-calles, etc)"
 
-#: functions.php:422
+#: functions.php:424
 msgid "days"
 msgstr "dias"
 
-#: functions.php:423
+#: functions.php:425
 msgid "Your shopping cart is empty"
 msgstr "Tu carrito está vacío"
 
-#: functions.php:424
+#: functions.php:426
 msgid "No carriers found"
 msgstr "No se han encontrado transportistas"
 
-#: functions.php:425
+#: functions.php:427
 msgid "Product not found"
 msgstr "Producto no encontrado"
 
-#: functions.php:426
+#: functions.php:428
 msgid "Server error"
 msgstr "Error del servidor"
 
-#: functions.php:427
+#: functions.php:429
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: functions.php:428
+#: functions.php:430
 msgid "The plugin is not configured correctly..."
 msgstr "El plugin no esta configurado correctamente..."
 
 #. translators: Office.
-#: functions.php:563 functions.php:574 functions.php:637 functions.php:648
+#: functions.php:566 functions.php:577 functions.php:641 functions.php:652
 #, php-format
 msgid "Office: %1$s"
 msgstr "Oficina: %1$s"
 
-#: functions.php:682
+#: functions.php:687
 msgid "Shipping"
 msgstr "Envío"
 
@@ -447,49 +451,49 @@ msgid "Shipping for Argentina"
 msgstr "Envíos para Argentina"
 
 #: includes/class-wc-kshippingargentina-shipping.php:258
-msgid "Correo Argentino/Andreani/OCA e-Pack"
-msgstr "Correo Argentino/Andreani/OCA e-Pack"
+msgid "Correo Argentino/Andreani/OCA e-Pak"
+msgstr "Correo Argentino/Andreani/OCA e-Pak"
 
 #: includes/class-wc-kshippingargentina-shipping.php:259
 msgid "Use a shipping company from Argentina in this area"
 msgstr "Utilice una compañía de envío de Argentina en esta área"
 
-#: includes/class-wc-kshippingargentina-shipping.php:412
+#: includes/class-wc-kshippingargentina-shipping.php:428
 msgid "Argentina have to be the country of origin."
 msgstr "Argentina tiene que ser el país de origen."
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:615
+#: includes/class-wc-kshippingargentina-shipping.php:631
 #, php-format
 msgid "Product #%s is virtual. Skipping."
 msgstr "El producto #%s es virtual. Saltar."
 
 #. translators: Min and max days of delay.
-#: includes/class-wc-kshippingargentina-shipping.php:787
+#: includes/class-wc-kshippingargentina-shipping.php:828
 #, php-format
 msgid "%1$d to %2$d days"
 msgstr "%1$d a %2$d días"
 
-#: includes/class-wc-kshippingargentina-shipping.php:824
+#: includes/class-wc-kshippingargentina-shipping.php:865
 msgid "- Free Shipping"
 msgstr "- Envío gratuito"
 
 #. translators: ISO Currency.
-#: includes/class-wc-kshippingargentina-shipping.php:841
+#: includes/class-wc-kshippingargentina-shipping.php:882
 msgid "Argentina Shipping"
 msgstr "Envíos en Argentina"
 
-#: includes/class-wc-kshippingargentina-shipping.php:841
+#: includes/class-wc-kshippingargentina-shipping.php:882
 #, php-format
 msgid ""
 "You currency <code>%s</code> can not be supported. Please use ARS or USD."
 msgstr "Su moneda <code>%s</code> no puede ser compatible. Utilice ARS o USD."
 
-#: includes/class-wc-kshippingargentina-shipping.php:904
+#: includes/class-wc-kshippingargentina-shipping.php:946
 msgid "Select all"
 msgstr "Seleccionar todos"
 
-#: includes/class-wc-kshippingargentina-shipping.php:904
+#: includes/class-wc-kshippingargentina-shipping.php:946
 msgid "Select none"
 msgstr "Selecciona ninguno"
 
@@ -531,12 +535,12 @@ msgid "Only for generation of label"
 msgstr "Solo para generación de etiqueta"
 
 #: includes/data-settings-manager.php:52
-msgid "OCA e-Pack API Username (Optional)"
-msgstr "Nombre de usuario de la API de OCA e-Pack (opcional)"
+msgid "OCA e-Pak API Username (Optional)"
+msgstr "Nombre de usuario de la API de OCA e-Pak (opcional)"
 
 #: includes/data-settings-manager.php:58
-msgid "OCA e-Pack API Password (Optional)"
-msgstr "Contraseña de la API de OCA e-Pack (opcional)"
+msgid "OCA e-Pak API Password (Optional)"
+msgstr "Contraseña de la API de OCA e-Pak (opcional)"
 
 #: includes/data-settings-manager.php:64
 msgid "OCA collections time slot"
@@ -774,8 +778,8 @@ msgid "Select you shipping company."
 msgstr "Seleccione su compañía de envío."
 
 #: includes/data-settings-shipping.php:45
-msgid "OCA e-Pack"
-msgstr "OCA e-Pack"
+msgid "OCA e-Pak"
+msgstr "OCA e-Pak"
 
 #: includes/data-settings-shipping.php:51
 msgid "Type"
@@ -816,12 +820,12 @@ msgid "Client Number"
 msgstr "Número de cliente"
 
 #: includes/data-settings-shipping.php:84
-msgid "CUIT (Only for OCA e-Pack)"
-msgstr "CUIT (Solo para OCA e-Pack)"
+msgid "CUIT (Only for OCA e-Pak)"
+msgstr "CUIT (Solo para OCA e-Pak)"
 
 #: includes/data-settings-shipping.php:86
-msgid "Only for OCA e-Pack"
-msgstr "Solo para OCA e-Pack"
+msgid "Only for OCA e-Pak"
+msgstr "Solo para OCA e-Pak"
 
 #: includes/data-settings-shipping.php:91
 msgid "Enable Insurance"
@@ -830,10 +834,10 @@ msgstr "Habilitar seguro"
 #: includes/data-settings-shipping.php:95
 msgid ""
 "Does this carrier pick up the package at your store? (Only for Andreani/OCA "
-"e-Pack)"
+"e-Pak)"
 msgstr ""
 "¿Este transportista recoge el paquete en su tienda? (Solo para Andreani/OCA "
-"e-Pack)"
+"e-Pak)"
 
 #: includes/data-settings-shipping.php:99
 msgid "Insurance Percentage (Only for Correo Argentino)"
@@ -1268,6 +1272,17 @@ msgstr "Kijam López"
 msgid "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
 msgstr "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
 
+#, fuzzy
+#~| msgid "Shipping for Argentina"
+#~ msgid "Shipping Argentina"
+#~ msgstr "Envíos para Argentina"
+
+#~ msgid "Enable Correo Argentino"
+#~ msgstr "Habilitar Correo Argentino"
+
+#~ msgid "Hide delay label for Correo Argentino"
+#~ msgstr "Ocultar etiqueta de tiempo estimado de entrega"
+
 #~ msgid ""
 #~ "Get this in https://rapidapi.com/kijamve/api/transportistas-de-argentina"
 #~ msgstr ""
@@ -1375,9 +1390,3 @@ msgstr "https://github.com/kijamve/carriers-of-argentina-for-woocommerce"
 
 #~ msgid "http://kijam.com/"
 #~ msgstr "https://kijam.com/"
-
-#~ msgid "Enable Correo Argentino"
-#~ msgstr "Habilitar Correo Argentino"
-
-#~ msgid "Hide delay label for Correo Argentino"
-#~ msgstr "Ocultar etiqueta de tiempo estimado de entrega"

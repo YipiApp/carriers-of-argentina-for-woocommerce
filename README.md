@@ -9,7 +9,7 @@ This plugins adds the most used shipping platforms in Argentina to your WooComme
 
 ### Descripción en Español ###
 
-Este plugins agrega las plataformas de envío mas usadas en Argentina a su tienda WooCommerce. Soporta: Correo Argentino / Andreani / Oca e-Pack. Con este plugin podras:
+Este plugins agrega las plataformas de envío mas usadas en Argentina a su tienda WooCommerce. Soporta: Correo Argentino / Andreani / Oca e-Pak. Con este plugin podras:
 - Cotizar Envios (Incluyendo Correo Argentino)
 - Solicitar la sucursal de destino a tus clientes (Para envíos a Sucursal)
 - Generar etiquetas de forma automatica (Solo Andreani y OCA).
@@ -17,8 +17,8 @@ Este plugins agrega las plataformas de envío mas usadas en Argentina a su tiend
 ## Requirements ##
 - WooCommerce
 - Yipi Membership (Price starts at 6 U$D / mo): https://yipi.app/p/membresia/
-- Número de Operativa / Número de Cliente / Cuit if you want to use Quote for OCA e-Pack
-- User and Password for OCA e-Pack if you want generate labels automatically with OCA e-Pack
+- Número de Operativa / Número de Cliente / Cuit if you want to use Quote for OCA e-Pak
+- User and Password for OCA e-Pak if you want generate labels automatically with OCA e-Pak
 - Número de Contrato / Número de Cliente if you want to use Quote for Andreani
 - User and Password for Andreani REST API V2.0  if you want generate labels automatically with Andreani
 

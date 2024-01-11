@@ -255,7 +255,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		public function __construct( $instance_id = 0 ) {
 			$this->id                 = 'kshippingargentina-shipping';
 			$this->instance_id        = absint( $instance_id );
-			$this->method_title       = __( 'Correo Argentino/Andreani/OCA e-Pack', 'carriers-of-argentina-for-woocommerce' );
+			$this->method_title       = __( 'Correo Argentino/Andreani/OCA e-Pak', 'carriers-of-argentina-for-woocommerce' );
 			$this->method_description = __( 'Use a shipping company from Argentina in this area', 'carriers-of-argentina-for-woocommerce' );
 			$this->supports           = array(
 				'shipping-zones',
@@ -319,8 +319,25 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			$this->discount_shipping_percent    = (float) $this->get_option( 'discount_shipping_percent' );
 			$this->discount_shipping_amount     = (float) $this->get_option( 'discount_shipping_amount' );
 
-			$this->exclude_state         = $this->get_option( 'exclude_state' );
-			$this->exclude_categories    = $this->get_option( 'exclude_categories' );
+			$this->exclude_state       = array_filter(
+				(array) $this->get_option( 'exclude_state' ),
+				function ( $element ) {
+					return 'dummy_delete' !== $element && ! empty( trim( $element ) );
+				}
+			);
+			$this->exclude_categories  = array_filter(
+				(array) $this->get_option( 'exclude_categories' ),
+				function ( $element ) {
+					return 'dummy_delete' !== $element && ! empty( trim( $element ) );
+				}
+			);
+			$this->free_shipping_state = array_filter(
+				(array) $this->get_option( 'free_shipping_state' ),
+				function ( $element ) {
+					return 'dummy_delete' !== $element && ! empty( trim( $element ) );
+				}
+			);
+
 			$this->exclude_products      = (array) $this->get_option( 'exclude_products' );
 			$this->exclude_zipcode       = array();
 			$this->activated_min_amount  = $this->get_option( 'activated_min_amount' );
@@ -329,7 +346,6 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			$this->activated_max_weight  = $this->get_option( 'activated_max_weight' );
 			$this->invalid_ranges        = array();
 			$this->free_shipping_mode    = $this->get_option( 'free_shipping_mode' );
-			$this->free_shipping_state   = $this->get_option( 'free_shipping_state' );
 			$this->free_shipping_zipcode = array();
 
 			// Re-Load the settings.
@@ -691,10 +707,19 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 					case 'coupon':
 						if ( $coupon_free_shipping ) {
 							$free_shipping = true;
+							KShippingArgentina_API::debug(
+								'Testing excludes coupon_free_shipping true'
+							);
 						}
+						KShippingArgentina_API::debug(
+							'Testing excludes coupon_free_shipping false1'
+						);
 						break;
 					case 'automatic_coupon':
 						if ( ! $coupon_free_shipping ) {
+							KShippingArgentina_API::debug(
+								'Testing excludes coupon_free_shipping false2'
+							);
 							break;
 						}
 						// Intensional no-break.
@@ -706,18 +731,34 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 							is_array( $this->free_shipping_state ) && count( $this->free_shipping_state ) > 0 &&
 							! in_array( $package['destination']['state'], $this->free_shipping_state, true ) ) {
 							$free_shipping = false;
+							KShippingArgentina_API::debug(
+								'Testing excludes free_shipping state: ' . $package['destination']['state'] . ' not in ' . wp_json_encode( $this->free_shipping_state )
+							);
 						}
 						if ( $order_price < $this->free_shipping_amount ) {
 							$free_shipping = false;
+							KShippingArgentina_API::debug(
+								"Testing excludes free_shipping free_shipping_amount: $order_price < {$this->free_shipping_amount}"
+							);
 						}
 						if ( $total_weight < $this->free_shipping_weight ) {
 							$free_shipping = false;
+							KShippingArgentina_API::debug(
+								"Testing excludes free_shipping free_shipping_amount: $total_weight < {$this->free_shipping_weight}"
+							);
 						}
 						break;
 				}
 				if ( ! $free_shipping && $coupon_free_shipping && 'semiautomatic_coupon' === $this->free_shipping_mode ) {
 					$free_shipping = true;
 				}
+				KShippingArgentina_API::debug(
+					"Testing excludes free_shipping[{$this->title}]: ! $free_shipping && $coupon_free_shipping && 'semiautomatic_coupon' === {$this->free_shipping_mode} => $free_shipping"
+				);
+			} else {
+				KShippingArgentina_API::debug(
+					"Testing excludes free_shipping[{$this->title}]: disabled"
+				);
 			}
 			KShippingArgentina_API::debug(
 				"Testing excludes:
@@ -892,6 +933,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				<td class="forminp">
 					<fieldset>
 						<legend class="screen-reader-text"><span><?php echo wp_kses_post( $data['title'] ); ?></span></legend>
+						<input type="hidden" name="<?php echo esc_attr( $field_key ); ?>[]" value="dummy_delete" />
 						<!-- <select multiple="multiple" class="multiselect <?php echo esc_attr( $data['class'] ); ?>" name="<?php echo esc_attr( $field_key ); ?>[]" id="<?php echo esc_attr( $field_key ); ?>" style="<?php echo esc_attr( $data['css'] ); ?>" <?php disabled( $data['disabled'], true ); ?> <?php echo wp_kses_post( $this->get_custom_attribute_html( $data ) ); ?>> -->
 						<div style="overflow: auto;height: 150px;min-width:250px;max-width:500px">
 							<?php foreach ( (array) $data['options'] as $option_key => $option_value ) : ?>

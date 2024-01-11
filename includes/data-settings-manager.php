@@ -49,13 +49,13 @@ $r = array(
 		'default'     => '',
 	),
 	'oca_username'         => array(
-		'title'       => __( 'OCA e-Pack API Username (Optional)', 'carriers-of-argentina-for-woocommerce' ),
+		'title'       => __( 'OCA e-Pak API Username (Optional)', 'carriers-of-argentina-for-woocommerce' ),
 		'type'        => 'text',
 		'description' => __( 'Optional, only for generation of label', 'carriers-of-argentina-for-woocommerce' ),
 		'default'     => '',
 	),
 	'oca_password'         => array(
-		'title'       => __( 'OCA e-Pack API Password (Optional)', 'carriers-of-argentina-for-woocommerce' ),
+		'title'       => __( 'OCA e-Pak API Password (Optional)', 'carriers-of-argentina-for-woocommerce' ),
 		'type'        => 'text',
 		'description' => __( 'Optional, only for generation of label', 'carriers-of-argentina-for-woocommerce' ),
 		'default'     => '',

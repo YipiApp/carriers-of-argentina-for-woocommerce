@@ -79,14 +79,26 @@ add_action(
 			isset( $_POST['kshippingargentina_delete_label_nonce'] ) &&
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kshippingargentina_delete_label_nonce'] ) ), ( (int) $_POST['delete_label'] ) . '_kshippingargentina_delete_label_nonce' )
 		) {
-			$oca_tracking_reference = get_post_meta( (int) $_POST['delete_label'], 'kshippingargentina_oca_tracking_reference' );
+			$order = wc_get_order( (int) $_POST['delete_label'] );
+			if ( ! $order || is_wp_error( $order ) ) {
+				die(
+					wp_json_encode(
+						array(
+							'ok'    => false,
+							'error' => __( 'The order could not be found', 'carriers-of-argentina-for-woocommerce' ),
+						)
+					)
+				);
+			}
+			$oca_tracking_reference = $order->get_meta( 'kshippingargentina_oca_tracking_reference' );
 			if ( $oca_tracking_reference ) {
 				$pdf_error = false;
 				KShippingArgentina_API::cancel_oca_label( $oca_tracking_reference, $pdf_error );
-				delete_post_meta( (int) $_POST['delete_label'], 'kshippingargentina_oca_tracking_reference' );
-				delete_post_meta( (int) $_POST['delete_label'], 'kshippingargentina_oca_operation_code' );
+				$order->delete_meta_data( 'kshippingargentina_oca_tracking_reference' );
+				$order->delete_meta_data( 'kshippingargentina_oca_operation_code' );
 			}
-			delete_post_meta( (int) $_POST['delete_label'], 'kshippingargentina_label_file' );
+			$order->delete_meta_data( 'kshippingargentina_label_file' );
+			$order->save();
 			die(
 				wp_json_encode(
 					array(
@@ -125,7 +137,8 @@ add_action(
 			}
 
 			$order_id = (int) $_POST['save_tracking_code'];
-			$labels   = get_post_meta( $order_id, 'kshippingargentina_label_file', true );
+			$order    = wc_get_order( $order_id );
+			$labels   = $order->get_meta( 'kshippingargentina_label_file', true );
 			if ( $labels && is_array( $labels ) && count( $labels ) > 0 ) {
 				if ( ! isset( $labels['no_tracking_code'] ) ) {
 					die(
@@ -142,8 +155,9 @@ add_action(
 				foreach ( $tracking_codes as $tc ) {
 					$new_labels[ $tc ] = $label;
 				}
-				update_post_meta( $order_id, 'kshippingargentina_label_file', $new_labels );
-				kshipping_notify_new_tracking( wc_get_order( $order_id ), $shipping );
+				$order->update_meta_data( 'kshippingargentina_label_file', $new_labels );
+				$order->save();
+				kshipping_notify_new_tracking( $order, $shipping );
 				die(
 					wp_json_encode(
 						array(
@@ -173,8 +187,10 @@ add_action(
 				}
 			}
 			if ( count( $new_labels ) ) {
-				update_post_meta( $order_id, 'kshippingargentina_label_file', $new_labels );
-				kshipping_notify_new_tracking( wc_get_order( $order_id ), $shipping );
+				$order = wc_get_order( $order_id );
+				$order->update_meta_data( 'kshippingargentina_label_file', $new_labels );
+				$order->save();
+				kshipping_notify_new_tracking( $order, $shipping );
 				die(
 					wp_json_encode(
 						array(
@@ -203,7 +219,8 @@ add_action(
 			$label    = $data['kshipping'];
 			$order    = wc_get_order( (int) $_POST['kshippingargentina_order_id'] );
 			$shipping = WC_KShippingArgentina_Shipping::get_instance( (int) $_POST['kshippingargentina_instance_id'] );
-			update_post_meta( $order->get_id(), 'kshippingargentina_label_data', $label );
+			$order->update_meta_data( 'kshippingargentina_label_data', $label );
+			$order->save();
 			$file = false;
 			KShippingArgentina_API::debug(
 				'Massive Label',
@@ -221,7 +238,8 @@ add_action(
 				$file = kshipping_generate_label_oca( $order, $label, $shipping );
 			}
 			if ( $file && isset( $file['error'] ) && ! $file['error'] ) {
-				update_post_meta( $order->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
+				$order->update_meta_data( 'kshippingargentina_label_file', $file['tracking_code'] );
+				$order->save();
 				kshipping_notify_new_tracking( $order, $shipping );
 				die(
 					wp_json_encode(
@@ -348,7 +366,8 @@ add_action(
 						);
 						$file = kshipping_generate_label_correo_argentino( $to_label['order'], $label, $to_label['shipping'] );
 						if ( ! $file['error'] ) {
-							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
+							$to_label['order']->update_meta_data( 'kshippingargentina_label_file', $file['tracking_code'] );
+							$to_label['order']->save();
 							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
 							foreach ( $file['tracking_code'] as $tc => $data ) {
 								if ( ! $data ) {
@@ -395,7 +414,8 @@ add_action(
 						);
 						$file = kshipping_generate_label_oca( $to_label['order'], $label, $to_label['shipping'] );
 						if ( ! $file['error'] ) {
-							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
+							$to_label['order']->update_meta_data( 'kshippingargentina_label_file', $file['tracking_code'] );
+							$to_label['order']->save();
 							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
 							foreach ( $file['tracking_code'] as $tc => $data ) {
 								if ( ! $data ) {
@@ -442,7 +462,8 @@ add_action(
 						);
 						$file = kshipping_generate_label_andreani( $to_label['order'], $label, $to_label['shipping'] );
 						if ( ! $file['error'] ) {
-							update_post_meta( $to_label['order']->get_id(), 'kshippingargentina_label_file', $file['tracking_code'] );
+							$to_label['order']->update_meta_data( 'kshippingargentina_label_file', $file['tracking_code'] );
+							$to_label['order']->save();
 							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
 							foreach ( $file['tracking_code'] as $tc => $data ) {
 								if ( ! $data ) {
@@ -602,7 +623,8 @@ function kshippingargentina_metabox_cb( $order = false, $is_dokan = false ) {
 add_action(
 	'add_meta_boxes',
 	function () {
-		add_meta_box( 'kshippingargentina-metabox', __( 'Data of the Argentine carrier', 'carriers-of-argentina-for-woocommerce' ), 'kshippingargentina_metabox_cb', 'shop_order', 'normal', 'high' );
+		$screen = class_exists( 'CustomOrdersTableController' ) && function_exists( 'wc_get_container' ) && wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled() ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
+		add_meta_box( 'kshippingargentina-metabox', __( 'Data of the Argentine carrier', 'carriers-of-argentina-for-woocommerce' ), 'kshippingargentina_metabox_cb', $screen, 'normal', 'high' );
 	}
 );
 
@@ -856,7 +878,8 @@ add_action(
 			$data  = $_POST;
 			$label = $data['kshipping'];
 			KShippingArgentina_API::debug( 'New request for Label save', $label );
-			update_post_meta( $order->get_id(), 'kshippingargentina_label_data', $label );
+			$order->update_meta_data( 'kshippingargentina_label_data', $label );
+			$order->save();
 		}
 	},
 	10,
@@ -903,8 +926,9 @@ function kshipping_generate_label_oca( $order, $label, $shipping ) {
 	} elseif ( ! isset( $data['Resumen'] ) ) {
 		$error[] = __( 'Error generating OCA order', 'carriers-of-argentina-for-woocommerce' ) . ': ' . wp_json_encode( $data );
 	} elseif ( isset( $data['DetalleIngresos'] ) && isset( $data['DetalleIngresos']['NumeroEnvio'] ) ) {
-		update_post_meta( $order_id, 'kshippingargentina_oca_tracking_reference', $data['DetalleIngresos']['OrdenRetiro'] );
-		update_post_meta( $order_id, 'kshippingargentina_oca_operation_code', (int) $data['Resumen']['CodigoOperacion'] );
+		$order->update_meta_data( 'kshippingargentina_oca_tracking_reference', $data['DetalleIngresos']['OrdenRetiro'] );
+		$order->update_meta_data( 'kshippingargentina_oca_operation_code', (int) $data['Resumen']['CodigoOperacion'] );
+		$order->save();
 		$tc        = (string) $data['DetalleIngresos']['NumeroEnvio'];
 		$pdf_error = false;
 		$pdf       = KShippingArgentina_API::get_oca_pdf_label( $tc, $pdf_error );

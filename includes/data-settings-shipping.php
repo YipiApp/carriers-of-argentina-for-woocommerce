@@ -42,7 +42,7 @@ return array(
 		'default'     => 'correo_argentino',
 		'options'     => array(
 			'correo_argentino' => __( 'Correo Argentino', 'carriers-of-argentina-for-woocommerce' ),
-			'oca'              => __( 'OCA e-Pack', 'carriers-of-argentina-for-woocommerce' ),
+			'oca'              => __( 'OCA e-Pak', 'carriers-of-argentina-for-woocommerce' ),
 			'andreani'         => __( 'Andreani', 'carriers-of-argentina-for-woocommerce' ),
 		),
 		'desc_tip'    => false,
@@ -81,9 +81,9 @@ return array(
 		'desc_tip'    => false,
 	),
 	'product_cuit'                 => array(
-		'title'       => __( 'CUIT (Only for OCA e-Pack)', 'carriers-of-argentina-for-woocommerce' ),
+		'title'       => __( 'CUIT (Only for OCA e-Pak)', 'carriers-of-argentina-for-woocommerce' ),
 		'type'        => 'text',
-		'description' => __( 'Only for OCA e-Pack', 'carriers-of-argentina-for-woocommerce' ),
+		'description' => __( 'Only for OCA e-Pak', 'carriers-of-argentina-for-woocommerce' ),
 		'default'     => '',
 		'desc_tip'    => false,
 	),
@@ -92,7 +92,7 @@ return array(
 		'type'  => 'checkbox',
 	),
 	'find_in_store'                => array(
-		'title' => __( 'Does this carrier pick up the package at your store? (Only for Andreani/OCA e-Pack)', 'carriers-of-argentina-for-woocommerce' ),
+		'title' => __( 'Does this carrier pick up the package at your store? (Only for Andreani/OCA e-Pak)', 'carriers-of-argentina-for-woocommerce' ),
 		'type'  => 'checkbox',
 	),
 	'insurance'                    => array(

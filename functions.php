@@ -146,7 +146,8 @@ add_action(
 			},
 			$zones
 		);
-		$offices = get_post_meta( $order_id, '_office_kshippingargentina', true );
+		$order   = wc_get_order( $order_id );
+		$offices = $order->get_meta( '_office_kshippingargentina', true );
 		if ( ! $offices ) {
 			$offices = array();
 		}
@@ -170,7 +171,8 @@ add_action(
 				}
 			}
 		}
-		update_post_meta( $order_id, '_office_kshippingargentina', $offices );
+		$order->update_meta_data( '_office_kshippingargentina', $offices );
+		$order->save();
 	},
 	30,
 	1
@@ -505,7 +507,7 @@ add_filter(
 add_filter(
 	'woocommerce_localisation_address_formats',
 	function ( $formats ) {
-		$formats['AR'] = "{name}\n{company}\n{address_1} {shipping_number}\n{shipping_floor} {shipping_apartment}\n{address_2}\n{city}\n{state}\n{postcode}\n{country}\n{shipping_office}";
+		$formats['AR'] = "{name}\n{company}\n{billing_vat}\n{address_1} {shipping_number}\n{shipping_floor} {shipping_apartment}\n{address_2}\n{city}\n{state}\n{postcode}\n{country}\n{shipping_office}";
 		return $formats;
 	}
 );
@@ -514,6 +516,7 @@ add_filter(
 	'woocommerce_order_formatted_billing_address',
 	function ( $fields, $order ) {
 		$setting                      = get_option( 'woocommerce_kshippingargentina-manager_settings' );
+		$fields['billing_vat']        = trim( $order->get_meta( '_billing_vat_type' ) . ' ' . $order->get_meta( '_billing_vat' ) );
 		$fields['shipping_number']    = $order->get_meta( '_billing_number' );
 		$fields['shipping_floor']     = $order->get_meta( '_billing_floor' );
 		$fields['shipping_apartment'] = $order->get_meta( '_billing_apartment' );
@@ -588,6 +591,7 @@ add_filter(
 	'woocommerce_order_formatted_shipping_address',
 	function ( $fields, $order ) {
 		$setting                      = get_option( 'woocommerce_kshippingargentina-manager_settings' );
+		$fields['billing_vat']        = trim( $order->get_meta( '_billing_vat_type' ) . ' ' . $order->get_meta( '_billing_vat' ) );
 		$fields['shipping_number']    = $order->get_meta( '_shipping_number' );
 		$fields['shipping_floor']     = $order->get_meta( '_shipping_floor' );
 		$fields['shipping_apartment'] = $order->get_meta( '_shipping_apartment' );
@@ -661,6 +665,7 @@ add_filter(
 add_filter(
 	'woocommerce_formatted_address_replacements',
 	function ( $replacements, $address ) {
+		$replacements['{billing_vat}']        = isset( $address['billing_vat'] ) ? $address['billing_vat'] : '';
 		$replacements['{shipping_number}']    = isset( $address['shipping_number'] ) ? $address['shipping_number'] : '';
 		$replacements['{shipping_floor}']     = isset( $address['shipping_floor'] ) ? $address['shipping_floor'] : '';
 		$replacements['{shipping_apartment}'] = isset( $address['shipping_apartment'] ) ? $address['shipping_apartment'] : '';
