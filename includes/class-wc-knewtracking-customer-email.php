@@ -168,9 +168,9 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 			array(
 				$order_id,
 				$this->recipient,
+				$billing_address,
 			)
 		);
-		// woohoo, send the email!
 		$this->send( $billing_address['email'], str_replace( '{order_id}', $this->object->get_order_number(), $this->get_subject() ), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 	}
 

@@ -571,10 +571,19 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				}
 				$products[] = $product;
 			}
+			$all_boxes_for_bin = kshipping_argentina_boxes();
+			if ( ! count( $all_boxes_for_bin ) ) {
+				$all_boxes_for_bin[] = array(
+					'width'     => 1,
+					'height'    => 1,
+					'depth'     => 1,
+					'maxWeight' => 0.01,
+				);
+			}
 			$boxes = KShippingArgentina_API::call(
 				'/bins/calculate',
 				array(
-					'boxes'    => kshipping_argentina_boxes(),
+					'boxes'    => $all_boxes_for_bin,
 					'products' => $products,
 				),
 				3600 * 24 * 120

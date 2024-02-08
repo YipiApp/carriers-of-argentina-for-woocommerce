@@ -45,8 +45,12 @@ add_action(
 
 			)
 		);
-		$boxes = kshipping_argentina_boxes();
+		$boxes                = kshipping_argentina_boxes();
+		$is_already_installed = get_option( 'kshipping_boxes_installed', false );
 		if ( ! count( $boxes ) ) {
+			if ( $is_already_installed ) {
+				return;
+			}
 			$post_id = wp_insert_post(
 				array(
 					'post_type'   => 'kshipping-box',
@@ -142,6 +146,9 @@ add_action(
 					)
 				);
 			}
+			update_option( 'kshipping_boxes_installed', true );
+		} elseif ( ! $is_already_installed ) {
+			update_option( 'kshipping_boxes_installed', true );
 		}
 	},
 	1
@@ -229,6 +236,9 @@ add_action(
 	2
 );
 
+/**
+ * Retrieves and filters shipping boxes for Argentina.
+ */
 function kshipping_argentina_boxes() {
 	$boxes  = get_posts(
 		array(

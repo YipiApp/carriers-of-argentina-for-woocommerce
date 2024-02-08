@@ -866,15 +866,20 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 	}
 	return apply_filters( 'kshippingargentina_label_data', $data, $order, $shipping );
 }
+
+$kshipping_woocommerce_after_order_object_save = array();
 add_action(
 	'woocommerce_after_order_object_save',
 	function ( $order ) {
+		global $kshipping_woocommerce_after_order_object_save;
 		if ( isset( $_POST['kshippingargentina_is_order_save'] ) &&
 			isset( $_POST['kshipping'] ) &&
 			isset( $_POST['kshippingargentina_order_id'] ) &&
 			isset( $_POST['kshippingargentina_generate_label_nonce'] ) &&
+			! in_array( (int) $order->get_id(), $kshipping_woocommerce_after_order_object_save, true ) &&
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kshippingargentina_generate_label_nonce'] ) ), ( (int) $_POST['kshippingargentina_order_id'] ) . '_kshippingargentina_generate_label_nonce' )
 		) {
+			$kshipping_woocommerce_after_order_object_save[] = (int) $order->get_id();
 			$data  = $_POST;
 			$label = $data['kshipping'];
 			KShippingArgentina_API::debug( 'New request for Label save', $label );
