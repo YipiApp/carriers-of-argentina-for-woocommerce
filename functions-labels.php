@@ -7,7 +7,7 @@
 
 add_action(
 	'restrict_manage_posts',
-	function( $post_type ) {
+	function ( $post_type ) {
 		if ( 'shop_order' === $post_type && is_admin() ) {
 			?>
 			<script>
@@ -118,7 +118,7 @@ add_action(
 
 			$tracking_codes = array_filter(
 				array_map(
-					function( $tc ) {
+					function ( $tc ) {
 						return trim( $tc );
 					},
 					explode( ',', sanitize_text_field( wp_unslash( $_POST['tracking_code'] ) ) )
@@ -269,7 +269,7 @@ add_action(
 			wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['kshippingargentina_massive_label_nonce'] ) ), 'kshippingargentina_massive_label_nonce' )
 		) {
 			$posts = array_map(
-				function( $v ) {
+				function ( $v ) {
 					return (int) $v;
 				},
 				array_filter( explode( ',', sanitize_text_field( wp_unslash( $_GET['kca_posts'] ) ) ) )
@@ -608,10 +608,12 @@ function kshippingargentina_metabox_cb( $order = false, $is_dokan = false ) {
 	$setting = get_option( 'woocommerce_kshippingargentina-manager_settings' );
 
 	$vars             = kshippingargentina_order_to_label_data( $order, $shipping );
+	KShippingArgentina_API::debug( 'order.tpl', $vars );
 	$vars['order']    = $order;
 	$vars['order_id'] = $order_id;
 	$vars['shipping'] = $shipping;
 	$vars['setting']  = $setting;
+
 	wc_get_template(
 		'order.tpl.php',
 		$vars,
@@ -854,7 +856,7 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 	}
 	$order_offices = $order->get_meta( '_office_kshippingargentina' );
 	if ( $shipping->office ) {
-		$data['office'] = $order_offices[ $shipping->instance_id ]['office'];
+		$data['office'] = $order_offices[ $shipping->instance_id ]['office'] ?? '';
 	}
 	$saved_data = get_post_meta( $order->get_id(), 'kshippingargentina_label_data', true );
 	if ( $saved_data ) {
@@ -961,7 +963,6 @@ function kshipping_generate_label_oca( $order, $label, $shipping ) {
 		$label,
 		$shipping
 	);
-
 }
 
 /**

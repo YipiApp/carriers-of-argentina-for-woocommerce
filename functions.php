@@ -141,7 +141,7 @@ add_action(
 	function ( $order_id ) {
 		$zones   = WC_Shipping_Zones::get_zones();
 		$methods = array_map(
-			function( $zone ) {
+			function ( $zone ) {
 				return $zone['shipping_methods'];
 			},
 			$zones
@@ -151,26 +151,22 @@ add_action(
 		if ( ! $offices ) {
 			$offices = array();
 		}
-		foreach ( $methods as $list ) {
-			foreach ( $list as $m ) {
-				if ( strstr( $m->id, 'kshippingargentina' ) !== false ) {
-					$shipping = WC_KShippingArgentina_Shipping::get_instance( $m->instance_id );
-					if ( $shipping->office ) {
-						if ( isset( $_POST['kshippingargentina_method_nonce'][ $m->instance_id ] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_nonce'][ $m->instance_id ] ) ), 'office_kshippingargentina_' . $m->instance_id ) ) {
-							if ( isset( $_POST['kshippingargentina_method_office'][ $m->instance_id ] ) && ! empty( $_POST['kshippingargentina_method_office'][ $m->instance_id ] ) ) {
-								$offices[ $m->instance_id ] = array(
-									'method_id'    => $m->id,
-									'instance_id'  => $m->instance_id,
-									'service_type' => $shipping->service_type,
-									'office_name'  => isset( $_POST['kshippingargentina_method_office_name'][ $m->instance_id ] ) ? sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office_name'][ $m->instance_id ] ) ) : '',
-									'office'       => sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office'][ $m->instance_id ] ) ),
-								);
-							}
-						}
-					}
+
+		if ( isset( $_POST['kshippingargentina_method_nonce'] ) ) {
+			foreach ( $_POST['kshippingargentina_method_nonce'] as $instance_id => $nonce ) {
+				if ( ! wp_verify_nonce( $nonce, 'office_kshippingargentina_' . $instance_id ) ) {
+					continue;
 				}
+				$shipping                = WC_KShippingArgentina_Shipping::get_instance( $instance_id );
+				$offices[ $instance_id ] = array(
+					'instance_id'  => $instance_id,
+					'service_type' => $shipping->service_type ?? '',
+					'office_name'  => isset( $_POST['kshippingargentina_method_office_name'][ $instance_id ] ) ? sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office_name'][ $instance_id ] ) ) : '',
+					'office'       => isset( $_POST['kshippingargentina_method_office'][ $instance_id ] ) ? sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office'][ $instance_id ] ) ) : '',
+				);
 			}
 		}
+		KShippingArgentina_API::debug( 'woocommerce_checkout_update_order_meta: ', array( $order_id, $offices ) );
 		$order->update_meta_data( '_office_kshippingargentina', $offices );
 		$order->save();
 	},
@@ -713,7 +709,7 @@ add_action(
 
 add_action(
 	'wp_enqueue_scripts',
-	function() {
+	function () {
 		if ( is_checkout() && ! is_wc_endpoint_url() ) {
 			wp_enqueue_style( 'kshippingargentina_style', plugin_dir_url( __FILE__ ) . 'kshippingargentina_style.css', array(), WC_KShippingArgentina::VERSION );
 		}

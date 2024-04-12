@@ -146,6 +146,9 @@ class KShippingArgentina_API {
 				}
 			}
 		}
+		if ( empty( $return ) || isset( $offices['statusCode'] ) && ( $offices['statusCode'] < 200 || $offices['statusCode'] >= 300 ) ) {
+			self::debug( "get_office error raw-response[/offices/postcode/$service/$postcode - $sender - $receiver]: " . json_encode( $offices ) );
+		}
 		return count( $return ) > 0 ? $return : false;
 	}
 
@@ -348,7 +351,7 @@ class KShippingArgentina_API {
 				self::debug( 'Json decode error from CACHE: ' . $result );
 				self::set_cache( $cache_id, 'error', 1 );
 			} else {
-				if ( 'shipping.yipi.app' !== self::$config['api_host']) {
+				if ( 'shipping.yipi.app' !== self::$config['api_host'] ) {
 					self::unmutex();
 				}
 				return $api_arr;

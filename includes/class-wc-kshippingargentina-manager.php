@@ -105,7 +105,7 @@ class WC_KShippingArgentina_Manager extends WC_Integration {
 			if (
 				isset( $conversion_rate[ $currency_src ] ) &&
 				isset( $conversion_rate[ $currency_src ][ $currency_dst ] ) &&
-				$conversion_rate[ $currency_src ][ $currency_dst ]['time'] > time() - 60 * 60 * 12
+				$conversion_rate[ $currency_src ][ $currency_dst ]['time'] > time() - 60 * 60 * 24
 			) {
 				return $conversion_rate[ $currency_src ][ $currency_dst ]['rate'];
 			}

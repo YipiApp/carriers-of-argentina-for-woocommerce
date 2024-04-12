@@ -1,30 +1,29 @@
 {
-    // The number of spaces a tab is equal to. This setting is overridden
-    // based on the file contents when `editor.detectIndentation` is true.
-    "editor.tabSize": 4,
-
-    // Insert spaces when pressing Tab. This setting is overriden
-    // based on the file contents when `editor.detectIndentation` is true.
-    "editor.insertSpaces": false,
-
-    // When opening a file, `editor.tabSize` and `editor.insertSpaces`
-    // will be detected based on the file contents. Set to false to keep
-    // the values you've explicitly set, above.
-    "editor.detectIndentation": false,
     "cSpell.words": [
-		"dokan",
-		"kshipping",
-		"kshippingargentina",
-		"pagenow",
-		"Publica",
-		"publicala",
-		"subpackage",
-		"theorder",
-		"unslash",
-		"woocommerce"
-	],
+        "pagenow",
+        "Publica",
+        "publicala",
+        "subpackage",
+        "woocommerce"
+    ],
+    "[php]": {
+        "editor.insertSpaces": false,
+        "editor.tabSize": 4
+    },
+    "[js]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2
+    },
+    "[css]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4
+    },
+    "files.eol": "\n",
     "phpcs.enable": true,
     "phpcs.standard": "WordPress",
+    "phpsab.executablePathCBF": "C:\\Users\\Kijam\\Documents\\Modulos\\Publica.la\\phpcs\\vendor\\bin\\phpcbf.bat",
+    "phpsab.executablePathCS": "C:\\Users\\Kijam\\Documents\\Modulos\\Publica.la\\phpcs\\vendor\\bin\\phpcs.bat",
+    "phpsab.standard": "WordPress",
     "phpcbf.enable": true,
     "phpcbf.standard": "WordPress",
     "phpcbf.documentFormattingProvider": true,
@@ -106,5 +105,5 @@
         "zlib",
         "wordpress",
         "woocommerce"
-    ]
+    ],
 }

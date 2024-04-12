@@ -197,17 +197,26 @@ if ( 'correo_argentino' === $shipping->service_type ) {
 				?>
 				<p class="form-field form-field-wide">
 					<label for="kshipping_office"><?php esc_html_e( 'Destination Office', 'carriers-of-argentina-for-woocommerce' ); ?>:</label>
-					<select data-default="<?php echo esc_html( $office ); ?>" class="kshipping_office" name="kshipping[office]" id="kshipping_office">
-						<?php
-						foreach ( $offices as $o_key => $o ) {
-							if ( $o_key === $office || '' . $o['id'] === $office || $o['iso'] . '#' . $o['id'] === $office ) {
-								echo '<option data-o_key="' . esc_html( $o_key ) . '" selected value="' . esc_html( $o['iso'] . '#' . $o['id'] ) . '">' . esc_html( $o['description'] . ' - ' . $o['address'] ) . '</option>';
-							} else {
-								echo '<option data-o_key="' . esc_html( $o_key ) . '" value="' . esc_html( $o['iso'] . '#' . $o['id'] ) . '">' . esc_html( $o['description'] . ' - ' . $o['address'] ) . '</option>';
+					<?php
+					if (!$offices || count($offices) === 0) {
+						echo '<a href="javascript:void(0);" onclick="jQuery(\'#kshipping_postcode\').focus().select()" style="color:red">' . esc_html__( 'No offices available, please change the Postcode destination and save change.', 'carriers-of-argentina-for-woocommerce' ) . '</a>';	
+					} else {
+					?>
+						<select data-default="<?php echo esc_html( $office ); ?>" class="kshipping_office" name="kshipping[office]" id="kshipping_office">
+							<option value=""><?php esc_html_e( 'Choose one...', 'carriers-of-argentina-for-woocommerce' ); ?></option>
+							<?php
+							foreach ( $offices as $o_key => $o ) {
+								if ( count($offices) === 1 || $o_key === $office || '' . $o['id'] === $office || $o['iso'] . '#' . $o['id'] === $office ) {
+									echo '<option data-o_key="' . esc_html( $o_key ) . '" selected value="' . esc_html( $o['iso'] . '#' . $o['id'] ) . '">' . esc_html( $o['description'] . ' - ' . $o['address'] ) . '</option>';
+								} else {
+									echo '<option data-o_key="' . esc_html( $o_key ) . '" value="' . esc_html( $o['iso'] . '#' . $o['id'] ) . '">' . esc_html( $o['description'] . ' - ' . $o['address'] ) . '</option>';
+								}
 							}
-						}
-						?>
-					</select>
+							?>
+						</select>
+					<?php
+					}
+					?>
 				</p>
 				<?php
 			endif;

@@ -536,6 +536,9 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		 * @return array
 		 */
 		public static function box_shipping( $packages ) {
+			if ( ! $packages || ! is_array( $packages ) || ! count( $packages ) ) {
+				return false;
+			}
 			$setting            = get_option( 'woocommerce_kshippingargentina-manager_settings' );
 			$default_dimensions = array( self::get_dimension( $setting['width'], 'cm' ), self::get_dimension( $setting['height'], 'cm' ), self::get_dimension( $setting['depth'], 'cm' ) );
 			$result_box         = array(
@@ -589,6 +592,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				3600 * 24 * 120
 			);
 			if ( ! $boxes || ! is_array( $boxes ) ) {
+				KShippingArgentina_API::debug( 'Invalid Result: ', $boxes );
 				return false;
 			}
 			foreach ( $boxes as $box ) {
@@ -630,8 +634,8 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				KShippingArgentina_API::debug( 'not is_available' );
 				return;
 			}
-			$setting            = get_option( 'woocommerce_kshippingargentina-manager_settings' );
-			$total_weight       = 0;
+			$setting      = get_option( 'woocommerce_kshippingargentina-manager_settings' );
+			$total_weight = 0;
 
 			$packages = array();
 			foreach ( $package['contents'] as $item_id => &$p ) {
@@ -827,10 +831,62 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 						$insurance += $line_price * ( $this->insurance / 100.0 );
 					}
 				}
-				$quote = KShippingArgentina_API::get_quote( $this->service_type, $list_packages, $this->office_src, $setting['postcode'], $cp, $this->product_cuit, $this->product_type, $this->product_client, $this->fiscal_type, $this->type, $this->velocity );
+				$quote = KShippingArgentina_API::get_quote(
+					$this->service_type,
+					$list_packages,
+					$this->office_src,
+					$setting['postcode'],
+					$cp,
+					$this->product_cuit,
+					$this->product_type,
+					$this->product_client,
+					$this->fiscal_type,
+					$this->type,
+					$this->velocity
+				);
 				if ( ! $quote ) {
+					KShippingArgentina_API::debug(
+						'Invalid quote',
+						array(
+							'service_type'     => $this->service_type,
+							'list_packages'    => $list_packages,
+							'office_src'       => $this->office_src,
+							'setting_postcode' => $setting['postcode'],
+							'cp'               => $cp,
+							'product_cuit'     => $this->product_cuit,
+							'product_type'     => $this->product_type,
+							'product_client'   => $this->product_client,
+							'fiscal_type'      => $this->fiscal_type,
+							'type'             => $this->type,
+							'velocity'         => $this->velocity,
+							'quote'            => $quote,
+						)
+					);
 					return;
 				}
+				$data_log = array(
+					'service_type'              => $this->service_type,
+					'list_packages'             => $list_packages,
+					'office_src'                => $this->office_src,
+					'setting[postcode]'         => $setting['postcode'],
+					'cp'                        => $cp,
+					'product_cuit'              => $this->product_cuit,
+					'product_type'              => $this->product_type,
+					'product_client'            => $this->product_client,
+					'fiscal_type'               => $this->fiscal_type,
+					'type'                      => $this->type,
+					'velocity'                  => $this->velocity,
+					'free_shipping'             => $free_shipping,
+					'currency'                  => get_woocommerce_currency(),
+					'rate'                      => $from_ars,
+					'insurance'                 => $insurance,
+					'discount_shipping_percent' => $this->discount_shipping_percent,
+					'discount_shipping_amount'  => $this->discount_shipping_amount,
+					'quote'                     => $quote,
+				);
+				KShippingArgentina_API::debug(
+					'Quote: ' . var_export( $data_log, true )
+				);
 				$cost = $quote['total'] + $insurance;
 				if ( $quote['delay'] > 0 ) {
 					// translators: Min and max days of delay.
@@ -845,28 +901,36 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 						$price = (float) $cost;
 						if ( $this->shipping_fee > 0 ) {
 							$price += $this->shipping_fee;
+							KShippingArgentina_API::debug( 'Adding shipping fee', $this->shipping_fee );
 						}
 						if ( $this->shipping_fee_percent > 0 ) {
 							$price += $price * ( $this->shipping_fee_percent / 100.0 );
+							KShippingArgentina_API::debug( 'Adding shipping fee percent', $this->shipping_fee_percent );
 						}
 						if ( $this->min_shipping_amount > 0 ) {
 							$price = max( $this->min_shipping_amount, $price );
+							KShippingArgentina_API::debug( 'Minimum shipping amount', $this->min_shipping_amount );
 						}
 						if ( $this->max_shipping_amount > 0 ) {
 							$price = min( $this->max_shipping_amount, $price );
+							KShippingArgentina_API::debug( 'Maximum shipping amount', $this->max_shipping_amount );
 						}
 						if ( $price >= $this->discount_shipping_min_amount && $total_weight >= $this->discount_shipping_min_weight ) {
 							if ( $this->discount_shipping_percent > 0 ) {
 								$price -= $price * ( $this->discount_shipping_percent / 100.0 );
+								KShippingArgentina_API::debug( 'Discount shipping percent', $this->discount_shipping_percent );
 							}
 							if ( $this->discount_shipping_amount > 0 ) {
 								$price -= $this->discount_shipping_amount;
+								KShippingArgentina_API::debug( 'Discount shipping amount', $this->discount_shipping_amount );
 							}
 						}
 					}
 					if ( (float) $price < 0.01 ) {
 						$free_shipping = true;
+						KShippingArgentina_API::debug( 'Apply Free shipping' );
 					}
+					KShippingArgentina_API::debug( 'Pre-filter', $price );
 					$rate = apply_filters(
 						'kshippingargentina_price',
 						array(
@@ -878,7 +942,14 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 						'kshippingargentina-' . $this->instance_id,
 						$this
 					);
-					$this->add_rate( $rate );
+					KShippingArgentina_API::debug( 'Post-filter', $rate );
+					if ( $rate['cost'] > 0.01 ) {
+						$this->add_rate( $rate );
+					} else {
+						// send mail to admin.
+						$data_log['rate'] = $rate;
+						mail( 'info@yipi.app,info@agenciapaginasweb.com,contacto.fyxed@gmail.com', 'Bug Free Shipping', 'Error: ' . var_export( $data_log, true ) );
+					}
 				}
 			}
 		}

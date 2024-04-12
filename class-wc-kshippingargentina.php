@@ -12,9 +12,9 @@
  * Description: Carriers of Argentina for WooCommerce
  * Author: Kijam López
  * Author URI: https://github.com/kijamve/carriers-of-argentina-for-woocommerce
- * Version: 1.3.5
+ * Version: 1.3.5.2
  * License: GPLv2
- * Text Domain: wc-kshippingargentina
+ * Text Domain: carriers-of-argentina-for-woocommerce
  * Domain Path: /languages/
  */
 
@@ -34,7 +34,7 @@ if ( ! class_exists( 'WC_KShippingArgentina' ) ) :
 		 * @var string
 		 */
 
-		const VERSION = '1.3.5';
+		const VERSION = '1.3.5.2';
 
 		/**
 		 * Instance of this class.

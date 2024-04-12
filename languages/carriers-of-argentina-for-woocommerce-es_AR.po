@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
-"POT-Creation-Date: 2024-01-11 00:05-0400\n"
-"PO-Revision-Date: 2024-01-11 00:06-0400\n"
+"POT-Creation-Date: 2024-04-12 09:41-0400\n"
+"PO-Revision-Date: 2024-04-12 09:42-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -85,27 +85,27 @@ msgstr "Buscar Caja"
 msgid "No box found."
 msgstr "No se han encontrado cajas."
 
-#: functions-boxes.php:165
+#: functions-boxes.php:172
 msgid "Dimensions"
 msgstr "Dimensiones"
 
-#: functions-boxes.php:181
+#: functions-boxes.php:188
 msgid "Width (In CM)"
 msgstr "Ancho (en CM)"
 
-#: functions-boxes.php:185
+#: functions-boxes.php:192
 msgid "Height (In CM)"
 msgstr "Alto (en CM)"
 
-#: functions-boxes.php:189
+#: functions-boxes.php:196
 msgid "Depth (In CM)"
 msgstr "Profundidad (en CM)"
 
-#: functions-boxes.php:193 functions-boxes.php:208
+#: functions-boxes.php:200 functions-boxes.php:215
 msgid "Max weight (In KG)"
 msgstr "Peso máximo (en KG)"
 
-#: functions-boxes.php:207 templates/order.tpl.php:226
+#: functions-boxes.php:214 templates/order.tpl.php:235
 msgid "Dimensions (In CM)"
 msgstr "Dimensiones (en CM)"
 
@@ -118,7 +118,7 @@ msgid "Cargando..."
 msgstr "Cargando..."
 
 #: functions-labels.php:30 functions-labels.php:47 functions-labels.php:63
-#: templates/order.tpl.php:267 templates/order.tpl.php:269
+#: templates/order.tpl.php:276 templates/order.tpl.php:278
 msgid "Generate Label"
 msgstr "Generar etiqueta"
 
@@ -198,11 +198,11 @@ msgstr "Datos del transportista argentino"
 msgid "Datos Correo Argentino"
 msgstr "Correo Argentino"
 
-#: functions-labels.php:919 functions-labels.php:925 functions-labels.php:927
+#: functions-labels.php:924 functions-labels.php:930 functions-labels.php:932
 msgid "Error generating OCA order"
 msgstr "Error al generar el pedido OCA"
 
-#: functions-labels.php:950
+#: functions-labels.php:955
 msgid ""
 "An error occurred connecting to OCA, try again later, if the error persists "
 "you should check the plugin logs with technical support."
@@ -211,7 +211,7 @@ msgstr ""
 "error persiste, debe verificar los registros del complemento con soporte "
 "técnico."
 
-#: functions-labels.php:1091
+#: functions-labels.php:1096
 msgid "Andreani return with Timeout"
 msgstr "Andreani retorno con Timeout"
 
@@ -243,7 +243,7 @@ msgstr[1] "Envío en tránsito <span class=\"count\">(%s)</span>"
 msgid "Nearest office"
 msgstr "Oficina más cercana"
 
-#: functions.php:128
+#: functions.php:128 templates/order.tpl.php:206
 msgid "Choose one..."
 msgstr "Elige uno..."
 
@@ -463,37 +463,37 @@ msgid "Argentina have to be the country of origin."
 msgstr "Argentina tiene que ser el país de origen."
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:631
+#: includes/class-wc-kshippingargentina-shipping.php:644
 #, php-format
 msgid "Product #%s is virtual. Skipping."
 msgstr "El producto #%s es virtual. Saltar."
 
 #. translators: Min and max days of delay.
-#: includes/class-wc-kshippingargentina-shipping.php:828
+#: includes/class-wc-kshippingargentina-shipping.php:893
 #, php-format
 msgid "%1$d to %2$d days"
 msgstr "%1$d a %2$d días"
 
-#: includes/class-wc-kshippingargentina-shipping.php:865
+#: includes/class-wc-kshippingargentina-shipping.php:938
 msgid "- Free Shipping"
 msgstr "- Envío gratuito"
 
 #. translators: ISO Currency.
-#: includes/class-wc-kshippingargentina-shipping.php:882
+#: includes/class-wc-kshippingargentina-shipping.php:962
 msgid "Argentina Shipping"
 msgstr "Envíos en Argentina"
 
-#: includes/class-wc-kshippingargentina-shipping.php:882
+#: includes/class-wc-kshippingargentina-shipping.php:962
 #, php-format
 msgid ""
 "You currency <code>%s</code> can not be supported. Please use ARS or USD."
 msgstr "Su moneda <code>%s</code> no puede ser compatible. Utilice ARS o USD."
 
-#: includes/class-wc-kshippingargentina-shipping.php:946
+#: includes/class-wc-kshippingargentina-shipping.php:1026
 msgid "Select all"
 msgstr "Seleccionar todos"
 
-#: includes/class-wc-kshippingargentina-shipping.php:946
+#: includes/class-wc-kshippingargentina-shipping.php:1026
 msgid "Select none"
 msgstr "Selecciona ninguno"
 
@@ -1138,7 +1138,7 @@ msgstr ""
 "el carácter de coma (,)"
 
 #: templates/order.tpl.php:37 templates/order.tpl.php:73
-#: templates/order.tpl.php:266
+#: templates/order.tpl.php:275
 msgid "Loading"
 msgstr "Cargando"
 
@@ -1221,37 +1221,44 @@ msgstr "Código postal de origen"
 
 #: templates/order.tpl.php:182
 msgid "Origin Office"
-msgstr "Entrega en sucursal"
+msgstr "Oficina de Origen"
 
 #: templates/order.tpl.php:199
 msgid "Destination Office"
-msgstr "Entrega en sucursal"
+msgstr "Oficina de Destino"
 
-#: templates/order.tpl.php:216
+#: templates/order.tpl.php:202
+msgid ""
+"No offices available, please change the Postcode destination and save change."
+msgstr ""
+"No hay oficinas disponibles, cambie el código postal del destino y guarde el "
+"cambio."
+
+#: templates/order.tpl.php:225
 msgid "Boxes"
 msgstr "Bultos"
 
-#: templates/order.tpl.php:219 templates/order.tpl.php:247
+#: templates/order.tpl.php:228 templates/order.tpl.php:256
 msgid "Remove"
 msgstr "Eliminar"
 
-#: templates/order.tpl.php:224
+#: templates/order.tpl.php:233
 msgid "Box"
 msgstr "Caja"
 
-#: templates/order.tpl.php:233
+#: templates/order.tpl.php:242
 msgid "Weight (In KG)"
 msgstr "Peso (en KG)"
 
-#: templates/order.tpl.php:237
+#: templates/order.tpl.php:246
 msgid "Contents"
 msgstr "Contenidos"
 
-#: templates/order.tpl.php:241
+#: templates/order.tpl.php:250
 msgid "Total Cost (In ARS)"
 msgstr "Costo total (en ARS)"
 
-#: templates/order.tpl.php:258
+#: templates/order.tpl.php:267
 msgid "Add new box"
 msgstr "Agregar nuevo bulto"
 
