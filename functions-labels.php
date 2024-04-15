@@ -6,6 +6,15 @@
  */
 
 add_action(
+	'add_meta_boxes',
+	function () {
+		$screen = class_exists( '\Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController' ) && wc_get_container()->get( \Automattic\WooCommerce\Internal\DataStores\Orders\CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled()
+		? wc_get_page_screen_id( 'shop-order' )
+		: 'shop_order';
+		add_meta_box( 'kshippingargentina-metabox', __( 'Data of the Argentine carrier', 'carriers-of-argentina-for-woocommerce' ), 'kshippingargentina_metabox_cb', $screen, 'normal', 'high' );
+	}
+);
+add_action(
 	'restrict_manage_posts',
 	function ( $post_type ) {
 		if ( 'shop_order' === $post_type && is_admin() ) {
@@ -292,7 +301,7 @@ add_action(
 					}
 
 					$shipping    = null;
-					$instance_id = $order->get_meta( 'kshippingargentina_instance_id' );
+					$instance_id = $order->get_meta( 'kshippingargentina_instance_id', true );
 					if ( $instance_id ) {
 						$shipping = WC_KShippingArgentina_Shipping::get_instance( $instance_id );
 					}
@@ -584,7 +593,7 @@ function kshippingargentina_metabox_cb( $order = false, $is_dokan = false ) {
 	}
 
 	$shipping    = null;
-	$instance_id = $order->get_meta( 'kshippingargentina_instance_id' );
+	$instance_id = $order->get_meta( 'kshippingargentina_instance_id', true );
 	if ( $instance_id ) {
 		$shipping = WC_KShippingArgentina_Shipping::get_instance( $instance_id );
 	}
@@ -607,7 +616,7 @@ function kshippingargentina_metabox_cb( $order = false, $is_dokan = false ) {
 
 	$setting = get_option( 'woocommerce_kshippingargentina-manager_settings' );
 
-	$vars             = kshippingargentina_order_to_label_data( $order, $shipping );
+	$vars = kshippingargentina_order_to_label_data( $order, $shipping );
 	KShippingArgentina_API::debug( 'order.tpl', $vars );
 	$vars['order']    = $order;
 	$vars['order_id'] = $order_id;
@@ -622,13 +631,6 @@ function kshippingargentina_metabox_cb( $order = false, $is_dokan = false ) {
 	);
 }
 
-add_action(
-	'add_meta_boxes',
-	function () {
-		$screen = class_exists( 'CustomOrdersTableController' ) && function_exists( 'wc_get_container' ) && wc_get_container()->get( CustomOrdersTableController::class )->custom_orders_table_usage_is_enabled() ? wc_get_page_screen_id( 'shop-order' ) : 'shop_order';
-		add_meta_box( 'kshippingargentina-metabox', __( 'Data of the Argentine carrier', 'carriers-of-argentina-for-woocommerce' ), 'kshippingargentina_metabox_cb', $screen, 'normal', 'high' );
-	}
-);
 
 add_action(
 	'dokan_order_detail_after_order_items',

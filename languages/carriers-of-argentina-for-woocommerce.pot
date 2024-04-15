@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
-"POT-Creation-Date: 2024-01-11 00:05-0400\n"
+"POT-Creation-Date: 2024-04-15 01:41-0400\n"
 "PO-Revision-Date: 2023-03-27 12:56-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -84,125 +84,149 @@ msgstr ""
 msgid "No box found."
 msgstr ""
 
-#: functions-boxes.php:165
+#: functions-boxes.php:172 functions-boxes.php:305
 msgid "Dimensions"
 msgstr ""
 
-#: functions-boxes.php:181
+#: functions-boxes.php:188
 msgid "Width (In CM)"
 msgstr ""
 
-#: functions-boxes.php:185
+#: functions-boxes.php:192
 msgid "Height (In CM)"
 msgstr ""
 
-#: functions-boxes.php:189
+#: functions-boxes.php:196
 msgid "Depth (In CM)"
 msgstr ""
 
-#: functions-boxes.php:193 functions-boxes.php:208
+#: functions-boxes.php:200 functions-boxes.php:215
 msgid "Max weight (In KG)"
 msgstr ""
 
-#: functions-boxes.php:207 templates/order.tpl.php:226
+#: functions-boxes.php:214 templates/order.tpl.php:235
 msgid "Dimensions (In CM)"
 msgstr ""
 
-#: functions-labels.php:22
+#: functions-boxes.php:282
+msgid "Send with own label"
+msgstr ""
+
+#: functions-boxes.php:283
+msgid "This product and its extra packages must have its own shipping label."
+msgstr ""
+
+#: functions-boxes.php:291
+msgid "Extra Packages"
+msgstr ""
+
+#: functions-boxes.php:292
+msgid "Add Extra Package"
+msgstr ""
+
+#: functions-boxes.php:301
+msgid "Weight"
+msgstr ""
+
+#: functions-boxes.php:313
+msgid "Remove Extra Package"
+msgstr ""
+
+#: functions-labels.php:14
+msgid "Data of the Argentine carrier"
+msgstr ""
+
+#: functions-labels.php:31
 msgid "You must select at least one order"
 msgstr ""
 
-#: functions-labels.php:28
+#: functions-labels.php:37
 msgid "Cargando..."
 msgstr ""
 
-#: functions-labels.php:30 functions-labels.php:47 functions-labels.php:63
-#: templates/order.tpl.php:267 templates/order.tpl.php:269
+#: functions-labels.php:39 functions-labels.php:56 functions-labels.php:72
+#: templates/order.tpl.php:276 templates/order.tpl.php:278
 msgid "Generate Label"
 msgstr ""
 
-#: functions-labels.php:49
+#: functions-labels.php:58
 msgid "Internal server error"
 msgstr ""
 
-#: functions-labels.php:88
+#: functions-labels.php:97
 msgid "The order could not be found"
 msgstr ""
 
-#: functions-labels.php:133
+#: functions-labels.php:142
 msgid "Invalid tracking codes"
 msgstr ""
 
-#: functions-labels.php:148
+#: functions-labels.php:157
 msgid "This order already has tracking codes assigned"
 msgstr ""
 
-#: functions-labels.php:206
+#: functions-labels.php:215
 msgid "Invalid service type."
 msgstr ""
 
-#: functions-labels.php:258
+#: functions-labels.php:267
 msgid ""
 "The label for this order could not be generated, you can verify what happens "
 "from the plugin log if you have it active in the configuration."
 msgstr ""
 
-#: functions-labels.php:288
+#: functions-labels.php:297
 msgid "Invalid Status:"
 msgstr ""
 
-#: functions-labels.php:301
+#: functions-labels.php:310
 msgid "Shipping instance not exists."
 msgstr ""
 
-#: functions-labels.php:323
+#: functions-labels.php:332
 msgid "Shipping type not found:"
 msgstr ""
 
 #. translators: %s => Tracking code.
-#: functions-labels.php:349 functions-labels.php:376 functions-labels.php:397
-#: functions-labels.php:424 functions-labels.php:445 functions-labels.php:472
+#: functions-labels.php:358 functions-labels.php:385 functions-labels.php:406
+#: functions-labels.php:433 functions-labels.php:454 functions-labels.php:481
 #, php-format
 msgid ""
 "Label %s generated, but the pdf was impossible to get because of an error in "
 "the service provider."
 msgstr ""
 
-#: functions-labels.php:582
+#: functions-labels.php:591
 msgid "The client asked that it not be sent by an Argentine carrier."
 msgstr ""
 
-#: functions-labels.php:592
+#: functions-labels.php:601
 msgid "This carrier not is supported."
 msgstr ""
 
-#: functions-labels.php:598
+#: functions-labels.php:607
 msgid "Invalid status, payment is not completed."
 msgstr ""
 
-#: functions-labels.php:604
+#: functions-labels.php:613
 msgid "Current tracking code:"
 msgstr ""
 
-#: functions-labels.php:627
-msgid "Data of the Argentine carrier"
-msgstr ""
-
-#: functions-labels.php:638
+#: functions-labels.php:642
 msgid "Datos Correo Argentino"
 msgstr ""
 
-#: functions-labels.php:919 functions-labels.php:925 functions-labels.php:927
+#: functions-labels.php:928 functions-labels.php:934 functions-labels.php:936
 msgid "Error generating OCA order"
 msgstr ""
 
-#: functions-labels.php:950
+#: functions-labels.php:959
 msgid ""
 "An error occurred connecting to OCA, try again later, if the error persists "
 "you should check the plugin logs with technical support."
 msgstr ""
 
-#: functions-labels.php:1091
+#: functions-labels.php:1099
 msgid "Andreani return with Timeout"
 msgstr ""
 
@@ -234,99 +258,99 @@ msgstr[1] ""
 msgid "Nearest office"
 msgstr ""
 
-#: functions.php:128
+#: functions.php:128 templates/order.tpl.php:206
 msgid "Choose one..."
 msgstr ""
 
-#: functions.php:210 templates/order.tpl.php:98
+#: functions.php:206 templates/order.tpl.php:98
 msgid "Identification number type"
 msgstr ""
 
-#: functions.php:220 templates/order.tpl.php:112
+#: functions.php:216 templates/order.tpl.php:112
 msgid "Identification number"
 msgstr ""
 
-#: functions.php:231 templates/order.tpl.php:158
+#: functions.php:227 templates/order.tpl.php:158
 msgid "Mobile Phone Area Code"
 msgstr ""
 
-#: functions.php:240 templates/order.tpl.php:162
+#: functions.php:236 templates/order.tpl.php:162
 msgid "Mobile Phone (No Area Code)"
 msgstr ""
 
-#: functions.php:251 functions.php:264 templates/order.tpl.php:146
+#: functions.php:247 functions.php:260 templates/order.tpl.php:146
 msgid "Height (Enter numbers only)"
 msgstr ""
 
-#: functions.php:277 functions.php:290 templates/order.tpl.php:150
+#: functions.php:273 functions.php:286 templates/order.tpl.php:150
 msgid "Floor"
 msgstr ""
 
-#: functions.php:303 functions.php:316 templates/order.tpl.php:154
+#: functions.php:299 functions.php:312 templates/order.tpl.php:154
 msgid "Apartment"
 msgstr ""
 
-#: functions.php:335
+#: functions.php:331
 msgid "Street"
 msgstr ""
 
-#: functions.php:336 templates/order.tpl.php:138
+#: functions.php:332 templates/order.tpl.php:138
 msgid "Street name"
 msgstr ""
 
-#: functions.php:337 functions.php:338 templates/order.tpl.php:142
+#: functions.php:333 functions.php:334 templates/order.tpl.php:142
 msgid "Detail (Between-streets, etc)"
 msgstr ""
 
-#: functions.php:424
+#: functions.php:421
 msgid "days"
 msgstr ""
 
-#: functions.php:425
+#: functions.php:422
 msgid "Your shopping cart is empty"
 msgstr ""
 
-#: functions.php:426
+#: functions.php:423
 msgid "No carriers found"
 msgstr ""
 
-#: functions.php:427
+#: functions.php:424
 msgid "Product not found"
 msgstr ""
 
-#: functions.php:428
+#: functions.php:425
 msgid "Server error"
 msgstr ""
 
-#: functions.php:429
+#: functions.php:426
 msgid "Loading..."
 msgstr ""
 
-#: functions.php:430
+#: functions.php:427
 msgid "The plugin is not configured correctly..."
 msgstr ""
 
 #. translators: Office.
-#: functions.php:566 functions.php:577 functions.php:641 functions.php:652
+#: functions.php:563 functions.php:574 functions.php:638 functions.php:649
 #, php-format
 msgid "Office: %1$s"
 msgstr ""
 
-#: functions.php:687
+#: functions.php:680
 msgid "Shipping"
 msgstr ""
 
-#: includes/class-kshippingargentina-api.php:166
+#: includes/class-kshippingargentina-api.php:169
 msgid "Cities not found..."
 msgstr ""
 
-#: includes/class-kshippingargentina-api.php:440
-#: includes/class-kshippingargentina-api.php:445
+#: includes/class-kshippingargentina-api.php:443
+#: includes/class-kshippingargentina-api.php:448
 msgid "User or Password of Andreani is invalid"
 msgstr ""
 
-#: includes/class-kshippingargentina-api.php:484
-#: includes/class-kshippingargentina-api.php:529
+#: includes/class-kshippingargentina-api.php:487
+#: includes/class-kshippingargentina-api.php:532
 #: includes/data-settings-shipping.php:46
 msgid "Andreani"
 msgstr ""
@@ -441,37 +465,37 @@ msgid "Argentina have to be the country of origin."
 msgstr ""
 
 #. translators: %s Product ID.
-#: includes/class-wc-kshippingargentina-shipping.php:631
+#: includes/class-wc-kshippingargentina-shipping.php:686
 #, php-format
 msgid "Product #%s is virtual. Skipping."
 msgstr ""
 
 #. translators: Min and max days of delay.
-#: includes/class-wc-kshippingargentina-shipping.php:828
+#: includes/class-wc-kshippingargentina-shipping.php:935
 #, php-format
 msgid "%1$d to %2$d days"
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:865
+#: includes/class-wc-kshippingargentina-shipping.php:980
 msgid "- Free Shipping"
 msgstr ""
 
 #. translators: ISO Currency.
-#: includes/class-wc-kshippingargentina-shipping.php:882
+#: includes/class-wc-kshippingargentina-shipping.php:1004
 msgid "Argentina Shipping"
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:882
+#: includes/class-wc-kshippingargentina-shipping.php:1004
 #, php-format
 msgid ""
 "You currency <code>%s</code> can not be supported. Please use ARS or USD."
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:946
+#: includes/class-wc-kshippingargentina-shipping.php:1068
 msgid "Select all"
 msgstr ""
 
-#: includes/class-wc-kshippingargentina-shipping.php:946
+#: includes/class-wc-kshippingargentina-shipping.php:1068
 msgid "Select none"
 msgstr ""
 
@@ -1065,7 +1089,7 @@ msgid ""
 msgstr ""
 
 #: templates/order.tpl.php:37 templates/order.tpl.php:73
-#: templates/order.tpl.php:266
+#: templates/order.tpl.php:275
 msgid "Loading"
 msgstr ""
 
@@ -1149,31 +1173,36 @@ msgstr ""
 msgid "Destination Office"
 msgstr ""
 
-#: templates/order.tpl.php:216
+#: templates/order.tpl.php:202
+msgid ""
+"No offices available, please change the Postcode destination and save change."
+msgstr ""
+
+#: templates/order.tpl.php:225
 msgid "Boxes"
 msgstr ""
 
-#: templates/order.tpl.php:219 templates/order.tpl.php:247
+#: templates/order.tpl.php:228 templates/order.tpl.php:256
 msgid "Remove"
 msgstr ""
 
-#: templates/order.tpl.php:224
+#: templates/order.tpl.php:233
 msgid "Box"
 msgstr ""
 
-#: templates/order.tpl.php:233
+#: templates/order.tpl.php:242
 msgid "Weight (In KG)"
 msgstr ""
 
-#: templates/order.tpl.php:237
+#: templates/order.tpl.php:246
 msgid "Contents"
 msgstr ""
 
-#: templates/order.tpl.php:241
+#: templates/order.tpl.php:250
 msgid "Total Cost (In ARS)"
 msgstr ""
 
-#: templates/order.tpl.php:258
+#: templates/order.tpl.php:267
 msgid "Add new box"
 msgstr ""
 

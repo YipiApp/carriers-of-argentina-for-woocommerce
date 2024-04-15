@@ -366,6 +366,7 @@ add_action(
 	function ( $item, $cart_item_key, $values, $order ) {
 		// Load shipping rate for this item.
 		$rate = kshippingargentina_cart_item_shipping_method( $cart_item_key );
+
 		if ( strstr( $rate->id, 'kshippingargentina' ) === false ) {
 			return;
 		}
@@ -537,7 +538,7 @@ add_filter(
 		$shipping = false;
 		$offices  = $order->get_meta( '_office_kshippingargentina' );
 
-		$instance_id = get_post_meta( $order->get_id(), 'kshippingargentina_instance_id', true );
+		$instance_id = $order->get_meta( 'kshippingargentina_instance_id', true );
 
 		if ( $instance_id ) {
 			$shipping = WC_KShippingArgentina_Shipping::get_instance( $instance_id );
@@ -612,7 +613,7 @@ add_filter(
 		$shipping = false;
 		$offices  = $order->get_meta( '_office_kshippingargentina' );
 
-		$instance_id = get_post_meta( $order->get_id(), 'kshippingargentina_instance_id', true );
+		$instance_id = $order->get_meta( 'kshippingargentina_instance_id', true );
 
 		if ( $instance_id ) {
 			$shipping = WC_KShippingArgentina_Shipping::get_instance( $instance_id );
@@ -671,38 +672,52 @@ add_filter(
 	10,
 	2
 );
-
-
-add_filter(
-	'manage_edit-shop_order_columns',
-	function ( $columns ) {
-		$return = array();
-		foreach ( $columns as $key => $data ) {
-			$return[ $key ] = $data;
-			if ( 'order_number' === $key ) {
-				$return['shipping_name'] = __( 'Shipping', 'carriers-of-argentina-for-woocommerce' );
-			}
+function kshipping_custom_column_name( $columns ) {
+	$return = array();
+	foreach ( $columns as $key => $data ) {
+		$return[ $key ] = $data;
+		if ( 'order_number' === $key ) {
+			$return['shipping_name'] = __( 'Shipping', 'carriers-of-argentina-for-woocommerce' );
 		}
-		return $return;
-	},
+	}
+	return $return;
+}
+add_filter(
+	'manage_woocommerce_page_wc-orders_columns',
+	'kshipping_custom_column_name',
 	20
 );
 
+add_filter(
+	'manage_edit-shop_order_columns',
+	'kshipping_custom_column_name',
+	20
+);
+function kshiping_custom_column_content( $column, $order ) {
+	if ( 'shipping_name' === $column ) {
+		if ( ! is_object( $order ) ) {
+			$order = wc_get_order( $order );
+		}
+		$instance_id = $order->get_meta( 'kshippingargentina_instance_id', true );
+		if ( $instance_id ) {
+			$shipping = WC_KShippingArgentina_Shipping::get_instance( $instance_id );
+			if ( $shipping && isset( $shipping->service_type ) && ! empty( $shipping->service_type ) ) {
+				echo '<img src="' . esc_url( plugin_dir_url( __FILE__ ) . 'img/' . $shipping->service_type . '.png' ) . '" height="12" class="wc-kshippingargentina-logo" /> ';
+			}
+		}
+		echo esc_html( $order->get_shipping_method() );
+	}
+}
 add_action(
 	'manage_shop_order_posts_custom_column',
-	function ( $column, $post_id ) {
-		if ( 'shipping_name' === $column ) {
-			$instance_id = get_post_meta( $post_id, 'kshippingargentina_instance_id', true );
-			if ( $instance_id ) {
-				$shipping = WC_KShippingArgentina_Shipping::get_instance( $instance_id );
-				if ( $shipping && isset( $shipping->service_type ) && ! empty( $shipping->service_type ) ) {
-					echo '<img src="' . esc_url( plugin_dir_url( __FILE__ ) . 'img/' . $shipping->service_type . '.png' ) . '" height="12" class="wc-kshippingargentina-logo" /> ';
-				}
-			}
-			$order = wc_get_order( $post_id );
-			echo esc_html( $order->get_shipping_method() );
-		}
-	},
+	'kshiping_custom_column_content',
+	10,
+	2
+);
+
+add_action(
+	'manage_woocommerce_page_wc-orders_custom_column',
+	'kshiping_custom_column_content',
 	10,
 	2
 );
