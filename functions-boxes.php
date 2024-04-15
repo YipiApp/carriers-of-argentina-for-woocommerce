@@ -268,3 +268,68 @@ function kshipping_argentina_boxes() {
 	}
 	return $result;
 }
+
+// Add custom fields to the Shipping tab in the product
+add_action(
+	'woocommerce_product_options_shipping',
+	function () {
+		global $post;
+		echo '<div class="options_group show_if_simple" id="package_data">';
+		echo '<input type="hidden" name="kshipping_package_nonce" value="' . esc_html( wp_create_nonce( 'kshipping_package_nonce' ) ) . '">';
+		woocommerce_wp_checkbox(
+			array(
+				'id'            => '_force_label',
+				'label'         => __( 'Send with own label', 'carriers-of-argentina-for-woocommerce' ),
+				'description'   => __( 'This product and its extra packages must have its own shipping label.', 'carriers-of-argentina-for-woocommerce' ),
+				'desc_tip'      => true,
+				'value'         => get_post_meta( $post->ID, '_force_label', true ),
+				'wrapper_class' => 'show_if_simple',
+				'style'         => 'margin-top:10px;',
+			)
+		);
+		echo '<p class="form-field">
+			<label for="_add_package">' . esc_html__( 'Extra Packages', 'carriers-of-argentina-for-woocommerce' ) . '</label>
+			<button type="button" id="_add_package" class="button tagadd show_if_simple">' . esc_html__( 'Add Extra Package', 'carriers-of-argentina-for-woocommerce' ) . '</button>
+		</p>';
+
+		$package_data = get_post_meta( $post->ID, '_package_data', true );
+		if ( $package_data ) {
+			foreach ( array_keys( $package_data['width'] ) as $idx ) {
+				echo '<div class="old_package">
+					<p class="form-field">
+						<p class="form-field _weight_field_package ">
+							<label for="_weight">' . esc_html__( 'Weight', 'carriers-of-argentina-for-woocommerce' ) . '</label>
+							<span class="woocommerce-help-tip" tabindex="0" aria-label="Peso en forma decimal"></span><input type="text" class="short wc_input_decimal" style="" name="_package_data[weight][]" value="' . esc_attr( $package_data['weight'][ $idx ] ) . '" placeholder="0">
+						</p>
+						<p class="form-field dimensions_field_package">
+							<label for="product_length_package">' . esc_html__( 'Dimensions', 'carriers-of-argentina-for-woocommerce' ) . '</label>
+							<span class="wrap">
+								<input style="width: 25%;margin-right: 3.8%;" placeholder="Longitud" class="input-text wc_input_decimal"     size="6" type="text" name="_package_data[width][]"  value="' . esc_attr( $package_data['width'][ $idx ] ) . '" />
+								<input style="width: 25%;margin-right: 3.8%;" placeholder="Ancho"    class="input-text wc_input_decimal"     size="6" type="text" name="_package_data[height][]" value="' . esc_attr( $package_data['height'][ $idx ] ) . '" />
+								<input style="width: 25%;margin-right: 3.8%;" placeholder="Alto"    class="input-text wc_input_decimal last" size="6" type="text" name="_package_data[depth][]"  value="' . esc_attr( $package_data['depth'][ $idx ] ) . '" />
+							</span>
+						</p>
+						<p class="form-field dimensions_field_package">
+							<button class="remove_old_package button tagadd">' . esc_html( __( 'Remove Extra Package', 'carriers-of-argentina-for-woocommerce' ) ) . '</button>
+						</p>
+					</p>
+				</div>';
+			}
+		}
+		echo '</div>';
+	}
+);
+
+// Save package data as product metadata.
+add_action(
+	'woocommerce_process_product_meta',
+	function ( $post_id ) {
+		if ( ! isset( $_POST['kshipping_package_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['kshipping_package_nonce'] ) ), 'kshipping_package_nonce' ) ) {
+			return;
+		}
+		update_post_meta( $post_id, '_force_label', ( isset( $_POST['_force_label'] ) && 'yes' === $_POST['_force_label'] ) ? 'yes' : 'no' );
+		update_post_meta( $post_id, '_package_data', $_POST['_package_data'] ?? array() );
+	},
+	10,
+	1
+);

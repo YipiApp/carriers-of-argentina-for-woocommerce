@@ -553,7 +553,8 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			);
 			$products           = array();
 			foreach ( $packages as $item_id => $values ) {
-				$sku = $item_id;
+				$sku        = $item_id;
+				$product_id = $values['product_id'];
 				if ( $values['weight'] ) {
 					$weight_p = self::get_weight( $values['weight'], 'kg' );
 				} else {
@@ -572,7 +573,48 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 					$product['height'] = round( self::get_dimension( $values['height'], 'cm' ), 2 );
 					$product['depth']  = round( self::get_dimension( $values['length'], 'cm' ), 2 );
 				}
+				$force_label  = ( 'yes' === get_post_meta( $product_id, '_force_label', true ) );
+				$package_data = get_post_meta( $product_id, '_package_data', true );
+				KShippingArgentina_API::debug( 'Package: ', array( $product, $package_data, $force_label ) );
+				if ( $force_label ) {
+					for ( $i = 0; $i < $product['qty']; $i++ ) {
+						$result_box['width'][]    = $product['width'];
+						$result_box['height'][]   = $product['height'];
+						$result_box['depth'][]    = $product['depth'];
+						$result_box['weight'][]   = round( $product['weight'], 2 );
+						$result_box['total'][]    = ( $values['line_subtotal'] ) / $values['quantity'];
+						$result_box['total_wt'][] = ( $values['line_subtotal'] + $values['line_subtotal_tax'] ) / $values['quantity'];
+						$result_box['content'][]  = $values['name'];
+						$result_box['items'][]    = 1;
+						if ( $package_data ) {
+							foreach ( array_keys( $package_data['width'] ) as $idx ) {
+								$result_box['width'][]    = round( self::get_dimension( $package_data['width'][ $idx ], 'cm' ), 2 );
+								$result_box['height'][]   = round( self::get_dimension( $package_data['height'][ $idx ], 'cm' ), 2 );
+								$result_box['depth'][]    = round( self::get_dimension( $package_data['depth'][ $idx ], 'cm' ), 2 );
+								$result_box['weight'][]   = round( self::get_weight( $package_data['weight'], 'kg' ), 2 );
+								$result_box['total'][]    = 1;
+								$result_box['total_wt'][] = 1;
+								$result_box['content'][]  = $values['name'];
+								$result_box['items'][]    = 1;
+							}
+						}
+					}
+					continue;
+				}
 				$products[] = $product;
+				if ( $package_data ) {
+					foreach ( array_keys( $package_data['width'] ) as $idx ) {
+						$product_clone             = json_decode( wp_json_encode( $product ), true );
+						$product_clone['width']    = round( self::get_dimension( $package_data['width'][ $idx ], 'cm' ), 2 );
+						$product_clone['height']   = round( self::get_dimension( $package_data['height'][ $idx ], 'cm' ), 2 );
+						$product_clone['depth']    = round( self::get_dimension( $package_data['depth'][ $idx ], 'cm' ), 2 );
+						$product_clone['weight']   = round( self::get_weight( $package_data['weight'], 'kg' ), 2 );
+						$product_clone['total']    = 1;
+						$product_clone['total_wt'] = 1;
+						$product_clone['sku']      = $product['sku'] . '-' . $idx;
+						$products[]                = $product_clone;
+					}
+				}
 			}
 			$all_boxes_for_bin = kshipping_argentina_boxes();
 			if ( ! count( $all_boxes_for_bin ) ) {
@@ -583,15 +625,15 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 					'maxWeight' => 0.01,
 				);
 			}
-			$boxes = KShippingArgentina_API::call(
+			$boxes = count( $products ) > 0 ? KShippingArgentina_API::call(
 				'/bins/calculate',
 				array(
 					'boxes'    => $all_boxes_for_bin,
 					'products' => $products,
 				),
 				3600 * 24 * 120
-			);
-			if ( ! $boxes || ! is_array( $boxes ) ) {
+			) : array();
+			if ( count( $products ) > 0 && ( ! $boxes || ! is_array( $boxes ) ) ) {
 				KShippingArgentina_API::debug( 'Invalid Result: ', $boxes );
 				return false;
 			}

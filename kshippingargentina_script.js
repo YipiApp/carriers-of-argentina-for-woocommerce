@@ -43,8 +43,39 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 		$('.method_instance_id-'+instance_id+' select').on('change', checkOfficeSelectedArgentinaOffice);
 	});
 }
-jQuery(document).ready(function() {
-	let $ = jQuery;
+jQuery(document).ready(function($) {
+	$('#package_data').on('click', '#_add_package', function() {
+		var package = '<div class="package">'+
+		'<p class="form-field _weight_field_package ">'+
+		'	<label for="_weight">'+$('label[for="_weight"]').first().text()+'</label><span class="woocommerce-help-tip" tabindex="0" aria-label="Peso en forma decimal"></span><input type="text" class="short wc_input_decimal" style="" name="_package_data[weight][]" value="" placeholder="0">'+
+		'</p>'+
+		'<p class="form-field dimensions_field_package">'+
+		'	<label for="product_length_package">'+$('label[for="product_length"]').first().text()+'</label>'+
+		'	<span class="wrap">'+
+		'		<input style="width: 25%;margin-right: 3.8%;" placeholder="Longitud" class="input-text wc_input_decimal"      size="6" type="text" name="_package_data[width][]"  value="">'+
+		'		<input style="width: 25%;margin-right: 3.8%;" placeholder="Ancho"    class="input-text wc_input_decimal"      size="6" type="text" name="_package_data[height][]" value="">'+
+		'		<input style="width: 25%;margin-right: 3.8%;" placeholder="Alto"     class="input-text wc_input_decimal last" size="6" type="text" name="_package_data[depth][]"  value="">'+
+		'	</span>'+
+		'</p>'+
+		'<p class="form-field dimensions_field_package">'+
+		'	<button class="remove_package button tagadd">Remove Package</button>'+
+		'</p></div>';
+		$(this).before(package);
+		return false;
+	});
+    $('#package_data').on('click', '.remove_package', function() {
+        $(this).closest('.package').remove();
+        return false;
+    });
+    $('#package_data').on('click', '.remove_old_package', function() {
+        $(this).closest('.old_package').remove();
+        return false;
+    });
+
+	$('#package_data').on('click', '.remove_package', function() {
+		$(this).closest('.package').remove();
+		return false;
+	});
 	jQuery(document.body).on('change', 'input[name="payment_method"]', function() {
 		if (kijam_update_checkout_request) clearTimeout(kijam_update_checkout_request);
 		kijam_update_checkout_request = setTimeout(function() { jQuery('body').trigger('update_checkout'); }, 2000);

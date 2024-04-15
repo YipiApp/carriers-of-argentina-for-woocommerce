@@ -96,7 +96,7 @@ class WC_KShippingArgentina_Manager extends WC_Integration {
 	public function get_conversion_rate( $currency_src, $currency_dst ) {
 		static $conversion_rate = null;
 		if ( null === $conversion_rate ) {
-			$conversion_rate = json_decode( get_option( $this->id . 'conversion_rate', '{}' ) );
+			$conversion_rate = json_decode( get_option( $this->id . 'conversion_rate', '{}' ), true );
 		}
 		if ( $currency_src === $currency_dst || 'off' === self::$config['conversion_option'] ) {
 			return 1.0;
@@ -109,11 +109,11 @@ class WC_KShippingArgentina_Manager extends WC_Integration {
 			) {
 				return $conversion_rate[ $currency_src ][ $currency_dst ]['rate'];
 			}
-			$data = wp_remote_get( 'https://www.live-rates.com/rates' );
+			$data = wp_remote_get( 'https://kijam.com/lic/rate/' );
 			if ( ! is_wp_error( $data ) ) {
 				$api_arr = json_decode( $data['body'], true );
 				foreach ( $api_arr as $fields ) {
-					if ( isset( $fields['currency'] ) && 7 === strlen( $fields['currency'] ) &&
+					if ( isset( $fields['rate'] ) && $fields['rate'] > 0 && isset( $fields['currency'] ) && 7 === strlen( $fields['currency'] ) &&
 					preg_match( '/[A-Z0-9]{3}\/[A-Z0-9]{3}/', $fields['currency'] ) ) {
 						$cur                                   = explode( '/', $fields['currency'] );
 						$conversion_rate[ $cur[0] ][ $cur[1] ] = array();
