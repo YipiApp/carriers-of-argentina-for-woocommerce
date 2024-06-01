@@ -109,6 +109,18 @@ return array(
 		'default'     => __( '4 - 7 days', 'carriers-of-argentina-for-woocommerce' ),
 		'desc_tip'    => false,
 	),
+	'box_calculation'                     => array(
+		'title'       => __( 'Box Calculation', 'carriers-of-argentina-for-woocommerce' ),
+		'type'        => 'select',
+		'description' => __( 'Select the Algorithm to calculate the final Boxes', 'carriers-of-argentina-for-woocommerce' ),
+		'default'     => 'smart',
+		'options'     => array(
+			'smart' => __( 'Select best boxes for all order', 'carriers-of-argentina-for-woocommerce' ),
+			'fit_one' => __( 'Force to fit in one box', 'carriers-of-argentina-for-woocommerce' ),
+			'by_product' => __( 'One box by unit product', 'carriers-of-argentina-for-woocommerce' ),
+		),
+		'desc_tip'    => false,
+	),
 	'velocity'                     => array(
 		'title'       => __( 'Velocity', 'carriers-of-argentina-for-woocommerce' ),
 		'type'        => 'select',

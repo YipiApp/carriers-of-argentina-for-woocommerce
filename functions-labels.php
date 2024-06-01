@@ -1134,8 +1134,9 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
  * @param WC_KShippingArgentina_Shipping $shipping Shipping Object.
  */
 function kshipping_generate_label_correo_argentino( $order, $label, $shipping ) {
-	$dim   = $label['box'];
-	$lines = array();
+	$dim      = $label['box'];
+	$lines    = array();
+	$id_order = $order->get_id();
 	foreach ( $dim['weight'] as $i => $weight ) {
 		$csvl = "{$shipping->product_type};{$dim['height'][$i]};{$dim['width'][$i]};{$dim['depth'][$i]};{$dim['weight'][$i]};{$dim['total'][$i]};{$label['state']};";
 		if ( (bool) $shipping->office ) {
@@ -1144,7 +1145,7 @@ function kshipping_generate_label_correo_argentino( $order, $label, $shipping ) 
 			$address = $label['address_1'] . ( ! empty( $label['address_2'] ) ? ', ' . $label['address_2'] : '' );
 			$csvl   .= ";{$label['city']};{$address};{$label['number']};{$label['floor']};{$label['apartment']};{$label['postcode']};";
 		}
-		$csvl   .= "{$label['full_name']};EMAILAQUI;;;{$label['prefix_phone']};{$label['phone']}";
+		$csvl   .= "{$label['full_name']};EMAILAQUI;;;{$label['prefix_phone']};{$label['phone']};{$id_order}";
 		$csv     = str_replace(
 			'EMAILAQUI',
 			$label['email'],
@@ -1189,7 +1190,7 @@ function kshipping_generate_label_correo_argentino( $order, $label, $shipping ) 
 	if ( count( $lines ) > 0 ) {
 		$csv       = apply_filters(
 			'kshipping_csv_correo_argentino',
-			'tipo_producto(obligatorio);largo(obligatorio en CM);ancho(obligatorio en CM);altura(obligatorio en CM);peso(obligatorio en KG);valor_del_contenido(obligatorio en pesos argentinos);provincia_destino(obligatorio);sucursal_destino(obligatorio solo en caso de no ingresar localidad de destino);localidad_destino(obligatorio solo en caso de no ingresar sucursal de destino);calle_destino(obligatorio solo en caso de no ingresar sucursal de destino);altura_destino(obligatorio solo en caso de no ingresar sucursal de destino);piso(opcional solo en caso de no ingresar sucursal de destino);dpto(opcional solo en caso de no ingresar sucursal de destino);codpostal_destino(obligatorio solo en caso de no ingresar sucursal de destino);destino_nombre(obligatorio);destino_email(obligatorio, debe ser un email valido);cod_area_tel(opcional);tel(opcional);cod_area_cel(obligatorio);cel(obligatorio)' . "\n" . implode( "\n", $lines ),
+			'tipo_producto(obligatorio);largo(obligatorio en CM);ancho(obligatorio en CM);altura(obligatorio en CM);peso(obligatorio en KG);valor_del_contenido(obligatorio en pesos argentinos);provincia_destino(obligatorio);sucursal_destino(obligatorio solo en caso de no ingresar localidad de destino);localidad_destino(obligatorio solo en caso de no ingresar sucursal de destino);calle_destino(obligatorio solo en caso de no ingresar sucursal de destino);altura_destino(obligatorio solo en caso de no ingresar sucursal de destino);piso(opcional solo en caso de no ingresar sucursal de destino);dpto(opcional solo en caso de no ingresar sucursal de destino);codpostal_destino(obligatorio solo en caso de no ingresar sucursal de destino);destino_nombre(obligatorio);destino_email(obligatorio, debe ser un email valido);cod_area_tel(opcional);tel(opcional);cod_area_cel(obligatorio);cel(obligatorio);cel(obligatorio);numero_orden(opcional)' . "\n" . implode( "\n", $lines ),
 			$order,
 			$label,
 			$shipping
