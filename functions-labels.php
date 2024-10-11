@@ -815,7 +815,7 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 		}
 		$packages[ $item_id ] = $r;
 	}
-	$dim    = WC_KShippingArgentina_Shipping::box_shipping( $packages );
+	$dim    = WC_KShippingArgentina_Shipping::box_shipping( $packages, $shipping->box_calculation );
 	$to_ars = WC_KShippingArgentina_Manager::get_instance()->get_conversion_rate( get_woocommerce_currency(), 'ARS' );
 	$data   = array(
 		'box'          => array(

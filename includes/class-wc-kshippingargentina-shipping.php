@@ -547,7 +547,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		 *
 		 * @return array
 		 */
-		public static function box_shipping( $packages ) {
+		public static function box_shipping( $packages, $box_calculation ) {
 			if ( ! $packages || ! is_array( $packages ) || ! count( $packages ) ) {
 				return false;
 			}
@@ -629,7 +629,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				}
 			}
 			$all_boxes_for_bin = kshipping_argentina_boxes();
-			if ( $this->box_calculation == 'by_product' || ! count( $all_boxes_for_bin ) ) {
+			if ( $box_calculation == 'by_product' || ! count( $all_boxes_for_bin ) ) {
 				$all_boxes_for_bin = array(array(
 					'width'     => 1,
 					'height'    => 1,
@@ -642,7 +642,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				array(
 					'boxes'    => $all_boxes_for_bin,
 					'products' => $products,
-					'fit_one_box' => $this->box_calculation == 'fit_one'
+					'fit_one_box' => $box_calculation == 'fit_one'
 				),
 				3600 * 24 * 120
 			) : array();
@@ -749,7 +749,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				WC()->session->init();
 			}
 			KShippingArgentina_API::debug( 'Destination: ', $package['destination'] );
-			$dim = self::box_shipping( $packages );
+			$dim = self::box_shipping( $packages, $this->box_calculation );
 			if ( ! $dim ) {
 				return;
 			}
