@@ -1139,6 +1139,13 @@ function kshipping_generate_label_correo_argentino( $order, $label, $shipping ) 
 	$id_order = $order->get_id();
 	foreach ( $dim['weight'] as $i => $weight ) {
 		$csvl = "{$shipping->product_type};{$dim['height'][$i]};{$dim['width'][$i]};{$dim['depth'][$i]};{$dim['weight'][$i]};{$dim['total'][$i]};{$label['state']};";
+		$label['phone'] = preg_replace( '/[^0-9]/', '', $label['phone'] );
+		$label['prefix_phone'] = preg_replace( '/[^0-9]/', '', $label['prefix_phone'] );
+		if (empty($label['prefix_phone'])) {
+			$label['prefix_phone'] = substr($label['phone'], 0, 2);
+			$label['phone'] = substr($label['phone'], 2);
+		}
+		$label['number'] = preg_replace( '/[^0-9]/', '', $label['number'] ); 
 		if ( (bool) $shipping->office ) {
 			$csvl .= explode( '#', $label['office'] )[0] . ';;;;;;;';
 		} else {
@@ -1190,7 +1197,7 @@ function kshipping_generate_label_correo_argentino( $order, $label, $shipping ) 
 	if ( count( $lines ) > 0 ) {
 		$csv       = apply_filters(
 			'kshipping_csv_correo_argentino',
-			'tipo_producto(obligatorio);largo(obligatorio en CM);ancho(obligatorio en CM);altura(obligatorio en CM);peso(obligatorio en KG);valor_del_contenido(obligatorio en pesos argentinos);provincia_destino(obligatorio);sucursal_destino(obligatorio solo en caso de no ingresar localidad de destino);localidad_destino(obligatorio solo en caso de no ingresar sucursal de destino);calle_destino(obligatorio solo en caso de no ingresar sucursal de destino);altura_destino(obligatorio solo en caso de no ingresar sucursal de destino);piso(opcional solo en caso de no ingresar sucursal de destino);dpto(opcional solo en caso de no ingresar sucursal de destino);codpostal_destino(obligatorio solo en caso de no ingresar sucursal de destino);destino_nombre(obligatorio);destino_email(obligatorio, debe ser un email valido);cod_area_tel(opcional);tel(opcional);cod_area_cel(obligatorio);cel(obligatorio);cel(obligatorio);numero_orden(opcional)' . "\n" . implode( "\n", $lines ),
+			'tipo_producto(obligatorio);largo(obligatorio en CM);ancho(obligatorio en CM);altura(obligatorio en CM);peso(obligatorio en KG);valor_del_contenido(obligatorio en pesos argentinos);provincia_destino(obligatorio);sucursal_destino(obligatorio solo en caso de no ingresar localidad de destino);localidad_destino(obligatorio solo en caso de no ingresar sucursal de destino);calle_destino(obligatorio solo en caso de no ingresar sucursal de destino);altura_destino(obligatorio solo en caso de no ingresar sucursal de destino);piso(opcional solo en caso de no ingresar sucursal de destino);dpto(opcional solo en caso de no ingresar sucursal de destino);codpostal_destino(obligatorio solo en caso de no ingresar sucursal de destino);destino_nombre(obligatorio);destino_email(obligatorio, debe ser un email valido);cod_area_tel(opcional);tel(opcional);cod_area_cel(obligatorio);cel(obligatorio);numero_orden(opcional)' . "\n" . implode( "\n", $lines ),
 			$order,
 			$label,
 			$shipping

@@ -1,9 +1,9 @@
 ﻿=== Shipping Argentina WooCommerce Plugin ===
-Contributors: Kijam Lopez
-Tags: woocommerce, oca, correo argentino, andreani, argentina, envio, transportista, shipping
+Contributors: Kijam López
+Tags: woocommerce, oca, correo argentino, andreani, argentina
 Requires at least: 4.0
 Tested up to: 6.4
-Stable tag: 1.4.3
+Stable tag: 1.4.6
 License: GPLv2
 
 Add Correo Argentino / Andreani / Oca ePack to the WooCommerce plugin

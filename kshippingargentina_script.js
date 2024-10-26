@@ -22,11 +22,6 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 		for (let i in list) {
 			let o = list[i];
 			let selected = '';
-			if (wc_kshippingargentina_context.office_kshippingargentina == o.iso + '#' + o.id) {
-				found = true;
-				selected = 'selected';
-				$('.method_instance_id-'+instance_id+' .method_office_name').val(o.description + ' - ' + o.address);
-			}
 			$('.method_instance_id-'+instance_id+' select').append('<option ' + selected + ' data-map="https://maps.google.com/?q=' + o.lat + ',' + o.lng + '" value="' + o.iso + '#' + o.id + '">' + o.description + ' - ' + o.address + '</option>');
 		}
 		if (!found) {
@@ -126,6 +121,7 @@ jQuery(document).ready(function($) {
 						//$('#billing_city').append('<option value="">Seleccione...</option>');
 						let list = jQuery.parseJSON(list_json);
 						let city = val_city;
+						$('#billing_city').append('<option value="">Seleccione...</option>');
 						for (let i in list) {
 							let o = list[i];
 							let selected = '';
@@ -219,7 +215,8 @@ jQuery(document).ready(function($) {
 						$('#shipping_city option').remove();
 						//$('#shipping_city').append('<option value="">Seleccione...</option>');
 						let list = jQuery.parseJSON(list_json);
-						let city = $('#shipping_city').val();
+						let city = val_city;
+						$('#shipping_city').append('<option value="">Seleccione...</option>');
 						for (let i in list) {
 							let o = list[i];
 							let selected = '';

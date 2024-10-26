@@ -184,7 +184,11 @@ add_filter(
 			WC()->session->init();
 		}
 		$ship_to_different_address = (bool) WC()->session->get( 'ship_to_different_address' );
-		$country                   = $ship_to_different_address ? WC()->customer->get_shipping_country() : WC()->customer->get_billing_country();
+		if ( ! WC()->customer ) {
+			$country                   = 'AR';
+		} else {
+			$country                   = $ship_to_different_address ? WC()->customer->get_shipping_country() : WC()->customer->get_billing_country();
+		}
 		$required                  = true;
 		$bp_state                  = $fields['billing']['billing_state']['priority'];
 		$fields['billing']['billing_country']['priority'] = $bp_state - 5;
@@ -400,14 +404,9 @@ add_action( 'admin_enqueue_scripts', 'kshippingargentina_hook_js' );
  * Hook js function.
  */
 function kshippingargentina_hook_js() {
-	if ( ! WC()->session ) {
-		WC()->session = new WC_Session_Handler();
-		WC()->session->init();
-	}
 	if ( is_admin() ) {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 	}
-	$values = WC_KShippingArgentina::woocommerce_instance()->checkout->get_value( 'kshippingargentina_method_office' );
 	wp_enqueue_script( 'wc-kshippingargentina-js', plugins_url( 'kshippingargentina_script.js', __FILE__ ), array( 'jquery' ), WC_KShippingArgentina::VERSION, true );
 	wp_localize_script(
 		'wc-kshippingargentina-js',
@@ -416,7 +415,6 @@ function kshippingargentina_hook_js() {
 			'token'                     => wp_create_nonce( 'kshippingargentina_token' ),
 			'ajax_url'                  => WC_AJAX::get_endpoint( 'wc_kshippingargentina_ajax' ),
 			'home_url'                  => home_url(),
-			'office_kshippingargentina' => $values,
 			'messages'                  => array(
 				'days'              => __( 'days', 'carriers-of-argentina-for-woocommerce' ),
 				'empty_cart'        => __( 'Your shopping cart is empty', 'carriers-of-argentina-for-woocommerce' ),
