@@ -11,7 +11,7 @@
  * @since             1.0.0
  */
 class KShippingArgentina_API {
-	const TRACKING_URL_OCA      = 'https://www1.oca.com.ar/OEPTrackingWeb/trackingenvio.asp?numero1=@';
+	const TRACKING_URL_OCA      = 'http://www5.oca.com.ar/ocaepak/historial/Historial_Piezas.asp?IdOrdenRetiro=$$';
 	const TRACKING_URL_ANDREANI = 'https://www.andreani.com/#!/informacionEnvio/@';
 	const TRACKING_URL_CORREO   = 'https://www.correoargentino.com.ar/formularios/e-commerce?id=@';
 

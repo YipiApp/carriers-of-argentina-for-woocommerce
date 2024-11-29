@@ -20,6 +20,8 @@ if ( 'correo_argentino' === $shipping->service_type ) {
 	$url = KShippingArgentina_API::TRACKING_URL_CORREO;
 } elseif ( 'oca' === $shipping->service_type ) {
 	$url = KShippingArgentina_API::TRACKING_URL_OCA;
+	$idReference = $order->get_meta( 'kshippingargentina_oca_tracking_reference', true);
+	$url = str_replace( '$$', $idReference, $url );
 } elseif ( 'andreani' === $shipping->service_type ) {
 	$url = KShippingArgentina_API::TRACKING_URL_ANDREANI;
 }

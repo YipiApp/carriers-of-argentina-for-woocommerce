@@ -142,6 +142,8 @@ class WC_KNewTracking_Admin_Email extends WC_Email {
 			$url = KShippingArgentina_API::TRACKING_URL_CORREO;
 		} elseif ( 'oca' === $shipping->service_type ) {
 			$url = KShippingArgentina_API::TRACKING_URL_OCA;
+			$idReference = $this->object->get_meta( 'kshippingargentina_oca_tracking_reference', true);
+			$url = str_replace( '$$', $idReference, $url );
 		} elseif ( 'andreani' === $shipping->service_type ) {
 			$url = KShippingArgentina_API::TRACKING_URL_ANDREANI;
 		}
