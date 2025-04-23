@@ -37,6 +37,10 @@ class KShippingArgentina_API {
 	const OCA_API_SANDBOX = 'http://webservice.oca.com.ar/ePak_Tracking_TEST/Oep_TrackEPak.asmx?wsdl';
 	const OCA_API_PROD    = 'http://webservice.oca.com.ar/ePak_tracking/Oep_TrackEPak.asmx?wsdl';
 
+	const CORREO_TRACKING_URL = 'https://www.correoargentino.com.ar/formularios/e-commerce?id=';
+	const CORREO_MI_CORREO_API_URL = 'https://api.correoargentino.com.ar/micorreo/v1';
+	const CORREO_MI_CORREO_API_SANDBOX_URL = 'https://apitest.correoargentino.com.ar/micorreo/v1';
+	
 	const ANDREANI_API_PROD    = array(
 		'v2' => 'https://apis.andreani.com',
 		'v1' => 'https://api.andreani.com',
@@ -137,6 +141,9 @@ class KShippingArgentina_API {
 	 */
 	public static function get_office( $service, $postcode, $sender = null, $receiver = null ) {
 		self::init();
+		if ($service == 'correo_argentino') {
+			$service = 'correo_argentino_v2';
+		}
 		$offices = self::call( "/offices/postcode/$service/$postcode", false, 3600 * 24 * 60 );
 		$return  = array();
 		foreach ( $offices as $office ) {
@@ -394,6 +401,261 @@ class KShippingArgentina_API {
 			self::debug( 'From API error: ', array( $url, $post_data, $data ) );
 		}
 		self::set_cache( $cache_id, 'error', 5 * 60 );
+		return false;
+	}
+
+
+	// ##################################################################
+	// ##################################################################
+	// ##################################################################
+	// ##################################################################
+
+	// ######################## CORREO ARGENTINO ########################
+
+	// ##################################################################
+	// ##################################################################
+	// ##################################################################
+	// ##################################################################
+
+	/**
+	 * Get Correo Argentino Token.
+	 *
+	 * @param mixed $error error.
+	 * @param bool  $sandbox sandbox.
+	 *
+	 * @return mixed
+	 */
+	public static function get_token_correo( $force = false, &$error = null ) {
+		$sandbox = apply_filters( 'kshippingargentina_sandbox', false );
+		$key = base64_encode( 'WOOCOMMERCE:Paneles55+' );
+		$cache_id = 'token_correo_' . md5( $key );
+		$token = self::get_cache( $cache_id );
+		
+		if ( ! $token || $force ) {
+			$config = array(
+                'method' => 'POST',
+				'timeout' => 10,
+				'headers' => array(
+					'Content-Type'  => 'application/json',
+					'Accept' => 'application/json',
+					'Connection' => 'keep-alive',
+					'Authorization' => 'Basic ' . $key,
+				),
+			);
+			$domain = $sandbox ? self::CORREO_MI_CORREO_API_SANDBOX_URL : self::CORREO_MI_CORREO_API_URL;
+			self::debug( 'get_token_correo Request data: ', array( $domain, $config ) );
+
+			$login = wp_remote_post( $domain . '/token', $config );
+			
+			if ( ! is_wp_error( $login ) ) {
+				$response = json_decode( $login['body'], true );
+				self::debug( 'get_token_correo Response: ', array( $response ) );
+				if ( isset( $response['token'] ) ) {
+					$token = $response['token'];
+					$expire = new DateTime($response['expire']);
+					$now = new DateTime('now');
+					$diff = $now->diff($expire);
+					$minutes = $diff->days * 24 * 60 + $diff->h * 60 + $diff->i;
+					self::set_cache( $cache_id, $token, $minutes * 60 );
+				} else {
+					$error = __( 'Invalid Correo Argentino credentials', 'carriers-of-argentina-for-woocommerce' );
+					return false;
+				}
+			} else {
+				self::debug( 'get_token_correo Error: ', array( $login ) );
+				$error = __( 'Invalid Correo Argentino credentials', 'carriers-of-argentina-for-woocommerce' );
+				return false;
+			}
+		}
+		return $token;
+	}
+
+	/**
+	 * Get Correo Argentino Customer ID.
+	 *
+	 * @param mixed $error error.
+	 * @param bool  $sandbox sandbox.
+	 *
+	 * @return mixed
+	 */
+	public static function get_customer_id_correo( &$error = null ) {
+		$sandbox = apply_filters( 'kshippingargentina_sandbox', false );
+		$key = base64_encode( self::$config['correo_username'] . ':' . self::$config['correo_password'] );
+		$cache_id = 'customer_id_correo_' . md5( $key );
+		$customer_id = self::get_cache( $cache_id );
+		
+		if ( ! $customer_id ) {
+			$token = self::get_token_correo();
+			if ( ! $token ) {
+				self::debug( 'Failed to get token' );
+				return false;
+			}
+
+			$config = array(
+				'timeout' => 10,
+				'headers' => array(
+					'Content-Type'  => 'application/json',
+					'Accept' => 'application/json',
+					'Authorization' => 'Bearer ' . $token,
+				),
+				'body' => wp_json_encode( array(
+					'email' => self::$config['correo_username'],
+					'password' => self::$config['correo_password']
+				) ),
+			);
+			self::debug( 'get_customer_id_correo Request data: ', array( $config ) );
+
+			$domain = $sandbox ? self::CORREO_MI_CORREO_API_SANDBOX_URL : self::CORREO_MI_CORREO_API_URL;
+			$response = wp_remote_post( $domain . '/users/validate', $config );
+			
+			if ( ! is_wp_error( $response ) ) {
+				$result = json_decode( $response['body'], true );
+				$result["status"] = wp_remote_retrieve_response_code($response);
+				self::debug( 'get_customer_id_correo Response: ', array( $result ) );
+				if ( isset( $result['customerId'] ) && ($result['status'] >= 200 && $result['status'] < 300) ) {
+					$customer_id = $result['customerId'];
+					self::set_cache( $cache_id, $customer_id, 7 * 24 * 60 * 60 ); // 7 days
+				} else {
+					$error = __( 'Invalid Correo Argentino credentials', 'carriers-of-argentina-for-woocommerce' );
+					return false;
+				}
+			} else {
+				self::debug( 'get_customer_id_correo Error: ', array( $response ) );
+				$error = __( 'Invalid Correo Argentino credentials', 'carriers-of-argentina-for-woocommerce' );
+				return false;
+			}
+		}
+		return $customer_id;
+	}
+
+	/**
+	 * Create Correo Argentino Label.
+	 *
+	 * @param array $request Request.
+	 * @param mixed $error error.
+	 * @param bool  $sandbox sandbox.
+	 *
+	 * @return mixed
+	 */
+	public static function create_label_correo( $request, &$error ) {
+		$sandbox = apply_filters( 'kshippingargentina_sandbox', false );
+		$token = self::get_token_correo();
+		if ( ! $token ) {
+			self::debug( 'Failed to get token' );
+			return false;
+		}
+		
+		$config = array(
+			'timeout' => 10,
+			'headers' => array(
+				'Content-Type' => 'application/json',
+				'Accept' => 'application/json',
+				'Authorization' => 'Bearer ' . $token,
+			),
+			'body' => wp_json_encode( $request ),
+		);
+
+		$domain = $sandbox ? self::CORREO_MI_CORREO_API_SANDBOX_URL : self::CORREO_MI_CORREO_API_URL;
+		self::debug( 'create_label_correo Request data: ', array( $config ) );
+		$response = wp_remote_post( $domain . '/shipping/import', $config );
+		
+		if ( ! is_wp_error( $response ) ) {
+			$result = json_decode( $response['body'], true );
+			$result["status"] = wp_remote_retrieve_response_code($response);
+			self::debug( 'create_label_correo Label creation response: ', array( $result ) );
+			if ( $result && isset( $result['status'] ) && ($result['status'] >= 200 && $result['status'] < 300) ) {
+				return $result;
+			}
+			if ( isset( $result['message'] ) ) {
+				$error = $result['message'];
+			}
+		} else {
+			self::debug( 'Label creation error: ', array( $response ) );
+		}
+		return false;
+	}
+
+	/**
+	 * Get Correo Argentino Rates.
+	 *
+	 * @param string $postal_code Postal Code.
+	 * @param string $delivery_type Delivery Type.
+	 * @param array  $dimensions Dimensions.
+	 * @param array  $settings Settings.
+	 *
+	 * @return mixed
+	 */
+	public static function get_rates_correo( $origin_postal_code, $postal_code, $delivery_type, $dimensions, $force = false ) {
+		$sandbox = apply_filters( 'kshippingargentina_sandbox', $sandbox );
+		if (!isset($dimensions['weight']) || !isset($dimensions['length']) || 
+			!isset($dimensions['height']) || !isset($dimensions['width'])) {
+			return false;
+		}
+
+		$dimensions['weight'] = $dimensions['weight'] * 1000; // Convert to grams
+
+		$dimensions = array_map( function( $dimension ) {
+			return (int) $dimension;
+		}, $dimensions );
+
+		$settings = get_option( 'woocommerce_kshippingargentina-manager_settings' );
+
+		$token = self::get_token_correo( $force );
+		if ( ! $token ) {
+			self::debug( 'Failed to get token' );
+			return false;
+		}
+
+		$customer_id = self::get_customer_id_correo( );
+		if ( ! $customer_id ) {
+			self::debug( 'Failed to get customer ID' );
+			return false;
+		}
+		$body = wp_json_encode( array(
+			'customerId' => $customer_id,
+			'postalCodeOrigin' => $origin_postal_code,
+			'postalCodeDestination' => $postal_code,
+			'deliveredType' => $delivery_type,
+			'dimensions' => $dimensions
+		) );
+		$config = array(
+			'timeout' => 10,
+			'headers' => array(
+				'Content-Type' => 'application/json',
+				'Accept' => 'application/json',
+				'Authorization' => 'Bearer ' . $token,
+			),
+			'body' => $body,
+		);
+
+		$cache_id = 'get_rates_correo_' . md5( $body );
+		$result = self::get_cache( $cache_id );
+		if ( $result ) {
+			return $result;
+		}
+
+		$domain = $sandbox ? self::CORREO_MI_CORREO_API_SANDBOX_URL : self::CORREO_MI_CORREO_API_URL;
+		self::debug( 'get_rates_correo Request data: ', array( $domain, $config ) );
+
+		$response = wp_remote_post( $domain . '/rates', $config );
+		
+		if ( ! is_wp_error( $response ) ) {
+			$result = json_decode( $response['body'], true );
+			$result['status'] = wp_remote_retrieve_response_code( $response );
+			$result['message'] = wp_remote_retrieve_response_message( $response );
+			self::debug( 'get_rates_correo response: ', array( $result ) );
+			if ( $result && isset( $result['status'] ) && ($result['status'] >= 200 && $result['status'] < 300) ) {
+				self::set_cache( $cache_id, $result, 24 * 60 * 60 ); // 1 day
+				return $result;
+			} /*else if (! $force ) {
+				return self::get_rates_correo( $origin_postal_code, $postal_code, $delivery_type, $dimensions, true );
+			}*/ else {
+				self::debug( 'get_rates_correo error: ', array( $result ) );
+				return false;
+			}
+		}
+		
+		self::debug( 'get_rates_correo error: ', array( $response ) );
 		return false;
 	}
 

@@ -13,8 +13,9 @@ if ( $shipping->office ) {
 	$offices = KShippingArgentina_API::get_office( $shipping->service_type, $postcode, null, true );
 }
 $offices_src = KShippingArgentina_API::get_office( $shipping->service_type, $setting['postcode'], true, null );
-$labels      = get_post_meta( $order->get_id(), 'kshippingargentina_label_file', true );
 
+$labels = $order->get_meta('kshippingargentina_label_file', true);
+$labels_correo_argentino = $order->get_meta('kshippingargentina_label_correo_argentino', true);
 $url = '';
 if ( 'correo_argentino' === $shipping->service_type ) {
 	$url = KShippingArgentina_API::TRACKING_URL_CORREO;
@@ -44,7 +45,7 @@ if ( 'correo_argentino' === $shipping->service_type ) {
 		<hr />
 		<?php
 	endif;
-	if ( $labels && is_array( $labels ) && count( $labels ) > 0 ) :
+	if ( $labels && is_array( $labels ) && count( $labels ) > 0 || $labels_correo_argentino && is_array( $labels_correo_argentino ) && count( $labels_correo_argentino ) > 0 ) :
 		?>
 		<table>
 			<tr>

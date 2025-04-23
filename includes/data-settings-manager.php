@@ -36,6 +36,18 @@ $r = array(
 		'description' => __( 'Get this in https://yipi.app/p/membresia/', 'carriers-of-argentina-for-woocommerce' ),
 		'default'     => '',
 	),
+	'correo_username'    => array(
+		'title'       => __( 'Correo Argentino Mi Correo Username (Optional)', 'carriers-of-argentina-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Optional, only for generation of label', 'carriers-of-argentina-for-woocommerce' ),
+		'default'     => '',
+	),
+	'correo_password'    => array(
+		'title'       => __( 'Correo Argentino Mi Correo Password (Optional)', 'carriers-of-argentina-for-woocommerce' ),
+		'type'        => 'text',
+		'description' => __( 'Only for generation of label', 'carriers-of-argentina-for-woocommerce' ),
+		'default'     => '',
+	),
 	'andreani_username'    => array(
 		'title'       => __( 'Andreani API Username (Optional)', 'carriers-of-argentina-for-woocommerce' ),
 		'type'        => 'text',

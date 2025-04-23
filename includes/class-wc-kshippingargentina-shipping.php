@@ -869,6 +869,8 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				$insurance     = 0;
 				$cost          = 0;
 				$list_packages = array();
+				$total_ca = 0;
+				$max_delay = 0;
 				foreach ( $dim['items'] as $idp => $name ) {
 					$line_price        = (int) round( $to_ars * $dim['total'][ $idp ], 0 );
 					$b                 = array(
@@ -885,21 +887,50 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 					if ( $this->insurance_active && 'correo_argentino' === $this->service_type ) {
 						$insurance += $line_price * ( $this->insurance / 100.0 );
 					}
+					if ( 'correo_argentino' === $this->service_type ) {
+						$dimensions = array(
+							'weight' => $b['weight'],
+							'length' => $b['depth'],
+							'width' => $b['width'],
+							'height' => $b['height'],
+						);
+						$quote = KShippingArgentina_API::get_rates_correo(
+							$setting['postcode'],
+							$cp,
+							$this->type === 'office' ? 'S' : 'D',
+							$dimensions,
+						);
+						if ($quote && isset($quote['rates']) && is_array($quote['rates'])) {
+							$total_ca = 0;
+							foreach ($quote['rates'] as $rate) {
+								if ($rate['productType'] === ($this->velocity === 'classic' ? 'CP' : 'EP')) {
+									$total_ca += $rate['price'];
+									$max_delay = max($max_delay, $rate['deliveryTimeMax']);
+									break;
+								}
+							}
+						}
+					}
 				}
-				$quote = KShippingArgentina_API::get_quote(
-					$this->service_type,
-					$list_packages,
-					$this->office_src,
-					$setting['postcode'],
-					$cp,
-					$this->product_cuit,
-					$this->product_type,
-					$this->product_client,
-					$this->fiscal_type,
-					$this->type,
-					$this->velocity
-				);
-				if ( ! $quote ) {
+				if ( 'correo_argentino' !== $this->service_type ) {
+					$quote = KShippingArgentina_API::get_quote(
+						$this->service_type,
+						$list_packages,
+						$this->office_src,
+						$setting['postcode'],
+						$cp,
+						$this->product_cuit,
+						$this->product_type,
+						$this->product_client,
+						$this->fiscal_type,
+						$this->type,
+						$this->velocity
+					);
+				} else if ( $total_ca > 0 ) {
+					$quote = array();
+					$quote['delay'] = $max_delay;
+					$quote['total'] = $total_ca;
+				} else {
 					KShippingArgentina_API::debug(
 						'Invalid quote',
 						array(

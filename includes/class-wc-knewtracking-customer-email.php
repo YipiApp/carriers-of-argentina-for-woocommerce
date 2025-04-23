@@ -106,7 +106,7 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 		}
 
 		// setup order object.
-		$this->object = new WC_Order( $order_id );
+		$this->object = wc_get_order( $order_id );
 
 		// replace variables in the subject/headings.
 		$this->find[]    = '{order_date}';
@@ -120,7 +120,7 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 
 		$message = str_replace( '{order_id}', $this->object->get_order_number(), $this->mail_message );
 		$links   = array();
-		$labels  = get_post_meta( $this->object->get_id(), 'kshippingargentina_label_file', true );
+		$labels = $this->object->get_meta('kshippingargentina_label_file', true);
 		if ( ! $labels || ! is_array( $labels ) || ! count( $labels ) ) {
 			KShippingArgentina_API::debug(
 				'WC_KNewTracking_Customer_Email no labels...',

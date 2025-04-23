@@ -337,7 +337,15 @@ function kshipping_generate_label(btn) {
 	$(btn).html($(btn).attr('data-text-loading')).attr('disabled', 'disabled');
 	let data_to_send = {};
 	$('input,select', '#kshippingargentina-container').each(function() {
-		data_to_send[$(this).attr('name')] = $(this).val();
+		let name = $(this).attr('name');
+		if (name && name.includes('[]')) {
+			if (!data_to_send[name]) {
+				data_to_send[name] = [];
+			}
+			data_to_send[name].push($(this).val());
+		} else if (name) {
+			data_to_send[name] = $(this).val();
+		}
 	});
 	$.post(wc_kshippingargentina_context.ajax_url, data_to_send, function(data_json) {
 		kshipping_generate_label_loading = false;

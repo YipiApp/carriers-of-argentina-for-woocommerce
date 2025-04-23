@@ -106,6 +106,7 @@ add_action(
 				$order->delete_meta_data( 'kshippingargentina_oca_tracking_reference' );
 				$order->delete_meta_data( 'kshippingargentina_oca_operation_code' );
 			}
+			$order->delete_meta_data( 'kshippingargentina_label_correo_argentino' );
 			$order->delete_meta_data( 'kshippingargentina_label_file' );
 			$order->save();
 			die(
@@ -232,11 +233,12 @@ add_action(
 			$order->save();
 			$file = false;
 			KShippingArgentina_API::debug(
-				'Massive Label',
+				'Init Massive Label',
 				array(
 					'service_type' => $shipping->service_type,
 					'label'        => $label,
 					'shipping'     => $shipping,
+					'file'         => $file,
 				)
 			);
 			if ( 'correo_argentino' === $shipping->service_type ) {
@@ -246,10 +248,22 @@ add_action(
 			} elseif ( 'oca' === $shipping->service_type ) {
 				$file = kshipping_generate_label_oca( $order, $label, $shipping );
 			}
+			KShippingArgentina_API::debug(
+				'End Massive Label',
+				array(
+					'service_type' => $shipping->service_type,
+					'file'         => $file,
+				)
+			);
 			if ( $file && isset( $file['error'] ) && ! $file['error'] ) {
-				$order->update_meta_data( 'kshippingargentina_label_file', $file['tracking_code'] );
-				$order->save();
-				kshipping_notify_new_tracking( $order, $shipping );
+				if ( 'correo_argentino' !== $shipping->service_type ) {
+					$order->update_meta_data( 'kshippingargentina_label_file', $file['tracking_code'] );
+					$order->save();
+					kshipping_notify_new_tracking( $order, $shipping );
+				} else {
+					$order->update_meta_data( 'kshippingargentina_label_correo_argentino', $file['tracking_code'] );
+					$order->save();
+				}
 				die(
 					wp_json_encode(
 						array(
@@ -366,7 +380,7 @@ add_action(
 						}
 						$label = kshippingargentina_order_to_label_data( $to_label['order'], $to_label['shipping'] );
 						KShippingArgentina_API::debug(
-							'New Label',
+							'Init New Label',
 							array(
 								'service_type' => 'correo_argentino',
 								'label'        => $label,
@@ -374,10 +388,19 @@ add_action(
 							)
 						);
 						$file = kshipping_generate_label_correo_argentino( $to_label['order'], $label, $to_label['shipping'] );
+						KShippingArgentina_API::debug(
+							'End New Label',
+							array(
+								'service_type' => 'correo_argentino',
+								'label'        => $label,
+								'shipping'     => $to_label['shipping'],
+								'file'         => $file,
+							)
+						);
 						if ( ! $file['error'] ) {
-							$to_label['order']->update_meta_data( 'kshippingargentina_label_file', $file['tracking_code'] );
+							$to_label['order']->update_meta_data( 'kshippingargentina_label_correo_argentino', $file['tracking_code'] );
 							$to_label['order']->save();
-							kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
+							// kshipping_notify_new_tracking( $to_label['order'], $to_label['shipping'] );
 							foreach ( $file['tracking_code'] as $tc => $data ) {
 								if ( ! $data ) {
 									$errors[] = array(
@@ -1127,103 +1150,157 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
 }
 
 /**
- * Create CSV for Correo Argentino.
+ * Clean text.
+ *
+ * @param string $text Text.
+ * @return string Clean text.
+ */
+function kshipping_clean_text( $text ) {
+	return preg_replace(
+		'/[^0-9a-zA-Z ,._;\(\)-]/',
+		'',
+		str_replace(
+			array(
+				'Á',
+				'É',
+				'Í',
+				'Ó',
+				'Ú',
+				'Ñ',
+				'á',
+				'é',
+				'í',
+				'ó',
+				'ú',
+				'ñ',
+			),
+			array(
+				'A',
+				'E',
+				'I',
+				'O',
+				'U',
+				'N',
+				'a',
+				'e',
+				'i',
+				'o',
+				'u',
+				'n',
+			),
+			$text
+		)
+	);
+}
+function kshipping_only_numbers( $text ) {
+	return preg_replace( '/[^0-9]/', '', $text );
+}
+
+/**
+ * Create Label in Correo Argentino.
  *
  * @param int|WC_Order                   $order Order Object or Order ID.
  * @param array                          $label Labels.
  * @param WC_KShippingArgentina_Shipping $shipping Shipping Object.
  */
 function kshipping_generate_label_correo_argentino( $order, $label, $shipping ) {
-	$dim      = $label['box'];
-	$lines    = array();
-	$id_order = $order->get_id();
-	foreach ( $dim['weight'] as $i => $weight ) {
-		$csvl = "{$shipping->product_type};{$dim['height'][$i]};{$dim['width'][$i]};{$dim['depth'][$i]};{$dim['weight'][$i]};{$dim['total'][$i]};{$label['state']};";
-		$label['phone'] = preg_replace( '/[^0-9]/', '', $label['phone'] );
-		$label['prefix_phone'] = preg_replace( '/[^0-9]/', '', $label['prefix_phone'] );
-		if (empty($label['prefix_phone'])) {
-			$label['prefix_phone'] = substr($label['phone'], 0, 2);
-			$label['phone'] = substr($label['phone'], 2);
-		}
-		$label['number'] = preg_replace( '/[^0-9]/', '', $label['number'] ); 
-		if ( (bool) $shipping->office ) {
-			$csvl .= explode( '#', $label['office'] )[0] . ';;;;;;;';
-		} else {
-			$address = $label['address_1'] . ( ! empty( $label['address_2'] ) ? ', ' . $label['address_2'] : '' );
-			$csvl   .= ";{$label['city']};{$address};{$label['number']};{$label['floor']};{$label['apartment']};{$label['postcode']};";
-		}
-		$csvl   .= "{$label['full_name']};EMAILAQUI;;;{$label['prefix_phone']};{$label['phone']};{$id_order}";
-		$csv     = str_replace(
-			'EMAILAQUI',
-			$label['email'],
-			preg_replace(
-				'/[^0-9a-zA-Z ,._;\(\)-]/',
-				'',
-				str_replace(
-					array(
-						'Á',
-						'É',
-						'Í',
-						'Ó',
-						'Ú',
-						'Ñ',
-						'á',
-						'é',
-						'í',
-						'ó',
-						'ú',
-						'ñ',
-					),
-					array(
-						'A',
-						'E',
-						'I',
-						'O',
-						'U',
-						'N',
-						'a',
-						'e',
-						'i',
-						'o',
-						'u',
-						'n',
-					),
-					$csvl
-				)
-			)
-		);
-		$lines[] = $csv;
-	}
-	if ( count( $lines ) > 0 ) {
-		$csv       = apply_filters(
-			'kshipping_csv_correo_argentino',
-			'tipo_producto(obligatorio);largo(obligatorio en CM);ancho(obligatorio en CM);altura(obligatorio en CM);peso(obligatorio en KG);valor_del_contenido(obligatorio en pesos argentinos);provincia_destino(obligatorio);sucursal_destino(obligatorio solo en caso de no ingresar localidad de destino);localidad_destino(obligatorio solo en caso de no ingresar sucursal de destino);calle_destino(obligatorio solo en caso de no ingresar sucursal de destino);altura_destino(obligatorio solo en caso de no ingresar sucursal de destino);piso(opcional solo en caso de no ingresar sucursal de destino);dpto(opcional solo en caso de no ingresar sucursal de destino);codpostal_destino(obligatorio solo en caso de no ingresar sucursal de destino);destino_nombre(obligatorio);destino_email(obligatorio, debe ser un email valido);cod_area_tel(opcional);tel(opcional);cod_area_cel(obligatorio);cel(obligatorio);numero_orden(opcional)' . "\n" . implode( "\n", $lines ),
-			$order,
-			$label,
-			$shipping
-		);
-		$file_name = apply_filters(
-			'kshipping_filename_correo_argentino',
-			'correo_argentino_' . $order->get_id() . '.csv',
-			$order,
-			$label,
-			$shipping
-		);
-		$file      = kshipping_save_pdf( $order->get_id(), $file_name, $csv );
-		return apply_filters(
-			'kshipping_generate_label_correo_argentino',
-			array(
-				'error'         => false,
-				'tracking_code' => array(
-					'no_tracking_code' => $file,
-				),
+	$setting = get_option( 'woocommerce_kshippingargentina-manager_settings' );
+	$order_id = $order->get_id();
+	// Preparar datos del remitente
+	$sender = [
+		"name" => kshipping_clean_text( $setting['fullname'] ),
+		"phone" => kshipping_only_numbers( $setting['phone'] ),
+		"cellPhone" => kshipping_only_numbers( $setting['phone'] ),
+		"email" => $setting['email'],
+		"originAddress" => [
+			"streetName" => kshipping_clean_text( $setting['street'] ),
+			"streetNumber" => kshipping_only_numbers( $setting['number'] ),
+			"floor" => kshipping_only_numbers( $setting['floor'] ),
+			"apartment" => kshipping_only_numbers( $setting['apartment'] ),
+			"city" => kshipping_clean_text( $setting['city'] ),
+			"provinceCode" => $setting['state'],
+			"postalCode" => kshipping_only_numbers( $setting['postcode'] )
+		]
+	];
+
+	// Preparar datos del destinatario
+	$recipient = [
+		"name" => kshipping_clean_text( $label['full_name'] ),
+		"email" => $label['email'],
+		"phone" => kshipping_only_numbers( $label['phone'] ),
+		"cellPhone" => kshipping_only_numbers( $label['phone'] ),
+	];
+
+	// Preparar datos del envío
+	$shipping_data = [];
+	$tracking_codes = [];
+	$api_error = false;
+	$customer_id = KShippingArgentina_API::get_customer_id_correo();
+
+	// Crear una guía por cada paquete
+	foreach ($label['box']['weight'] as $index => $weight) {
+		$shipping_data = [
+			"deliveryType" => $shipping->office ? "S" : "D",
+			"productType" => $shipping->velocity === 'classic' ? "CP" : "EP",
+			"declaredValue" => $label['box']['total'][$index],
+			"weight" => $weight * 1000, // Convertir a gramos
+			"height" => $label['box']['height'][$index],
+			"length" => $label['box']['depth'][$index],
+			"width" => $label['box']['width'][$index],
+			"agency" => $shipping->office ? explode('#', $label['office'])[0] : "",
+			"address" => [
+				"streetName" => kshipping_clean_text( $label['address_1'] ),
+				"streetNumber" => kshipping_only_numbers( $label['number'] ),
+				"floor" => kshipping_clean_text( $label['floor'] ),
+				"apartment" => kshipping_clean_text( $label['apartment'] ),
+				"city" => kshipping_clean_text( $label['city'] ),
+				"provinceCode" => $label['state'],
+				"postalCode" => kshipping_only_numbers( $label['postcode'] )
+			]
+		];
+
+		$request = [
+			"customerId" => $customer_id,
+			"extOrderId" => strval($order_id) . '_' . ($index + 1),
+			"orderNumber" => $order_id,
+			"sender" => $sender,
+			"recipient" => $recipient,
+			"shipping" => $shipping_data
+		];
+		
+		$api_error = false;
+		$result = KShippingArgentina_API::create_label_correo(
+			apply_filters(
+				'kshippingargentina_correo_label_request',
+				$request,
+				$order,
+				$label,
+				$shipping
 			),
-			$order,
-			$label,
-			$shipping
+			$api_error
 		);
+
+		if ($result) {
+			$tracking_codes[$request['extOrderId']] = false;	
+			KShippingArgentina_API::debug( 'kshippingargentina_correo_label_request result: ', array( $request['extOrderId'], $result, $api_error ) );
+		} else {
+			if (!$api_error && isset($result['message'])) {
+				$api_error = $result['message'];
+			}
+			break;
+		}
 	}
-	return false;
+
+	return apply_filters(
+		'kshipping_generate_label_correo_argentino',
+		array(
+			'error' => !count($tracking_codes) ? ($api_error ? $api_error : __( 'Correo Argentino return with empty response', 'carriers-of-argentina-for-woocommerce' ) ) : false,
+			'tracking_code' => !count($tracking_codes) ? false : $tracking_codes,
+		),
+		$order,
+		$label,
+		$shipping
+	);
 }
 
 /**
