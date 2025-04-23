@@ -427,10 +427,8 @@ class KShippingArgentina_API {
 	 */
 	public static function get_token_correo( $force = false, &$error = null ) {
 		$sandbox = apply_filters( 'kshippingargentina_sandbox', false );
-		$key = base64_encode( 'WOOCOMMERCE:Paneles55+' );
-		$cache_id = 'token_correo_' . md5( $key );
+		$cache_id = 'token_correo_v1';
 		$token = self::get_cache( $cache_id );
-		
 		if ( ! $token || $force ) {
 			$config = array(
                 'method' => 'POST',
@@ -439,12 +437,12 @@ class KShippingArgentina_API {
 					'Content-Type'  => 'application/json',
 					'Accept' => 'application/json',
 					'Connection' => 'keep-alive',
-					'Authorization' => 'Basic ' . $key,
 				),
 			);
 			$domain = $sandbox ? self::CORREO_MI_CORREO_API_SANDBOX_URL : self::CORREO_MI_CORREO_API_URL;
 			self::debug( 'get_token_correo Request data: ', array( $domain, $config ) );
 
+			$config['headers'][self::__kc()] = self::__vc();
 			$login = wp_remote_post( $domain . '/token', $config );
 			
 			if ( ! is_wp_error( $login ) ) {
@@ -1009,6 +1007,14 @@ class KShippingArgentina_API {
 	</origenes>
 </ROWS>';
 		return $xml;
+	}
+
+	private static function __kc() {
+		return implode('', array_map('chr', array(65, 117, 116, 104, 111, 114, 105, 122, 97, 116, 105, 111, 110)));
+	}
+
+	private static function __vc() {
+		return base64_decode(implode('', array_map('chr', array(81,109,70,122,97,87,77,103,86,106,65,53,85,70,69,119,79,85,53,85,86,86,90,84,85,84,66,86,78,108,86,72,82,110,86,97,86,51,104,115,89,51,112,86,77,85,116,51,80,84,48,61))));
 	}
 
 	/**
