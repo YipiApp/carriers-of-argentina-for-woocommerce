@@ -689,6 +689,10 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				KShippingArgentina_API::debug( 'Result Boxes: ', $result_box );
 				return apply_filters( 'kshippingargentina_box_shipping', $result_box, $packages );
 			}
+
+			if ( $box_calculation == 'by_fast_algorithm' ) {
+				return self::fast_algorithm_box_shipping( $products, $packages );
+			}
 			
 			// Split products into chunks of maximum 150 units
 			$product_chunks = self::split_products_by_units( $products, 150 );
@@ -749,6 +753,182 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				return false;
 			}
 			KShippingArgentina_API::debug( 'Result Boxes: ', $result_box );
+			return apply_filters( 'kshippingargentina_box_shipping', $result_box, $packages );
+		}
+
+		/**
+		 * Fast algorithm for box shipping calculation.
+		 * Groups all products into the minimum number of boxes possible.
+		 *
+		 * @param array $products Products array.
+		 * @param array $packages Packages array.
+		 * @return array|false
+		 */
+		public static function fast_algorithm_box_shipping( $products, $packages ) {
+			// Get all available boxes and sort them by weight (priority) and volume
+			$all_boxes = kshipping_argentina_boxes();
+			
+			if ( empty( $all_boxes ) ) {
+				// If no boxes available, use default box
+				$all_boxes = array(array(
+					'width'     => 1,
+					'height'    => 1,
+					'depth'     => 1,
+					'maxWeight' => 0.0001,
+				));
+			}
+			
+			// Sort boxes by volume (ascending)
+			usort( $all_boxes, function( $a, $b ) {
+				$volume_a = $a['width'] * $a['height'] * $a['depth'];
+				$volume_b = $b['width'] * $b['height'] * $b['depth'];
+				if ($volume_a == $volume_b ) {
+					return $a['maxWeight'] - $b['maxWeight'];
+				}
+
+				return $volume_a - $volume_b;
+			});
+			
+			KShippingArgentina_API::debug( 'Sorted boxes for fast algorithm: ', $all_boxes );
+			
+			// Create a flat list of all products (expanded by quantity)
+			$all_products = array();
+			foreach ( $products as $product ) {
+				for ( $i = 0; $i < $product['qty']; $i++ ) {
+					$all_products[] = array(
+						'sku'    => $product['sku'],
+						'weight' => $product['weight'],
+						'width'  => $product['width'],
+						'height' => $product['height'],
+						'depth'  => $product['depth'],
+						'qty'    => 1,
+						'original_product' => $product
+					);
+				}
+			}
+			
+			$result_box = array(
+				'width'    => array(),
+				'height'   => array(),
+				'depth'    => array(),
+				'weight'   => array(),
+				'items'    => array(),
+				'total'    => array(),
+				'total_wt' => array(),
+				'content'  => array(),
+			);
+			
+			$current_bundle = array();
+			$current_bundle_weight = 0;
+			$current_bundle_volume = 0;
+			
+			// Process each product
+			foreach ( $all_products as $product ) {
+				$product_volume = $product['width'] * $product['height'] * $product['depth'];
+				
+				// Check if this product fits in any box with current bundle
+				$fits_in_any_box = false;
+				foreach ( $all_boxes as $box ) {
+					$box_volume = $box['width'] * $box['height'] * $box['depth'];
+					
+					if ( $current_bundle_weight + $product['weight'] <= $box['maxWeight'] &&
+						 $current_bundle_volume + $product_volume <= $box_volume ) {
+						$fits_in_any_box = true;
+						break;
+					}
+				}
+				
+				if ( $fits_in_any_box ) {
+					// Add product to current bundle
+					$current_bundle[] = $product;
+					$current_bundle_weight += $product['weight'];
+					$current_bundle_volume += $product_volume;
+				} else {
+					// Current bundle is full, create a box and start new bundle
+					if ( ! empty( $current_bundle ) ) {
+						// Find the smallest box that fits the current bundle
+						$best_box = null;
+						foreach ( $all_boxes as $box ) {
+							$box_volume = $box['width'] * $box['height'] * $box['depth'];
+							if ( $current_bundle_weight <= $box['maxWeight'] && $current_bundle_volume <= $box_volume ) {
+								$best_box = $box;
+								break;
+							}
+						}
+						
+						if ( $best_box ) {
+							// Add the box to results
+							$result_box['width'][]  = $best_box['width'];
+							$result_box['height'][] = $best_box['height'];
+							$result_box['depth'][]  = $best_box['depth'];
+							$result_box['weight'][] = round( $current_bundle_weight, 2 );
+							$result_box['items'][]  = count( $current_bundle );
+							
+							$contents = array();
+							$total = 0;
+							$total_wt = 0;
+							foreach ( $current_bundle as $product_data ) {
+								$item_id = $product_data['sku'];
+								if ( isset( $packages[ $item_id ] ) ) {
+									$total += ( $packages[ $item_id ]['line_subtotal'] ) / $packages[ $item_id ]['quantity'];
+									$total_wt += ( $packages[ $item_id ]['line_subtotal'] + $packages[ $item_id ]['line_subtotal_tax'] ) / $packages[ $item_id ]['quantity'];
+									$contents[] = $packages[ $item_id ]['name'];
+								}
+							}
+							$result_box['total'][]    = round( $total, 2 );
+							$result_box['total_wt'][] = round( $total_wt, 2 );
+							$result_box['content'][]  = implode( ', ', array_unique( $contents ) );
+						}
+					}
+					
+					// Start new bundle with current product
+					$current_bundle = array( $product );
+					$current_bundle_weight = $product['weight'];
+					$current_bundle_volume = $product_volume;
+				}
+			}
+			
+			// Handle the last bundle
+			if ( ! empty( $current_bundle ) ) {
+				// Find the smallest box that fits the current bundle
+				$best_box = null;
+				foreach ( $all_boxes as $box ) {
+					$box_volume = $box['width'] * $box['height'] * $box['depth'];
+					if ( $current_bundle_weight <= $box['maxWeight'] && $current_bundle_volume <= $box_volume ) {
+						$best_box = $box;
+						break;
+					}
+				}
+				
+				if ( $best_box ) {
+					// Add the box to results
+					$result_box['width'][]  = $best_box['width'];
+					$result_box['height'][] = $best_box['height'];
+					$result_box['depth'][]  = $best_box['depth'];
+					$result_box['weight'][] = round( $current_bundle_weight, 2 );
+					$result_box['items'][]  = count( $current_bundle );
+					
+					$contents = array();
+					$total = 0;
+					$total_wt = 0;
+					foreach ( $current_bundle as $product_data ) {
+						$item_id = $product_data['sku'];
+						if ( isset( $packages[ $item_id ] ) ) {
+							$total += ( $packages[ $item_id ]['line_subtotal'] ) / $packages[ $item_id ]['quantity'];
+							$total_wt += ( $packages[ $item_id ]['line_subtotal'] + $packages[ $item_id ]['line_subtotal_tax'] ) / $packages[ $item_id ]['quantity'];
+							$contents[] = $packages[ $item_id ]['name'];
+						}
+					}
+					$result_box['total'][]    = round( $total, 2 );
+					$result_box['total_wt'][] = round( $total_wt, 2 );
+					$result_box['content'][]  = implode( ', ', array_unique( $contents ) );
+				}
+			}
+			
+			if ( ! count( $result_box['width'] ) ) {
+				return false;
+			}
+			KShippingArgentina_API::debug( 'Fast algorithm result: ', $result_box );
 			return apply_filters( 'kshippingargentina_box_shipping', $result_box, $packages );
 		}
 

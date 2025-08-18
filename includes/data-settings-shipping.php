@@ -118,6 +118,7 @@ return array(
 			'smart' => __( 'Select best boxes for all order', 'carriers-of-argentina-for-woocommerce' ),
 			'fit_one' => __( 'Force to fit in one box', 'carriers-of-argentina-for-woocommerce' ),
 			'by_product' => __( 'One box by unit product', 'carriers-of-argentina-for-woocommerce' ),
+			'by_fast_algorithm' => __( 'Fast algorithm (Recommended for massive orders)', 'carriers-of-argentina-for-woocommerce' ),
 		),
 		'desc_tip'    => false,
 	),
