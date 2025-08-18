@@ -1,18 +1,18 @@
 # Correo Argentino / Andreani / Oca ePack for WooCommerce plugin #
 
-## Description ##
-
-This plugins adds the most used shipping platforms in Argentina to your WooCommerce store. Supports: Correo Argentino / Andreani / Oca ePack. With this plugin you can:
-- Quote Shipping (Including Correo Argentino)
-- Request the offices of destination to your customers (For shipments to offices)
-- Generate labels automatically (Only Andreani and OCA).
-
 ### Descripción en Español ###
 
 Este plugins agrega las plataformas de envío mas usadas en Argentina a su tienda WooCommerce. Soporta: Correo Argentino / Andreani / Oca e-Pak. Con este plugin podras:
 - Cotizar Envios (Incluyendo Correo Argentino)
 - Solicitar la sucursal de destino a tus clientes (Para envíos a Sucursal)
 - Generar etiquetas de forma automatica (Solo Andreani y OCA).
+
+## Description ##
+
+This plugins adds the most used shipping platforms in Argentina to your WooCommerce store. Supports: Correo Argentino / Andreani / Oca ePack. With this plugin you can:
+- Quote Shipping (Including Correo Argentino)
+- Request the offices of destination to your customers (For shipments to offices)
+- Generate labels automatically (Only Andreani and OCA).
 
 ## Requirements ##
 - WooCommerce
