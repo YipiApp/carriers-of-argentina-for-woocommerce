@@ -1,42 +1,33 @@
-﻿=== Shipping Argentina WooCommerce Plugin ===
-Contributors: Kijam López
-Tags: woocommerce, oca, correo argentino, andreani, argentina
-Requires at least: 4.0
-Tested up to: 6.8.1
-Stable tag: 1.5.3
-License: GPLv2
+=== Envíos por Correo Argentino, OCA e-Pak y Andreani para WooCommerce en Argentina ===
+Colaboradores: Kijam López
+Etiquetas: woocommerce, oca, correo argentino, andreani, argentina
+Requiere al menos: 4.0
+Probado hasta: 6.8.1
+Etiqueta estable: 1.5.3
+Licencia: GPLv2
 
-Add Correo Argentino / Andreani / Oca ePack to the WooCommerce plugin
+Agregue Correo Argentino / Andreani / Oca ePack al complemento WooCommerce
 
-=== Descripción en Español ===
+=== Descripción ===
 Correo Argentino / Andreani / Oca e-Pak para WooCommerce.
 
-Este plugins agrega las plataformas de envío más usadas en Argentina a su tienda WooCommerce. Soporta: Correo Argentino / Andreani / Oca e-Pak. Con este plugin podrás:
+Estos complementos agregan las plataformas de envío más usadas en Argentina a su tienda WooCommerce. Soporta: Correo Argentino / Andreani / Oca e-Pak. Con este complemento podrás:
 - Cotizar Envíos (Incluyendo Correo Argentino)
 - Solicitar la sucursal de destino a tus clientes (Para envíos a Sucursal)
-- Generar etiquetas de forma automática (Solo Andreani y OCA).
+- Generar etiquetas de forma automática (Solo Andreani y OCA; Para Correo Argentino se pre-carga en Mi Correo pero debe completar algunos pasos extras).
 
-=== Description ===
-Correo Argentino / Andreani / Oca e-Pak for WooCommerce.
+[YouTube https://www.youtube.com/watch?v=AHM8YmcfEgA]
 
-This plugins adds the most used shipping platforms in Argentina to your WooCommerce store. Supports: Correo Argentino / Andreani / Oca ePack. With this plugin you can:
-- Quote Shipping (Including Correo Argentino)
-- Request the offices of destination to your customers (For shipments to offices)
-- Generate labels automatically (Only Andreani and OCA).
-
-[youtube https://www.youtube.com/watch?v=AHM8YmcfEgA]
-
-=== Requirements ===
+=== Requisitos ===
 - WooCommerce
-- [Yipi Membership](https://yipi.app/p/membresia/) of this API (Price starts at 6.00 U$D / mo)
-- Número de Operativa / Número de Cliente / Cuit if you want to use Quote for OCA e-Pak
-- User and Password for OCA e-Pak if you want generate labels automatically with OCA e-Pak
-- Número de Contrato / Número de Cliente if you want to use Quote for Andreani
-- User and Password for Andreani REST API V2.0  if you want generate labels automatically with Andreani
+- [Membresía de Cujiware] (https://cujiware.com/) (precio desde 15 USD/mes)
+- Usuario y Contraseña + Operativas si desea usar OCA e-Pak
+- Usuario y Contraseña del API + Número de Contrato + Número de Cliente si desea usar Andreani
+- Usuario y Clave de acceso en Mi Correo si desea usar Correos Argentino
 
-=== Contribute ===
-You can contribute to the source code in our [GitHub](https://github.com/kijamve/carriers-of-argentina-for-woocommerce) page.
+=== Contribuir ===
+Puede contribuir al código fuente en nuestra página de [GitHub](https://github.com/kijamve/carriers-of-argentina-for-woocommerce).
 
-=== License ===
+=== Licencia ===
 
 GPLv2
