@@ -2,8 +2,8 @@
 Contributors: Kijam López
 Tags: woocommerce, oca, correo argentino, andreani, argentina
 Requires at least: 4.0
-Tested up to: 6.4
-Stable tag: 1.4.6
+Tested up to: 6.8.1
+Stable tag: 1.5.3
 License: GPLv2
 
 Add Correo Argentino / Andreani / Oca ePack to the WooCommerce plugin

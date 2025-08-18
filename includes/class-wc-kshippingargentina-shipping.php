@@ -541,6 +541,58 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			return woocommerce_get_weight( $dim, $to_unit );
 		}
 		/**
+		 * Split products into chunks of maximum 150 units for API processing.
+		 *
+		 * @param array $products Products array.
+		 * @param int   $max_units Maximum units per chunk.
+		 *
+		 * @return array
+		 */
+		private static function split_products_by_units( $products, $max_units = 150 ) {
+			$chunks = array();
+			$current_chunk = array();
+			$current_units = 0;
+
+			foreach ( $products as $product ) {
+				$product_units = $product['qty'];
+				
+				// If adding this product would exceed the limit, start a new chunk
+				if ( $current_units + $product_units > $max_units && ! empty( $current_chunk ) ) {
+					$chunks[] = $current_chunk;
+					$current_chunk = array();
+					$current_units = 0;
+				}
+				
+				// If a single product exceeds the limit, split it
+				if ( $product_units > $max_units ) {
+					$remaining_units = $product_units;
+					while ( $remaining_units > 0 ) {
+						$units_for_chunk = min( $remaining_units, $max_units );
+						$product_chunk = $product;
+						$product_chunk['qty'] = $units_for_chunk;
+						$current_chunk[] = $product_chunk;
+						$remaining_units -= $units_for_chunk;
+						
+						if ( $remaining_units > 0 ) {
+							$chunks[] = $current_chunk;
+							$current_chunk = array();
+						}
+					}
+				} else {
+					$current_chunk[] = $product;
+					$current_units += $product_units;
+				}
+			}
+			
+			// Add the last chunk if it has products
+			if ( ! empty( $current_chunk ) ) {
+				$chunks[] = $current_chunk;
+			}
+			
+			return $chunks;
+		}
+
+		/**
 		 * Box shipping calculation function.
 		 *
 		 * @param array $packages Packages.
@@ -628,6 +680,20 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 					}
 				}
 			}
+			
+			// If no products to process, return early
+			if ( empty( $products ) ) {
+				if ( ! count( $result_box['width'] ) ) {
+					return false;
+				}
+				KShippingArgentina_API::debug( 'Result Boxes: ', $result_box );
+				return apply_filters( 'kshippingargentina_box_shipping', $result_box, $packages );
+			}
+			
+			// Split products into chunks of maximum 150 units
+			$product_chunks = self::split_products_by_units( $products, 150 );
+			KShippingArgentina_API::debug( 'Product chunks: ', array( 'total_chunks' => count( $product_chunks ), 'chunks' => $product_chunks ) );
+			
 			$all_boxes_for_bin = kshipping_argentina_boxes();
 			if ( $box_calculation == 'by_product' || ! count( $all_boxes_for_bin ) ) {
 				$all_boxes_for_bin = array(array(
@@ -637,41 +703,48 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 					'maxWeight' => 0.0001,
 				));
 			}
-			$boxes = count( $products ) > 0 ? KShippingArgentina_API::call(
-				'/bins/calculate',
-				array(
-					'boxes'    => $all_boxes_for_bin,
-					'products' => $products,
-					'fit_one_box' => $box_calculation == 'fit_one'
-				),
-				3600 * 24 * 120
-			) : array();
-			if ( count( $products ) > 0 && ( ! $boxes || ! is_array( $boxes ) ) ) {
-				KShippingArgentina_API::debug( 'Invalid Result: ', $boxes );
-				return false;
-			}
-			foreach ( $boxes as $box ) {
-				if ( ! isset( $box['products'] ) || ! is_array( $box['products'] ) || ! count( $box['products'] ) ) {
-					KShippingArgentina_API::debug( 'Invalid Box: ', $box );
+			
+			// Process each chunk separately
+			foreach ( $product_chunks as $chunk_index => $product_chunk ) {
+				$boxes = KShippingArgentina_API::call(
+					'/bins/calculate',
+					array(
+						'boxes'    => $all_boxes_for_bin,
+						'products' => $product_chunk,
+						'fit_one_box' => $box_calculation == 'fit_one'
+					),
+					3600 * 24 * 120
+				);
+				
+				if ( ! $boxes || ! is_array( $boxes ) ) {
+					KShippingArgentina_API::debug( 'Invalid Result for chunk ' . $chunk_index . ': ', $boxes );
 					continue;
 				}
-				$result_box['width'][]  = $box['box']['width'];
-				$result_box['height'][] = $box['box']['height'];
-				$result_box['depth'][]  = $box['box']['depth'];
-				$result_box['weight'][] = round( $box['weight'], 2 );
-				$result_box['items'][]  = count( $box['products'] );
-				$contents               = array();
-				$total                  = 0;
-				$total_wt               = 0;
-				foreach ( $box['products'] as $item_id ) {
-					$total     += ( $packages[ $item_id ]['line_subtotal'] ) / $packages[ $item_id ]['quantity'];
-					$total_wt  += ( $packages[ $item_id ]['line_subtotal'] + $packages[ $item_id ]['line_subtotal_tax'] ) / $packages[ $item_id ]['quantity'];
-					$contents[] = $packages[ $item_id ]['name'];
+				
+				foreach ( $boxes as $box ) {
+					if ( ! isset( $box['products'] ) || ! is_array( $box['products'] ) || ! count( $box['products'] ) ) {
+						KShippingArgentina_API::debug( 'Invalid Box in chunk ' . $chunk_index . ': ', $box );
+						continue;
+					}
+					$result_box['width'][]  = $box['box']['width'];
+					$result_box['height'][] = $box['box']['height'];
+					$result_box['depth'][]  = $box['box']['depth'];
+					$result_box['weight'][] = round( $box['weight'], 2 );
+					$result_box['items'][]  = count( $box['products'] );
+					$contents               = array();
+					$total                  = 0;
+					$total_wt               = 0;
+					foreach ( $box['products'] as $item_id ) {
+						$total     += ( $packages[ $item_id ]['line_subtotal'] ) / $packages[ $item_id ]['quantity'];
+						$total_wt  += ( $packages[ $item_id ]['line_subtotal'] + $packages[ $item_id ]['line_subtotal_tax'] ) / $packages[ $item_id ]['quantity'];
+						$contents[] = $packages[ $item_id ]['name'];
+					}
+					$result_box['total'][]    = round( $total, 2 );
+					$result_box['total_wt'][] = round( $total_wt, 2 );
+					$result_box['content'][]  = implode( ', ', array_unique( $contents ) );
 				}
-				$result_box['total'][]    = round( $total, 2 );
-				$result_box['total_wt'][] = round( $total_wt, 2 );
-				$result_box['content'][]  = implode( ', ', array_unique( $contents ) );
 			}
+			
 			if ( ! count( $result_box['width'] ) ) {
 				return false;
 			}
