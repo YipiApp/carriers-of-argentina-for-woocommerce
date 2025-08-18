@@ -691,7 +691,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 			}
 
 			if ( $box_calculation == 'by_fast_algorithm' ) {
-				return self::fast_algorithm_box_shipping( $products, $packages );
+				return  apply_filters( 'kshippingargentina_box_shipping', self::fast_algorithm_box_shipping( $products, $packages ), $packages );
 			}
 			
 			// Split products into chunks of maximum 150 units
@@ -764,7 +764,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 		 * @param array $packages Packages array.
 		 * @return array|false
 		 */
-		public static function fast_algorithm_box_shipping( $products, $packages ) {
+		private static function fast_algorithm_box_shipping( $products, $packages ) {
 			// Get all available boxes and sort them by weight (priority) and volume
 			$all_boxes = kshipping_argentina_boxes();
 			
@@ -881,10 +881,51 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 						}
 					}
 					
-					// Start new bundle with current product
-					$current_bundle = array( $product );
-					$current_bundle_weight = $product['weight'];
-					$current_bundle_volume = $product_volume;
+					// Check if the current product can fit alone in any box
+					$product_fits_alone = false;
+					$best_box_for_product = null;
+					foreach ( $all_boxes as $box ) {
+						$box_volume = $box['width'] * $box['height'] * $box['depth'];
+						if ( $product['weight'] <= $box['maxWeight'] && $product_volume <= $box_volume ) {
+							$product_fits_alone = true;
+							$best_box_for_product = $box;
+							break;
+						}
+					}
+					
+					if ( $product_fits_alone ) {
+						// Start new bundle with current product
+						$current_bundle = array( $product );
+						$current_bundle_weight = $product['weight'];
+						$current_bundle_volume = $product_volume;
+					} else {
+						// Product doesn't fit in any box alone, create a forced box with product dimensions
+						$result_box['width'][]  = $product['width'];
+						$result_box['height'][] = $product['height'];
+						$result_box['depth'][]  = $product['depth'];
+						$result_box['weight'][] = round( $product['weight'], 2 );
+						$result_box['items'][]  = 1;
+						
+						$item_id = $product['sku'];
+						if ( isset( $packages[ $item_id ] ) ) {
+							$total = ( $packages[ $item_id ]['line_subtotal'] ) / $packages[ $item_id ]['quantity'];
+							$total_wt = ( $packages[ $item_id ]['line_subtotal'] + $packages[ $item_id ]['line_subtotal_tax'] ) / $packages[ $item_id ]['quantity'];
+							$content = $packages[ $item_id ]['name'];
+						} else {
+							$total = 0;
+							$total_wt = 0;
+							$content = '';
+						}
+						
+						$result_box['total'][]    = round( $total, 2 );
+						$result_box['total_wt'][] = round( $total_wt, 2 );
+						$result_box['content'][]  = $content;
+						
+						// Reset bundle for next product
+						$current_bundle = array();
+						$current_bundle_weight = 0;
+						$current_bundle_volume = 0;
+					}
 				}
 			}
 			
@@ -1124,6 +1165,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 				$list_packages = array();
 				$total_ca = 0;
 				$max_delay = 0;
+				$quote_by_package = array();
 				foreach ( $dim['items'] as $idp => $name ) {
 					$line_price        = (int) round( $to_ars * $dim['total'][ $idp ], 0 );
 					$b                 = array(
@@ -1153,8 +1195,15 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 							$this->type === 'office' ? 'S' : 'D',
 							$dimensions,
 						);
+						$quote_by_package[] = array(
+							'quote' => $quote,
+							'dimensions' => $dimensions,
+							'type' => $this->type,
+							'src_cp' => $setting['postcode'],
+							'dst_cp' => $cp,
+							'service_type' => $this->service_type,
+						);
 						if ($quote && isset($quote['rates']) && is_array($quote['rates'])) {
-							$total_ca = 0;
 							foreach ($quote['rates'] as $rate) {
 								if ($rate['productType'] === ($this->velocity === 'classic' ? 'CP' : 'EP')) {
 									$total_ca += $rate['price'];
@@ -1222,6 +1271,7 @@ if ( ! class_exists( 'WC_KShippingArgentina_Shipping' ) ) :
 					'discount_shipping_percent' => $this->discount_shipping_percent,
 					'discount_shipping_amount'  => $this->discount_shipping_amount,
 					'quote'                     => $quote,
+					'quote_by_package'          => $quote_by_package,
 				);
 				KShippingArgentina_API::debug(
 					'Quote',
