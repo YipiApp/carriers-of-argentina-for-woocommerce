@@ -16,7 +16,7 @@ Este plugins agrega las plataformas de envío mas usadas en Argentina a su tiend
 
 ## Requirements ##
 - WooCommerce
-- Yipi Membership (Price starts at 6 U$D / mo): https://yipi.app/p/membresia/
+- Cujiware Membership (Price starts at 15 U$D / mo): [https://cujiware.com/](https://cujiware.com/#pricing)
 - Número de Operativa / Número de Cliente / Cuit if you want to use Quote for OCA e-Pak
 - User and Password for OCA e-Pak if you want generate labels automatically with OCA e-Pak
 - Número de Contrato / Número de Cliente if you want to use Quote for Andreani
