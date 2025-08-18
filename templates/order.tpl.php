@@ -237,13 +237,13 @@ if ( 'correo_argentino' === $shipping->service_type ) {
 					<p class="form-field form-field-wide kshippingargentina-dimensions">
 						<label for=""><?php esc_html_e( 'Dimensions (In CM)', 'carriers-of-argentina-for-woocommerce' ); ?>:</label>
 						<br />
-						<input type="text" class="kshipping_box_width" name="kshipping[box][width][]" value="<?php echo esc_html( $box['width'][ $b_id ] ); ?>"  /> x
-						<input type="text" class="kshipping_box_height" name="kshipping[box][height][]" value="<?php echo esc_html( $box['height'][ $b_id ] ); ?>" /> x
-						<input type="text" class="kshipping_box_depth" name="kshipping[box][depth][]" value="<?php echo esc_html( $box['depth'][ $b_id ] ); ?>" />
+						<input type="text" class="kshipping_box_width" name="kshipping[box][width][]" value="<?php echo esc_html( max( $box['width'][ $b_id ], 0.01 ) ); ?>"  /> x
+						<input type="text" class="kshipping_box_height" name="kshipping[box][height][]" value="<?php echo esc_html( max( $box['height'][ $b_id ], 0.01 ) ); ?>" /> x
+						<input type="text" class="kshipping_box_depth" name="kshipping[box][depth][]" value="<?php echo esc_html( max( $box['depth'][ $b_id ], 0.01 ) ); ?>" />
 					</p>
 					<p class="form-field form-field-wide">
 						<label for=""><?php esc_html_e( 'Weight (In KG)', 'carriers-of-argentina-for-woocommerce' ); ?>:</label>
-						<input type="text" class="kshipping_box_weight" name="kshipping[box][weight][]" value="<?php echo esc_html( $box['weight'][ $b_id ] ); ?>" />
+						<input type="text" class="kshipping_box_weight" name="kshipping[box][weight][]" value="<?php echo esc_html( max( $box['weight'][ $b_id ], 0.01 ) ); ?>" />
 					</p>
 					<p class="form-field form-field-wide">
 						<label for=""><?php esc_html_e( 'Contents', 'carriers-of-argentina-for-woocommerce' ); ?>:</label>
