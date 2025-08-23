@@ -35,7 +35,18 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 		} else if(typeof $('.method_instance_id-'+instance_id+' select').select2 != 'undefined') {
 			$('.method_instance_id-'+instance_id+' select').select2();
 		}
-		$('.method_instance_id-'+instance_id+' select').on('change', checkOfficeSelectedArgentinaOffice);
+		// Use Select2/SelectWoo events instead of native change event
+		if(typeof $('.method_instance_id-'+instance_id+' select').selectWoo != 'undefined') {
+			$('.method_instance_id-'+instance_id+' select').on('select2:select', function(e) {
+				checkOfficeSelectedArgentinaOffice(e);
+			});
+		} else if(typeof $('.method_instance_id-'+instance_id+' select').select2 != 'undefined') {
+			$('.method_instance_id-'+instance_id+' select').on('select2:select', function(e) {
+				checkOfficeSelectedArgentinaOffice(e);
+			});
+		} else {
+			$('.method_instance_id-'+instance_id+' select').on('change', checkOfficeSelectedArgentinaOffice);
+		}
 	});
 }
 jQuery(document).ready(function($) {
@@ -108,6 +119,7 @@ jQuery(document).ready(function($) {
 				if ($('#billing_country').val() == 'AR') {
 					let class_city = $('#billing_city').attr('class');
 					let val_city = $('#billing_city').val();
+					let localstorage_city = localStorage.getItem('billing_city');
 					$('input#billing_city').replaceWith('<select class="'+class_city+'" name="billing_city" id="billing_city" /></select>');
 					$('#billing_city option').remove();
 					$('#billing_city').append('<option value="">Cargando...</option>');
@@ -116,16 +128,42 @@ jQuery(document).ready(function($) {
 					} else if(typeof $('#billing_city').select2 != 'undefined') {
 						$('#billing_city').select2();
 					}
+
+					// Use Select2/SelectWoo events instead of native change event
+					if(typeof $('#billing_city').selectWoo != 'undefined') {
+						$('#billing_city').on('select2:select', function(e) {
+							if (e.params.data && e.params.data.id) {
+								localStorage.setItem('billing_city', e.params.data.id);
+							}
+						});
+					} else if(typeof $('#billing_city').select2 != 'undefined') {
+						$('#billing_city').on('select2:select', function(e) {
+							if (e.params.data && e.params.data.id) {
+								localStorage.setItem('billing_city', e.params.data.id);
+							}
+						});
+					}
+					$('#billing_city').change(function() {
+						if ($(this).val() && $(this).val() != '') {
+							localStorage.setItem('billing_city', $(this).val());
+						} else {
+							let localstorage_city = localStorage.getItem('billing_city');
+							if (localstorage_city && localstorage_city != '') {
+								$('#billing_city').val(localstorage_city).trigger('change');
+							}
+						}
+						
+					});
 					$.post(wc_kshippingargentina_context.ajax_url, { nonce: wc_kshippingargentina_context.token, cmd: "cities", state: $(this).val() }, function(list_json) {
 						$('#billing_city option').remove();
 						//$('#billing_city').append('<option value="">Seleccione...</option>');
 						let list = jQuery.parseJSON(list_json);
-						let city = val_city;
+						let city = val_city ?? localstorage_city;
 						$('#billing_city').append('<option value="">Seleccione...</option>');
 						for (let i in list) {
 							let o = list[i];
 							let selected = '';
-							if (city == o) {
+							if (city == o || (city == '' && localstorage_city == o)) {
 								found = true;
 								selected = 'selected';
 							}
@@ -203,6 +241,7 @@ jQuery(document).ready(function($) {
 				if ($('#shipping_country').val() == 'AR') {
 					let class_city = $('#shipping_city').attr('class');
 					let val_city = $('#shipping_city').val();
+					let localstorage_city = localStorage.getItem('shipping_city');
 					$('input#shipping_city').replaceWith('<select class="'+class_city+'" name="shipping_city" id="shipping_city" /></select>');
 					$('#shipping_city option').remove();
 					$('#shipping_city').append('<option value="">Cargando...</option>');
@@ -211,16 +250,42 @@ jQuery(document).ready(function($) {
 					} else if(typeof $('#shipping_city').select2 != 'undefined') {
 						$('select#shipping_city').select2();
 					}
+
+					// Use Select2/SelectWoo events instead of native change event
+					if(typeof $('#shipping_city').selectWoo != 'undefined') {
+						$('#shipping_city').on('select2:select', function(e) {
+							if (e.params.data && e.params.data.id) {
+								localStorage.setItem('shipping_city', e.params.data.id);
+							}
+						});
+					} else if(typeof $('#shipping_city').select2 != 'undefined') {
+						$('#shipping_city').on('select2:select', function(e) {
+							if (e.params.data && e.params.data.id) {
+								localStorage.setItem('shipping_city', e.params.data.id);
+							}
+						});
+					}
+					
+					$('#shipping_city').change(function() {
+						if ($(this).val() && $(this).val() != '') {
+							localStorage.setItem('shipping_city', $(this).val());
+						} else {
+							let localstorage_city = localStorage.getItem('shipping_city');
+							if (localstorage_city && localstorage_city != '') {
+								$('#shipping_city').val(localstorage_city).trigger('change');
+							}
+						}
+					});
 					$.post(wc_kshippingargentina_context.ajax_url, { nonce: wc_kshippingargentina_context.token, cmd: "cities", state: $(this).val() }, function(list_json) {
 						$('#shipping_city option').remove();
 						//$('#shipping_city').append('<option value="">Seleccione...</option>');
 						let list = jQuery.parseJSON(list_json);
-						let city = val_city;
+						let city = val_city ?? localstorage_city;
 						$('#shipping_city').append('<option value="">Seleccione...</option>');
 						for (let i in list) {
 							let o = list[i];
 							let selected = '';
-							if (city == o) {
+							if (city == o || (city == '' && localstorage_city == o)) {
 								found = true;
 								selected = 'selected';
 							}
