@@ -872,10 +872,10 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 		'office_sfull' => $shipping->office_src,
 	);
 	foreach ( $dim['weight'] as $b_id => $weight ) {
-		$data['box']['width'][]   = $dim['width'][ $b_id ];
-		$data['box']['height'][]  = $dim['height'][ $b_id ];
-		$data['box']['depth'][]   = $dim['depth'][ $b_id ];
-		$data['box']['weight'][]  = $dim['weight'][ $b_id ];
+		$data['box']['width'][]   = max( 0.01, $dim['width'][ $b_id ] );
+		$data['box']['height'][]  = max( 0.01, $dim['height'][ $b_id ] );
+		$data['box']['depth'][]   = max( 0.01, $dim['depth'][ $b_id ] );
+		$data['box']['weight'][]  = max( 0.01, $dim['weight'][ $b_id ] );
 		$data['box']['content'][] = $dim['content'][ $b_id ];
 		$data['box']['total'][]   = round( $dim['total'][ $b_id ] * $to_ars, 2 );
 	}
@@ -1073,12 +1073,11 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
 	}
 	$bultos = array();
 	foreach ( array_keys( $label['box']['width'] ) as $i ) {
-		$bultos[] = array(
-			'anchoCm'                    => (int) $label['box']['width'][ $i ],
-			'altoCm'                     => (int) $label['box']['height'][ $i ],
-			'largoCm'                    => (int) $label['box']['depth'][ $i ],
-			'volumenCm'                  => (int) ( $label['box']['width'][ $i ] * $label['box']['height'][ $i ] * $label['box']['depth'][ $i ] ),
-			'kilos'                      => (float) round( $label['box']['weight'][ $i ], 2 ),
+		$b = array(
+			'anchoCm'                    => (int) max( 1, $label['box']['width'][ $i ] ),
+			'altoCm'                     => (int) max( 1, $label['box']['height'][ $i ] ),
+			'largoCm'                    => (int) max( 1, $label['box']['depth'][ $i ] ),
+			'kilos'                      => (float) round( max( 0.01, $label['box']['weight'][ $i ] ), 2 ),
 			'descripcion'                => $label['box']['content'][ $i ],
 			'valorDeclaradoSinImpuestos' => (int) $label['box']['total'][ $i ],
 			'valorDeclaradoConImpuestos' => (int) $label['box']['total'][ $i ],
@@ -1097,6 +1096,8 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
 				),
 			),
 		);
+		$b['volumenCm'] = $b['anchoCm'] * $b['altoCm'] * $b['largoCm'];
+		$bultos[] = $b;
 	}
 	$andreani_request['bultos'] = $bultos;
 
@@ -1243,10 +1244,10 @@ function kshipping_generate_label_correo_argentino( $order, $label, $shipping ) 
 			"deliveryType" => $shipping->office ? "S" : "D",
 			"productType" => $shipping->velocity === 'classic' ? "CP" : "EP",
 			"declaredValue" => $label['box']['total'][$index],
-			"weight" => $weight * 1000, // Convertir a gramos
-			"height" => $label['box']['height'][$index],
-			"length" => $label['box']['depth'][$index],
-			"width" => $label['box']['width'][$index],
+			"weight" => max( 0.01, $weight * 1000 ), // Convertir a gramos
+			"height" => max( 0.01, $label['box']['height'][$index] ),
+			"length" => max( 0.01, $label['box']['depth'][$index] ),
+			"width" => max( 0.01, $label['box']['width'][$index] ),
 			"agency" => $shipping->office ? explode('#', $label['office'])[0] : "",
 			"address" => [
 				"streetName" => kshipping_clean_text( $label['address_1'] ),

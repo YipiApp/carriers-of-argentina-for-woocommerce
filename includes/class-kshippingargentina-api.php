@@ -584,7 +584,7 @@ class KShippingArgentina_API {
 	 * @return mixed
 	 */
 	public static function get_rates_correo( $origin_postal_code, $postal_code, $delivery_type, $dimensions, $force = false ) {
-		$sandbox = apply_filters( 'kshippingargentina_sandbox', $sandbox );
+		$sandbox = apply_filters( 'kshippingargentina_sandbox', false );
 		if (!isset($dimensions['weight']) || !isset($dimensions['length']) || 
 			!isset($dimensions['height']) || !isset($dimensions['width'])) {
 			return false;
