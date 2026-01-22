@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Carriers of Argentina for WooCommerce\n"
 "POT-Creation-Date: 2024-04-15 01:40-0400\n"
-"PO-Revision-Date: 2024-04-15 01:41-0400\n"
+"PO-Revision-Date: 2026-01-21 22:37-0400\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: class-wc-kshippingargentina.php\n"
@@ -271,6 +271,10 @@ msgstr "Oficina más cercana"
 #: functions.php:128 templates/order.tpl.php:206
 msgid "Choose one..."
 msgstr "Elige uno..."
+
+#: functions.php:170
+msgid "Please select a nearest office for your shipment."
+msgstr "Por favor, seleccione una sucursal cercana para su envío."
 
 #: functions.php:206 templates/order.tpl.php:98
 msgid "Identification number type"

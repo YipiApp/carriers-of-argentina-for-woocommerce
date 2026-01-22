@@ -123,7 +123,7 @@ add_action(
 				'label'    => __( 'Nearest office', 'carriers-of-argentina-for-woocommerce' ),
 				'type'     => 'select',
 				'class'    => array( 'form-row-wide office_kshippingargentina' ),
-				'required' => false,
+				'required' => true,
 				'options'  => array(
 					'' => __( 'Choose one...', 'carriers-of-argentina-for-woocommerce' ),
 				),
@@ -133,6 +133,49 @@ add_action(
 		echo '</div>';
 	},
 	20,
+	2
+);
+
+add_action(
+	'woocommerce_after_checkout_validation',
+	function ( $data, $errors ) {
+		// Get chosen shipping methods.
+		$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
+		
+		if ( empty( $chosen_shipping_methods ) ) {
+			return;
+		}
+
+		foreach ( $chosen_shipping_methods as $shipping_method_id ) {
+			// Check if it's a kshippingargentina method.
+			if ( false === strstr( $shipping_method_id, 'kshippingargentina' ) ) {
+				continue;
+			}
+
+			// Extract instance_id from shipping_method_id (format: method_id:instance_id).
+			$parts       = explode( ':', $shipping_method_id );
+			$instance_id = isset( $parts[1] ) ? intval( $parts[1] ) : 0;
+
+			if ( ! $instance_id ) {
+				continue;
+			}
+
+			// Check if this shipping method requires office selection.
+			$t_setting = get_option( 'woocommerce_kshippingargentina-shipping_' . $instance_id . '_settings' );
+			
+			if ( ! isset( $t_setting['type'] ) || 'office' !== $t_setting['type'] ) {
+				continue;
+			}
+
+			// Validate that an office has been selected.
+			$office_selected = isset( $_POST['kshippingargentina_method_office'][ $instance_id ] ) ? sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office'][ $instance_id ] ) ) : '';
+
+			if ( empty( $office_selected ) ) {
+				$errors->add( 'shipping', __( 'Please select a nearest office for your shipment.', 'carriers-of-argentina-for-woocommerce' ) );
+			}
+		}
+	},
+	10,
 	2
 );
 
@@ -423,6 +466,7 @@ function kshippingargentina_hook_js() {
 				'server_error'      => __( 'Server error', 'carriers-of-argentina-for-woocommerce' ),
 				'server_loading'    => __( 'Loading...', 'carriers-of-argentina-for-woocommerce' ),
 				'not_installed'     => __( 'The plugin is not configured correctly...', 'carriers-of-argentina-for-woocommerce' ),
+				'choose_one'        => __( 'Choose one...', 'carriers-of-argentina-for-woocommerce' ),
 			),
 		)
 	);

@@ -18,6 +18,9 @@ function checkKShippingArgentinaOffice(postcode, instance_id) {
 		}
 		*/
 		
+		// Add empty option first
+		$('.method_instance_id-'+instance_id+' select').append('<option value="">' + wc_kshippingargentina_context.messages.choose_one + '</option>');
+		
 		let found = false;
 		for (let i in list) {
 			let o = list[i];
