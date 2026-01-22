@@ -32,6 +32,27 @@ class WC_KShippingArgentina_Manager extends WC_Integration {
 	public static $config = array();
 
 	/**
+	 * Has fields property.
+	 *
+	 * @var bool
+	 */
+	public $has_fields;
+
+	/**
+	 * Title property.
+	 *
+	 * @var string
+	 */
+	public $title;
+
+	/**
+	 * Description property.
+	 *
+	 * @var string
+	 */
+	public $description;
+
+	/**
 	 * Constructor
 	 *
 	 * @return void
