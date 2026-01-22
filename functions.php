@@ -136,48 +136,58 @@ add_action(
 	2
 );
 
-add_action(
-	'woocommerce_after_checkout_validation',
-	function ( $data, $errors ) {
-		// Get chosen shipping methods.
-		$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
+/**
+ * Validate office selection for kshippingargentina methods.
+ *
+ * @param array  $data   Posted data.
+ * @param object $errors WP_Error object.
+ */
+function kshippingargentina_validate_office_selection( $data = array(), $errors = null ) {
+	// Get chosen shipping methods.
+	$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
+	
+	if ( empty( $chosen_shipping_methods ) ) {
+		return;
+	}
+
+	foreach ( $chosen_shipping_methods as $shipping_method_id ) {
+		// Check if it's a kshippingargentina method.
+		if ( false === strstr( $shipping_method_id, 'kshippingargentina' ) ) {
+			continue;
+		}
+
+		// Extract instance_id from shipping_method_id (format: method_id:instance_id).
+		$parts       = explode( ':', $shipping_method_id );
+		$instance_id = isset( $parts[1] ) ? intval( $parts[1] ) : 0;
+
+		if ( ! $instance_id ) {
+			continue;
+		}
+
+		// Check if this shipping method requires office selection.
+		$t_setting = get_option( 'woocommerce_kshippingargentina-shipping_' . $instance_id . '_settings' );
 		
-		if ( empty( $chosen_shipping_methods ) ) {
-			return;
+		if ( ! isset( $t_setting['type'] ) || 'office' !== $t_setting['type'] ) {
+			continue;
 		}
 
-		foreach ( $chosen_shipping_methods as $shipping_method_id ) {
-			// Check if it's a kshippingargentina method.
-			if ( false === strstr( $shipping_method_id, 'kshippingargentina' ) ) {
-				continue;
-			}
+		// Validate that an office has been selected.
+		$office_selected = isset( $_POST['kshippingargentina_method_office'][ $instance_id ] ) ? sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office'][ $instance_id ] ) ) : '';
 
-			// Extract instance_id from shipping_method_id (format: method_id:instance_id).
-			$parts       = explode( ':', $shipping_method_id );
-			$instance_id = isset( $parts[1] ) ? intval( $parts[1] ) : 0;
-
-			if ( ! $instance_id ) {
-				continue;
-			}
-
-			// Check if this shipping method requires office selection.
-			$t_setting = get_option( 'woocommerce_kshippingargentina-shipping_' . $instance_id . '_settings' );
+		if ( empty( $office_selected ) ) {
+			$error_message = __( 'Please select a nearest office for your shipment.', 'carriers-of-argentina-for-woocommerce' );
 			
-			if ( ! isset( $t_setting['type'] ) || 'office' !== $t_setting['type'] ) {
-				continue;
-			}
-
-			// Validate that an office has been selected.
-			$office_selected = isset( $_POST['kshippingargentina_method_office'][ $instance_id ] ) ? sanitize_text_field( wp_unslash( $_POST['kshippingargentina_method_office'][ $instance_id ] ) ) : '';
-
-			if ( empty( $office_selected ) ) {
-				$errors->add( 'shipping', __( 'Please select a nearest office for your shipment.', 'carriers-of-argentina-for-woocommerce' ) );
+			if ( $errors ) {
+				$errors->add( 'shipping', $error_message );
+			} else {
+				wc_add_notice( $error_message, 'error' );
 			}
 		}
-	},
-	10,
-	2
-);
+	}
+}
+
+add_action( 'woocommerce_after_checkout_validation', 'kshippingargentina_validate_office_selection', 10, 2 );
+add_action( 'woocommerce_checkout_process', 'kshippingargentina_validate_office_selection' );
 
 add_action(
 	'woocommerce_checkout_update_order_meta',
