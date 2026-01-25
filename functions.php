@@ -143,8 +143,13 @@ add_action(
  * @param object $errors WP_Error object.
  */
 function kshippingargentina_validate_office_selection( $data = array(), $errors = null ) {
-	// Get chosen shipping methods.
+	// Get chosen shipping methods from session.
 	$chosen_shipping_methods = WC()->session->get( 'chosen_shipping_methods' );
+	
+	// Also check from POST data as backup.
+	if ( empty( $chosen_shipping_methods ) && isset( $_POST['shipping_method'] ) ) {
+		$chosen_shipping_methods = is_array( $_POST['shipping_method'] ) ? $_POST['shipping_method'] : array( $_POST['shipping_method'] );
+	}
 	
 	if ( empty( $chosen_shipping_methods ) ) {
 		return;
@@ -156,9 +161,17 @@ function kshippingargentina_validate_office_selection( $data = array(), $errors 
 			continue;
 		}
 
-		// Extract instance_id from shipping_method_id (format: method_id:instance_id).
-		$parts       = explode( ':', $shipping_method_id );
-		$instance_id = isset( $parts[1] ) ? intval( $parts[1] ) : 0;
+		// Extract instance_id from shipping_method_id.
+		// Can be in format: "kshippingargentina:15" or "kshippingargentina-15".
+		$instance_id = 0;
+		
+		if ( strpos( $shipping_method_id, ':' ) !== false ) {
+			$parts       = explode( ':', $shipping_method_id );
+			$instance_id = isset( $parts[1] ) ? intval( $parts[1] ) : 0;
+		} elseif ( strpos( $shipping_method_id, '-' ) !== false ) {
+			$parts       = explode( '-', $shipping_method_id );
+			$instance_id = isset( $parts[1] ) ? intval( $parts[1] ) : 0;
+		}
 
 		if ( ! $instance_id ) {
 			continue;
@@ -182,6 +195,13 @@ function kshippingargentina_validate_office_selection( $data = array(), $errors 
 			} else {
 				wc_add_notice( $error_message, 'error' );
 			}
+			
+			// Log for debugging.
+			KShippingArgentina_API::debug( 'Office validation failed', array( 
+				'instance_id'     => $instance_id,
+				'office_selected' => $office_selected,
+				'POST_data'       => isset( $_POST['kshippingargentina_method_office'] ) ? $_POST['kshippingargentina_method_office'] : 'not set',
+			) );
 		}
 	}
 }
