@@ -1055,6 +1055,22 @@ function kshipping_generate_label_andreani( $order, $label, $shipping ) {
 			'sucursal' => array( 'id' => $ofi_dst[1] ),
 		),
 	);
+	if ( $shipping->find_in_store ) {
+		if ( isset( $setting['floor'] ) && ! empty( $setting['floor'] ) ) {
+			$andreani_request['origen']['postal']['piso'] = $setting['floor'];
+		}
+		if ( isset( $setting['apartment'] ) && ! empty( $setting['apartment'] ) ) {
+			$andreani_request['origen']['postal']['departamento'] = $setting['apartment'];
+		}
+	}
+	if ( ! $shipping->office ) {
+		if ( isset( $label['floor'] ) && ! empty( $label['floor'] ) ) {
+			$andreani_request['destino']['postal']['piso'] = $label['floor'];
+		}
+		if ( isset( $label['apartment'] ) && ! empty( $label['apartment'] ) ) {
+			$andreani_request['destino']['postal']['departamento'] = $label['apartment'];
+		}
+	}
 	if ( $shipping->find_in_store && ! empty( $setting['other'] ) ) {
 		$andreani_request['origen']['postal']['componentesDeDireccion'] = array(
 			array(
