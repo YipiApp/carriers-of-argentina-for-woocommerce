@@ -144,12 +144,17 @@ class KShippingArgentina_API {
 		if ($service == 'correo_argentino') {
 			$service = 'correo_argentino_v2';
 		}
-		$offices = self::call( "/offices/postcode/$service/$postcode", false, 3600 * 24 * 60 );
+		$offices = self::call( "/offices/postcode/$service/$postcode", false, 3600 * 24 * 60, 'offices_' );
 		$return  = array();
-		foreach ( $offices as $office ) {
-			if ( ! $sender || isset( $office['is_sender'] ) && $office['is_sender'] ) {
-				if ( ! $receiver || isset( $office['is_receiver'] ) && $office['is_receiver'] ) {
-					$return[ $office['iso'] ] = $office;
+		if ( is_array( $offices ) ) {
+			foreach ( $offices as $office ) {
+				if ( ! is_array( $office ) || ! isset( $office['iso'] ) ) {
+					continue;
+				}
+				if ( ! $sender || isset( $office['is_sender'] ) && $office['is_sender'] ) {
+					if ( ! $receiver || isset( $office['is_receiver'] ) && $office['is_receiver'] ) {
+						$return[ $office['iso'] ] = $office;
+					}
 				}
 			}
 		}
@@ -168,10 +173,18 @@ class KShippingArgentina_API {
 	 */
 	public static function get_cities( $state ) {
 		self::init();
-		$cities = self::call( "/cities/states/$state", false, 3600 * 24 * 120 );
+		$cities = self::call( "/cities/states/$state", false, 3600 * 24 * 120, 'cities_' );
 		$return = array();
-		foreach ( $cities as $city ) {
-			$return[ $city['name'] ] = $city['name'];
+		if ( ! is_array( $cities ) ) {
+			self::debug( 'get_cities: unexpected response for state ' . $state . ' - expected array, got: ', $cities );
+		} else {
+			foreach ( $cities as $city ) {
+				if ( ! is_array( $city ) || ! isset( $city['name'] ) ) {
+					self::debug( 'get_cities: unexpected city format for state ' . $state . ' - expected array with name key, got: ', $city );
+					continue;
+				}
+				$return[ $city['name'] ] = $city['name'];
+			}
 		}
 		return count( $return ) > 0 ? $return : array( '' => __( 'Cities not found...', 'carriers-of-argentina-for-woocommerce' ) );
 	}
@@ -223,7 +236,7 @@ class KShippingArgentina_API {
 				if ( $package['volume'] / 6000 > $package['weight'] ) {
 					$package['weight'] = ceil( $package['volume'] / 6000 );
 				}
-				$costs = self::call( "/quotes/postcode/correo_argentino/{$package['weight']}/$postcode_src/$postcode_dst" );
+				$costs = self::call( "/quotes/postcode/correo_argentino/{$package['weight']}/$postcode_src/$postcode_dst", false, 86400, 'quotes_' );
 				if ( $costs && is_array( $costs ) ) {
 					foreach ( $costs as $cost ) {
 						if ( isset( $cost['fiscalType'] ) && $cost['fiscalType'] === $fiscal_type ) {
@@ -241,7 +254,7 @@ class KShippingArgentina_API {
 			}
 		} elseif ( 'oca' === $service ) {
 			foreach ( $packages as $package ) {
-				$costs = self::call( "/quotes/postcode/oca/{$product_cuit}/{$product_type}/{$package['product_cost']}/{$package['weight']}/{$package['volume']}/$postcode_src/$postcode_dst" );
+				$costs = self::call( "/quotes/postcode/oca/{$product_cuit}/{$product_type}/{$package['product_cost']}/{$package['weight']}/{$package['volume']}/$postcode_src/$postcode_dst", false, 86400, 'quotes_' );
 				if ( $costs && isset( $costs['total'] ) ) {
 					$total += $costs['total'];
 					if ( isset( $costs['delay'] ) ) {
@@ -253,7 +266,7 @@ class KShippingArgentina_API {
 			}
 		} elseif ( 'andreani' === $service ) {
 			$office = explode( '#', strtoupper( $office ) );
-			$costs  = self::call( "/quotes/postcode/andreani/{$product_client}/{$product_type}/$office[0]/$postcode_dst", $packages );
+			$costs  = self::call( "/quotes/postcode/andreani/{$product_client}/{$product_type}/$office[0]/$postcode_dst", $packages, 86400, 'quotes_' );
 			if ( $costs && isset( $costs['total'] ) ) {
 				$total += $costs['total'];
 				if ( isset( $costs['delay'] ) ) {
@@ -304,7 +317,7 @@ class KShippingArgentina_API {
 	 *
 	 * @return mixed
 	 */
-	public static function call( $path, $post_data = false, $ttl = 86400 ) {
+	public static function call( $path, $post_data = false, $ttl = 86400, $cache_prefix = null ) {
 		self::init();
 		$url = 'https://' . self::$config['api_host'] . $path;
 		if ( ! isset( self::$config['api_host'] ) || empty( self::$config['api_key'] ) ) {
@@ -314,19 +327,19 @@ class KShippingArgentina_API {
 			if ( ! is_string( $post_data ) ) {
 				$post_data = wp_json_encode( $post_data );
 			}
-			$cache_id = 'call_post_' . md5( self::$config['api_key'] . $post_data . $url );
+			$cache_id = ( $cache_prefix ?? 'call_post_' ) . md5( self::$config['api_key'] . $post_data . $url );
 		} else {
-			$cache_id = 'call_get_' . md5( self::$config['api_key'] . $url );
+			$cache_id = ( $cache_prefix ?? 'call_get_' ) . md5( self::$config['api_key'] . $url );
 		}
 		$result = self::get_cache( $cache_id );
-		if ( stristr( $result, 'Too many requests' ) || stristr( $result, 'You have exceeded the' ) ) {
+		if ( is_string( $result ) && ( stristr( $result, 'Too many requests' ) || stristr( $result, 'You have exceeded the' ) ) ) {
 			self::set_cache( $cache_id, 'error', 1 );
 		} elseif ( 'error' === $result ) {
 			return false;
 		} elseif ( ! empty( $result ) ) {
-			$api_arr = json_decode( $result, true );
-			if ( ! $api_arr ) {
-				self::debug( 'Json decode error from CACHE: ' . $result );
+			$api_arr = is_string( $result ) ? json_decode( $result, true ) : $result;
+			if ( ! is_array( $api_arr ) ) {
+				self::debug( 'Json decode error from CACHE: ', $result );
 				self::set_cache( $cache_id, 'error', 1 );
 			} else {
 				return $api_arr;
@@ -353,9 +366,9 @@ class KShippingArgentina_API {
 		}
 		$result = self::get_cache( $cache_id );
 		if ( 'error' !== $result && ! empty( $result ) ) {
-			$api_arr = json_decode( $result, true );
-			if ( ! $api_arr ) {
-				self::debug( 'Json decode error from CACHE: ' . $result );
+			$api_arr = is_string( $result ) ? json_decode( $result, true ) : $result;
+			if ( ! is_array( $api_arr ) ) {
+				self::debug( 'Json decode error from CACHE: ', $result );
 				self::set_cache( $cache_id, 'error', 1 );
 			} else {
 				if ( 'shipping.yipi.app' !== self::$config['api_host'] ) {
@@ -387,9 +400,15 @@ class KShippingArgentina_API {
 			self::unmutex();
 		}
 		if ( ! is_wp_error( $data ) ) {
-			self::debug( 'From API: ', array( $url, $post_data, $data['body'] ) );
+			$response_code = wp_remote_retrieve_response_code( $data );
+			self::debug( 'From API: ', array( $url, $post_data, $response_code, $data['body'] ) );
+			if ( 200 !== $response_code && 201 !== $response_code ) {
+				self::debug( 'API returned HTTP ' . $response_code . ' for: ' . $url . ' BODY: ' . $data['body'] );
+				self::set_cache( $cache_id, 'error', 5 * 60 );
+				return false;
+			}
 			$api_arr = json_decode( $data['body'], true );
-			if ( $api_arr && ! stristr( $data['body'], 'Too many requests' ) && ! stristr( $data['body'], 'You have exceeded the' ) ) {
+			if ( is_array( $api_arr ) && ! stristr( $data['body'], 'Too many requests' ) && ! stristr( $data['body'], 'You have exceeded the' ) ) {
 				self::set_cache( $cache_id, $data['body'], $ttl );
 				return $api_arr;
 			}
@@ -1251,23 +1270,43 @@ class KShippingArgentina_API {
 	 *
 	 * @return mixed
 	 */
+	public static function clear_cache( $prefix = '' ) {
+		$wpdb = WC_KShippingArgentina::woocommerce_wpdb();
+		if ( $prefix ) {
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}kshippingargentina_cache WHERE cache_id LIKE %s", $prefix . '%' ) );
+			foreach ( array_keys( self::$module_cache ) as $key ) {
+				if ( 0 === strpos( $key, $prefix ) ) {
+					unset( self::$module_cache[ $key ] );
+				}
+			}
+		} else {
+			$wpdb->query( "DELETE FROM {$wpdb->prefix}kshippingargentina_cache" );
+			self::$module_cache = array();
+		}
+		self::debug( 'Cache cleared manually', array( 'prefix' => $prefix ?: 'all' ) );
+	}
+
 	public static function set_cache( $cache_id, $value, $ttl = 21600 ) {
 		$wpdb                            = WC_KShippingArgentina::woocommerce_wpdb();
 		$table_name                      = $wpdb->prefix . 'kshippingargentina_cache';
 		self::$module_cache[ $cache_id ] = $value;
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$wpdb->prefix}kshippingargentina_cache WHERE ttl < %d OR cache_id = %s",
-				time(),
-				$cache_id
+				"DELETE FROM {$wpdb->prefix}kshippingargentina_cache WHERE ttl < %d",
+				time()
 			)
 		);
-		$wpdb->insert(
-			$table_name,
-			array(
-				'cache_id' => $cache_id,
-				'data'     => wp_json_encode( $value ),
-				'ttl'      => time() + $ttl,
+		// Upsert atomico: evita el error de clave duplicada cuando dos peticiones
+		// concurrentes escriben la misma cache_id (ej: token_correo_v1).
+		$wpdb->query(
+			$wpdb->prepare(
+				"INSERT INTO {$table_name} (`cache_id`, `data`, `ttl`) VALUES (%s, %s, %d)
+                ON DUPLICATE KEY UPDATE `data` = %s, `ttl` = %d",
+				$cache_id,
+				wp_json_encode( $value ),
+				time() + $ttl,
+				wp_json_encode( $value ),
+				time() + $ttl
 			)
 		);
 	}

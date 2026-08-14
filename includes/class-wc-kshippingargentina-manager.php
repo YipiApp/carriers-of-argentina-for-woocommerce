@@ -81,6 +81,7 @@ class WC_KShippingArgentina_Manager extends WC_Integration {
 		}
 
 		add_action( 'woocommerce_update_options_integration_' . $this->id, array( $this, 'process_admin_options' ) );
+		add_action( 'admin_post_kshippingargentina_clear_cache', array( $this, 'handle_clear_cache' ) );
 
 		KShippingArgentina_API::init( self::$config );
 	}
@@ -195,6 +196,26 @@ class WC_KShippingArgentina_Manager extends WC_Integration {
 		$this->form_fields = include 'data-settings-manager.php';
 	}
 
+
+	/**
+	 * Handle clear cache admin post action.
+	 *
+	 * @return void
+	 */
+	public function handle_clear_cache() {
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_die( esc_html__( 'Unauthorized', 'carriers-of-argentina-for-woocommerce' ) );
+		}
+		check_admin_referer( 'kshippingargentina_clear_cache' );
+		$allowed  = array( 'cities_', 'offices_', 'quotes_', 'token_correo', 'token_andreani_', 'get_rates_correo_', '' );
+		$prefix   = isset( $_GET['cache_type'] ) ? sanitize_text_field( wp_unslash( $_GET['cache_type'] ) ) : '';
+		if ( ! in_array( $prefix, $allowed, true ) ) {
+			$prefix = '';
+		}
+		KShippingArgentina_API::clear_cache( $prefix );
+		wp_safe_redirect( add_query_arg( 'kshipping_cache_cleared', $prefix ?: 'all', $this->admin_url() ) );
+		exit;
+	}
 
 	/**
 	 * Generate HTML Form Fields.

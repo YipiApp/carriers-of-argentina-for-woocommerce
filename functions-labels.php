@@ -788,7 +788,7 @@ function kshippingargentina_order_to_label_data( $order, $shipping ) {
 		$subtotal     = $item->get_subtotal();
 		$total        = $item->get_total();
 		$p_tax        = $item->get_subtotal_tax();
-		if ( ! $product->needs_shipping() ) {
+		if ( ! $product || ! method_exists( $product, 'needs_shipping' ) || ! $product->needs_shipping() ) {
 			continue;
 		}
 		$r               = array();

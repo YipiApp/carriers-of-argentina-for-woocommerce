@@ -107,10 +107,18 @@ class WC_KNewTracking_Customer_Email extends WC_Email {
 
 		// setup order object.
 		$this->object = wc_get_order( $order_id );
+		if ( ! $this->object ) {
+			KShippingArgentina_API::debug(
+				'WC_KNewTracking_Customer_Email order not found...',
+				array( $order_id )
+			);
+			return;
+		}
 
 		// replace variables in the subject/headings.
+		$order_date      = $this->object->get_date_created();
 		$this->find[]    = '{order_date}';
-		$this->replace[] = date_i18n( wc_date_format(), strtotime( $this->object->order_date ) );
+		$this->replace[] = $order_date ? date_i18n( wc_date_format(), $order_date->getTimestamp() ) : '';
 
 		$this->find[]    = '{order_id}';
 		$this->replace[] = $this->object->get_order_number();

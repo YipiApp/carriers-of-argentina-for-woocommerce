@@ -289,6 +289,15 @@ $r = array(
 		'default    ' => '',
 		'desc_tip'    => false,
 	),
+	'clear_cache'          => array(
+		'title'       => __( 'Cache', 'carriers-of-argentina-for-woocommerce' ),
+		'type'        => 'html',
+		'description' => ( isset( $_GET['kshipping_cache_cleared'] ) ? '<p style="color:green;margin-bottom:8px">' . esc_html__( 'Cache cleared successfully.', 'carriers-of-argentina-for-woocommerce' ) . '</p>' : '' ) .
+			'<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=kshippingargentina_clear_cache&cache_type=cities_' ), 'kshippingargentina_clear_cache' ) ) . '" class="button" style="margin-right:4px">' . esc_html__( 'Clear Cities', 'carriers-of-argentina-for-woocommerce' ) . '</a>' .
+			'<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=kshippingargentina_clear_cache&cache_type=offices_' ), 'kshippingargentina_clear_cache' ) ) . '" class="button" style="margin-right:4px">' . esc_html__( 'Clear Offices', 'carriers-of-argentina-for-woocommerce' ) . '</a>' .
+			'<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=kshippingargentina_clear_cache&cache_type=quotes_' ), 'kshippingargentina_clear_cache' ) ) . '" class="button" style="margin-right:4px">' . esc_html__( 'Clear Quotes', 'carriers-of-argentina-for-woocommerce' ) . '</a>' .
+			'<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=kshippingargentina_clear_cache&cache_type=' ), 'kshippingargentina_clear_cache' ) ) . '" class="button button-secondary">' . esc_html__( 'Clear All Cache', 'carriers-of-argentina-for-woocommerce' ) . '</a>',
+	),
 	'debug'                => array(
 		'title'       => __( 'Debug', 'carriers-of-argentina-for-woocommerce' ),
 		'type'        => 'checkbox',
